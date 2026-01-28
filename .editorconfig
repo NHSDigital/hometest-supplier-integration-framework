@@ -10,12 +10,3 @@ trim_trailing_whitespace = true
 
 [*.md]
 indent_size = unset
-
-[*.py]
-indent_size = 4
-
-[{Dockerfile,Dockerfile.}*]
-indent_size = 4
-
-[{Makefile,*.mk,go.mod,go.sum,*.go,.gitmodules}]
-indent_style = tab
