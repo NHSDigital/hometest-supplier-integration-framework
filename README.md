@@ -38,8 +38,7 @@ cd hometest-supplier-integration-framework
     - why it changed,
     - impact (breaking/non-breaking),
     - any migration notes.
-4. **Bump `VERSION`** according to your versioning policy (see below).
-5. Open a PR and use the PR template to capture:
+4. Open a PR and use the PR template to capture:
     - test evidence,
     - rollout/migration plan,
     - stakeholder sign-off if required.
