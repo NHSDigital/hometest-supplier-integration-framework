@@ -1,0 +1,11 @@
+# CODEOWNERS file for hometest-supplier-integration-framework
+# This file defines who is responsible for code in this repository.
+# Order is important; the last matching pattern takes the most precedence.
+
+# Global fallback
+* @NHSDigital/hometest-techleads
+
+# Core schemas and examples
+schemas/ @NHSDigital/hometest-techleads @NHSDigital/hometest-dev
+examples/ @NHSDigital/hometest-techleads @NHSDigital/hometest-dev
+tests/ @NHSDigital/hometest-techleads @NHSDigital/hometest-dev
