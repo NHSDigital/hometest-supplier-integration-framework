@@ -46,12 +46,14 @@ cd hometest-supplier-integration-framework
 
 ## Contributing
 
-Contributions are welcome via pull requests.
+## Contributing
+
+Contributions are welcome via pull requests. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for full details, including how to fork the repository and set up GPG commit signing.
 
 - Use the existing **issue templates** for bug reports/requests.
 - Follow the **PR template** to ensure changes are auditable and easy to review.
 - Keep changes focused: one contract change per PR where practical.
-- Ensure documentation (especially `schemas/changelog.md`) is updated alongside schema changes.
+- Ensure documentation (especially `schemas/CHANGELOG.md`) is updated alongside schema changes.
 
 ## Licence
 
