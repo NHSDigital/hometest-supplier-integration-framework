@@ -9,12 +9,12 @@ Thank you for your interest in contributing to this project! Please follow the g
 1. Fork this repository to your own GitHub account
 2. Clone your forked repository locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
-   cd REPO_NAME
+   git clone https://github.com/YOUR_USERNAME/hometest-supplier-integration-framework.git
+   cd hometest-supplier-integration-framework
    ```
 3. Add the original repository as an upstream remote:
    ```bash
-   git remote add upstream https://github.com/NHSDigital/REPO_NAME.git
+   git remote add upstream https://github.com/NHSDigital/hometest-supplier-integration-framework.git
    ```
 
 ### GPG Commit Signing
