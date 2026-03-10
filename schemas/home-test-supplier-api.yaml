@@ -126,7 +126,10 @@ components:
           type: array
           description: Reference to the ServiceRequest this observation fulfills
           items:
-            $ref: '#/components/schemas/FHIRReference'
+            allOf:
+              - $ref: '#/components/schemas/FHIRReference'
+              - example:
+                  reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
         status:
           type: string
           description: Status of the observation result
@@ -187,6 +190,8 @@ components:
         - intent
         - basedOn
         - identifier
+        - for
+        - lastModified
       properties:
         resourceType:
           type: string
@@ -203,9 +208,12 @@ components:
             $ref: '#/components/schemas/FHIRIdentifier'
         basedOn:
           type: array
-          description: Request fulfilled by this task
+          description: Reference to the ServiceRequest this task fulfills
           items:
-            $ref: '#/components/schemas/FHIRReference'
+            allOf:
+              - $ref: '#/components/schemas/FHIRReference'
+              - example:
+                  reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
         status:
           type: string
           description: Current status of the task - FHIR standard values (use businessStatus for domain-specific states)

@@ -3,7 +3,8 @@
   "identifier": [
     {
       "system": "https://fhir.hometest.nhs.uk/Id/order-uid",
-      "value": "550e8400-e29b-41d4-a716-446655440000"
+      "value": "550e8400-e29b-41d4-a716-446655440000",
+      "use": "official"
     }
   ],
   "basedOn": [
@@ -11,8 +12,13 @@
       "reference": "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
     }
   ],
-  "status": "dispatched",
+  "status": "in-progress",
+  "intent": "order",
+  "for": {
+    "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
+  },
+  "lastModified": "2025-11-04T10:35:00Z",
   "businessStatus": {
-    "text": "Sample dispatched to laboratory"
+    "text": "dispatched"
   }
 }
