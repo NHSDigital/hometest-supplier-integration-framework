@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.0.4
+  version: 1.0.5
 
 paths:
   /result:

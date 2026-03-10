@@ -185,3 +185,27 @@ Added Required Fields for Business Operations (FHIR Constrained Profile)
    - Updated description to clarify both phone and email are required
    - **Business Rationale**: Both phone (for delivery contact) and email are essential for order fulfillment and customer communication
    - **Implementation Note**: Application validation should verify one telecom has `system: 'phone'` and one has `system: 'email'`
+
+
+**Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections**
+
+Changes to home-test-supplier-api.yaml:
+
+1. Fixed basedOn Example Values
+- FHIRObservation.basedOn: Changed items from bare `$ref` to `allOf` with context-specific example, replacing inherited `Organization/SUP001` example with correct `ServiceRequest/550e8400-e29b-41d4-a716-446655440000`
+- FHIRTask.basedOn: Same fix applied - updated description to "Reference to the ServiceRequest this task fulfills" and added correct ServiceRequest example
+
+2. Added Required Fields to FHIRTask
+- Made `for` required - Patient beneficiary must be identified on every status update
+- Made `lastModified` required - Timestamp of the status change is mandatory for audit and ordering
+
+Changes to examples/fhir/task_update_dispatched.example.json:
+
+3. Fixed task_update_dispatched Example
+- Corrected `status` from `"dispatched"` (invalid FHIR value) to `"in-progress"`
+- Added missing required `intent` field with value `"order"`
+- Added missing required `for` field referencing `Patient/123e4567-e89b-12d3-a456-426614174000`
+- Added missing required `lastModified` field with value `"2025-11-04T10:35:00Z"`
+- Added `use: "official"` to identifier entry for consistency with schema example
+
+
