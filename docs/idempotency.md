@@ -14,8 +14,7 @@ For any request with the **same** `X-Correlation-ID` and **logically identical**
 ## Requirements
 1. `X-Correlation-ID` **MUST** be a UUID (v4 recommended).
 2. Servers **SHOULD** include an idempotency key store with a TTL ≥ 24h for transient network retries.
-3. Responses **SHOULD** include an `ETag` header where a stable resource representation exists.
-4. Duplicate submissions **MUST NOT** create duplicate Tasks, Observations, or Orders.
+3. Duplicate submissions **MUST NOT** create duplicate Tasks, Observations, or Orders.
 
 ## Error Handling
 - If a duplicate with a **different** payload is received for the same `X-Correlation-ID`, the server **MUST** return `409 Conflict` with an `OperationOutcome`/`problem+json` explaining the mismatch.

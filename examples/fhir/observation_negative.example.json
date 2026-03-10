@@ -1,6 +1,6 @@
 {
   "resourceType": "Observation",
-  "id": "59e06cf8-f390-5093-af2e-3685be593a25",
+  "id": "550e8400-e29b-41d4-a716-446655440001",
   "basedOn": [
     {
       "reference": "ServiceRequest/96fc8467-cfc5-46b6-9f6b-e08dc6cc533d",
@@ -14,20 +14,21 @@
       {
         "system": "http://snomed.info/sct",
         "code": "31676001",
-        "display": "HIV antibody test - self-sampling"
+        "display": "HIV antigen test"
       }
-    ]
+    ],
+    "text": "HIV antigen test"
   },
   "subject": {
     "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
   },
-  "effectiveDateTime": "2026-02-13T09:53:40Z",
-  "issued": "2026-03-10T14:57:58Z",
+  "effectiveDateTime": "2025-11-04T15:45:00Z",
+  "issued": "2025-11-04T16:00:00Z",
   "performer": [
     {
-      "reference": "Organization/77777777-7777-4777-8777-777777777777",
-      "type": "Supplier",
-      "display": "Supplier Name"
+      "reference": "Organization/SUP001",
+      "type": "Organization",
+      "display": "Supplier Organization Name"
     }
   ],
   "interpretation": [

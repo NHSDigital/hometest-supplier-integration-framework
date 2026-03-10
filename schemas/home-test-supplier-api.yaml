@@ -171,6 +171,12 @@ components:
           description: Clinical interpretation of the observation (e.g., Normal, Abnormal, Positive, Negative)
           items:
             $ref: '#/components/schemas/FHIRCodeableConcept'
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                  code: "N"
+                  display: "Normal"
+              text: "Normal"
         valueCodeableConcept:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
