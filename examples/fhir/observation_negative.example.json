@@ -3,9 +3,7 @@
   "id": "550e8400-e29b-41d4-a716-446655440001",
   "basedOn": [
     {
-      "reference": "ServiceRequest/96fc8467-cfc5-46b6-9f6b-e08dc6cc533d",
-      "type": "ServiceRequest",
-      "display": "Original service request"
+      "reference": "ServiceRequest/96fc8467-cfc5-46b6-9f6b-e08dc6cc533d"
     }
   ],
   "status": "final",
@@ -27,8 +25,7 @@
   "performer": [
     {
       "reference": "Organization/SUP001",
-      "type": "Organization",
-      "display": "Supplier Organization Name"
+      "display": "Test Supplier Ltd"
     }
   ],
   "interpretation": [

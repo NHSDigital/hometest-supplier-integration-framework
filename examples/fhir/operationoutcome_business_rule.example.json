@@ -5,8 +5,9 @@
       "severity": "error",
       "code": "business-rule",
       "details": {
-        "text": "Invalid status transition"
-      }
+        "text": "Individual quota already used"
+      },
+      "diagnostics": "Patient has already used their allocated quota for this test type"
     }
   ]
 }
