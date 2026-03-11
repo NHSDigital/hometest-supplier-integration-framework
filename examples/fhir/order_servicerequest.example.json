@@ -1,6 +1,6 @@
 {
   "resourceType": "ServiceRequest",
-  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "id": "7cb0623e-9cd7-4495-aa66-715c04a81903",
   "status": "active",
   "intent": "order",
   "code": {
@@ -16,12 +16,14 @@
   "contained": [
     {
       "resourceType": "Patient",
-      "id": "patient-1",
+      "id": "1d6efc98-78e7-4049-9d4f-e651a95d9727",
       "name": [
         {
           "use": "official",
           "family": "Doe",
-          "given": ["Alex"],
+          "given": [
+            "Alex"
+          ],
           "text": "Alex Doe"
         }
       ],
@@ -41,17 +43,20 @@
         {
           "use": "home",
           "type": "both",
-          "line": ["123 Main Street"],
+          "line": [
+            "123 Main Street",
+            "Flat 4B"
+          ],
           "city": "London",
           "postalCode": "SW1A 1AA",
           "country": "United Kingdom"
         }
       ],
-      "birthDate": "1985-03-15"
+      "birthDate": "1990-01-01"
     }
   ],
   "subject": {
-    "reference": "#patient-1"
+    "reference": "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
   },
   "requester": {
     "reference": "Organization/ORG001"
