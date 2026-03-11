@@ -1,20 +1,57 @@
 {
   "resourceType": "ServiceRequest",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "active",
   "intent": "order",
   "code": {
     "coding": [
       {
         "system": "http://snomed.info/sct",
         "code": "31676001",
-        "display": "HIV antibody test - self-sampling"
+        "display": "HIV antigen test"
       }
-    ]
+    ],
+    "text": "HIV antigen test"
   },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "patient-1",
+      "name": [
+        {
+          "use": "official",
+          "family": "Doe",
+          "given": ["Alex"],
+          "text": "Alex Doe"
+        }
+      ],
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "+447700900000",
+          "use": "mobile"
+        },
+        {
+          "system": "email",
+          "value": "alex.doe@example.com",
+          "use": "home"
+        }
+      ],
+      "address": [
+        {
+          "use": "home",
+          "type": "both",
+          "line": ["123 Main Street"],
+          "city": "London",
+          "postalCode": "SW1A 1AA",
+          "country": "United Kingdom"
+        }
+      ],
+      "birthDate": "1985-03-15"
+    }
+  ],
   "subject": {
-    "reference": "Patient/123e4567-e89b-12d3-a456-426614174000",
-    "firstName": "Alex",
-    "lastName": "Doe",
-    "phone": "+447700900000"
+    "reference": "#patient-1"
   },
   "requester": {
     "reference": "Organization/ORG001"
