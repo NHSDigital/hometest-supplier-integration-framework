@@ -49,8 +49,6 @@ Changes to home-test-supplier-api.yaml
    - All errors now use application/fhir+json consistently
 5. Made Success Responses FHIR-Compliant
    - Changed POST /result 201 response from custom JSON {order_uid, result_status, timestamp} to return the FHIR Observation resource
-6. Updated /test-order/status endpoint
-   - Changed the method from PUT to POST
 
 ---
 
