@@ -188,6 +188,7 @@ Added Required Fields for Business Operations (FHIR Constrained Profile)
    - **Business Rationale**: Both phone (for delivery contact) and email are essential for order fulfillment and customer communication
    - **Implementation Note**: Application validation should verify one telecom has `system: 'phone'` and one has `system: 'email'`
 
+---
 
 **Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections**
 
@@ -210,4 +211,12 @@ Changes to examples/fhir/task_update_dispatched.example.json:
 - Added missing required `lastModified` field with value `"2025-11-04T10:35:00Z"`
 - Added `use: "official"` to identifier entry for consistency with schema example
 
+---
 
+**Version 1.0.6 - March 20, 2026 - Status Endpoint Method Update**
+
+Changes to home-test-supplier-api.yaml
+1. Updated /test-order/status endpoint
+   - Changed the method from PUT to POST
+
+---
