@@ -3,7 +3,7 @@
 
 **Scope:** Applies to all write operations using `X-Correlation-ID`:
 - `POST /order` (Supplier API)
-- `PUT /test-order/status` (Home Test Supplier API)
+- `POST /test-order/status` (Home Test Supplier API)
 - `POST /result` (Home Test Supplier API)
 
 ## Principle

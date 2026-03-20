@@ -46,7 +46,7 @@ Visit: https://validator.fhir.org/
 
 ### home-test-supplier-api.json uses:
 - **Observation** - POST /result request/response
-- **Task** - PUT /test-order/status request/response
+- **Task** - POST /test-order/status request/response
 - **OperationOutcome** - Error responses (400, 401, 404)
 
 ## FHIR Version

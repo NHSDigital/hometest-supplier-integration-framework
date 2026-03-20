@@ -69,7 +69,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 
   /test-order/status:
-    put:
+    post:
       summary: Update Order Status
       description: Update the status of an existing order using FHIR Task resource
       tags:
