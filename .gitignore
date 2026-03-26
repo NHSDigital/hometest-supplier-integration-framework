@@ -13,3 +13,7 @@
 # Please, add your custom content below!
 /.idea/
 schemas/home-test-consumer-api.yaml
+
+*.jar
+
+validation-results/
