@@ -1,24 +1,29 @@
 # FHIR Example Validation
 
-This directory contains tooling to validate the FHIR example resources in [`examples/fhir/`](../../examples/fhir) against the FHIR specification using the [HL7 FHIR Validator CLI](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator).
+This directory contains tooling to validate the FHIR example resources in [
+`examples/fhir/`](../../examples/fhir) against the FHIR specification using
+the [HL7 FHIR Validator CLI](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator).
 
-Validation is also run automatically in CI on every push and pull request — see [`.github/workflows/validate-fhir-examples.yml`](../../.github/workflows/validate-fhir-examples.yml).
+Validation is also run automatically in CI on every push and pull request — see [
+`.github/workflows/validate-fhir-examples.yml`](../../.github/workflows/validate-fhir-examples.yml).
 
 ---
 
 ## Prerequisites
 
-| Requirement        | Version | Notes                                                 |
-|--------------------|---------|-------------------------------------------------------|
-| Java               | 11+     | Must be on `PATH`. Check with `java -version`         |
-| FHIR Validator JAR | latest  | See [Downloading the JAR](#downloading-the-jar) below |
-| bash               | 3.2+    | Pre-installed on macOS and Linux                      |
+| Requirement        | Version | Notes                                                                         |
+|--------------------|---------|-------------------------------------------------------------------------------|
+| Java               | 17+     | Must be on `PATH`. Check with `java -version` (The validation action uses 25) |
+| FHIR Validator JAR | latest  | See [Downloading the JAR](#downloading-the-jar) below                         |
+| bash               | 3.2+    | Pre-installed on macOS and Linux                                              |
 
 ---
 
 ## Downloading the JAR
 
-The validator JAR is not committed to this repository. Download the latest release from the [hapifhir/org.hl7.fhir.core](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest) repository.
+The validator JAR is not committed to this repository. Download the latest release from
+the [hapifhir/org.hl7.fhir.core](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest)
+repository.
 
 Using the GitHub CLI:
 
@@ -26,7 +31,9 @@ Using the GitHub CLI:
 gh release download --pattern '*.jar' --repo 'hapifhir/org.hl7.fhir.core' --dir tests/schema
 ```
 
-Or download it manually from the [releases page](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest) and place the JAR in this directory.
+Or download it manually from
+the [releases page](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest) and place the JAR
+in this directory.
 
 ---
 
