@@ -372,7 +372,8 @@ components:
           description: Requested performer (this supplier)
           items:
             $ref: '#/components/schemas/FHIRReference'
-
+          example:
+            - reference: "Organization/SUPP001"
     FHIRObservation:
       type: object
       description: FHIR Observation resource for test results
