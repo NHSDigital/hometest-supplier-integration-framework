@@ -218,3 +218,10 @@ Changes to home-test-supplier-api.yaml
    - Changed the method from PUT to POST
 
 ---
+
+**Version 1.0.7 - April 8, 2026 - Performer Example Update**
+
+Changes to schemas/supplier-api-spec.yaml
+Added Example to clarify required Performer fields
+1. Updated Performer Organisation
+   - Added Example to Performer Organisation
