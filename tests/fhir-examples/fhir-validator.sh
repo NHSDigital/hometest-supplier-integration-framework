@@ -9,7 +9,7 @@ usage() {
   echo "  -i  Directory containing resource files to validate"
   echo "  -o  (Optional) Directory to write validation results to."
   echo "      Defaults to <input_dir>/validation-results/<timestamp>"
-  echo "  -v  (Optional) FHIR version to validate against. Defaults to 4.0"
+  echo "  -v  (Optional) FHIR version to validate against. Defaults to 4.0.1"
   echo ""
   echo "  The following outputs are written to the output directory:"
   echo "    results.json   Bundle of OperationOutcomes as JSON  (-output)"
@@ -20,7 +20,7 @@ usage() {
 VALIDATOR_LOCATION=""
 TO_VALIDATE=""
 OUTPUT_DIR=""
-FHIR_VERSION="4.0"
+FHIR_VERSION="4.0.1"
 
 while getopts ":j:i:o:v:" opt; do
   case $opt in

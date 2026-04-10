@@ -15,5 +15,5 @@
 schemas/home-test-consumer-api.yaml
 
 *.jar
-
+.local/
 validation-results/

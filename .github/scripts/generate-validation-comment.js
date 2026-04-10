@@ -1,14 +1,16 @@
 // Generates a FHIR validation results summary and writes it to comment-body.md.
 // Environment variables:
-//   - RESULTS_PATH       : path to the results.json file (optional, defaults to 'validation-results/results.json')
+//   - RESULTS_PATH       : path to the results.json file (optional, defaults to '.local/results/results.json')
 //   - VALIDATION_OUTCOME : result of the validation job ('success' | 'failure' | 'cancelled'), optional
 //   - RUN_URL            : URL to the workflow run, for linking to artifacts
+//   - OUTPUT_PATH        : path for the generated comment body (optional, defaults to 'comment-body.md')
 
 const fs = require('fs');
 
-const resultsPath = process.env.RESULTS_PATH ?? 'validation-results/results.json';
+const resultsPath = process.env.RESULTS_PATH ?? '.local/results/results.json';
 const validationOutcome = process.env.VALIDATION_OUTCOME;
 const runUrl = process.env.RUN_URL;
+const OUTPUT_PATH = process.env.OUTPUT_PATH ?? 'comment-body.md'
 
 let body;
 
@@ -67,5 +69,5 @@ const warning = validationOutcome === 'failure'
   ? `> [!WARNING]\n> The FHIR validator exited with errors. This check is non-blocking but should be reviewed before merging.\n\n`
   : '';
 
-fs.writeFileSync('comment-body.md', `<!-- fhir-validation -->\n${warning}${body}`);
+fs.writeFileSync(OUTPUT_PATH, `<!-- fhir-validation -->\n${warning}${body}`);
 console.log('Comment body written to comment-body.md');
