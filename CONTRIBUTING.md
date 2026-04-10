@@ -216,7 +216,7 @@ To avoid repeating git config steps across repositories or having it decalared g
     ```
     Replace **`~/work`** with the correct path
 
-4. You can then skip the `git config` steps in the GPG setup above, as the partial will handle them.
+3. You can then skip the `git config` steps in the GPG setup above, as the partial will handle them.
 
 ## Making Changes
 
