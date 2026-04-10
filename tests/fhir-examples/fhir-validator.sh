@@ -10,6 +10,7 @@ usage() {
   echo "  -o  (Optional) Directory to write validation results to."
   echo "      Defaults to <input_dir>/validation-results/<timestamp>"
   echo "  -v  (Optional) FHIR version to validate against. Defaults to 4.0.1"
+  echo "  -c  (Optional) Cache for the validator tool"
   echo ""
   echo "  The following outputs are written to the output directory:"
   echo "    results.json   Bundle of OperationOutcomes as JSON  (-output)"
@@ -21,13 +22,15 @@ VALIDATOR_LOCATION=""
 TO_VALIDATE=""
 OUTPUT_DIR=""
 FHIR_VERSION="4.0.1"
+VALIDATOR_CACHE="$HOME"
 
-while getopts ":j:i:o:v:" opt; do
+while getopts ":j:i:o:v:c:" opt; do
   case $opt in
     j) VALIDATOR_LOCATION="$(realpath "$OPTARG")" ;;
     i) TO_VALIDATE="$(realpath "$OPTARG")" ;;
     o) OUTPUT_DIR="$OPTARG" ;;
     v) FHIR_VERSION="$OPTARG" ;;
+    c) VALIDATOR_CACHE="$OPTARG" ;;
     :) echo "Error: Flag -$OPTARG requires an argument." >&2; usage ;;
     \?) echo "Error: Unknown flag -$OPTARG." >&2; usage ;;
   esac
@@ -61,15 +64,18 @@ echo "Validator: $VALIDATOR_LOCATION"
 echo "Examples:  $TO_VALIDATE"
 echo "Version:   $FHIR_VERSION"
 echo "Results:   $OUTPUT_DIR"
+echo "Cache:     $VALIDATOR_CACHE"
 echo ""
 
 mkdir -p "$OUTPUT_DIR"
+mkdir -p "$VALIDATOR_CACHE"
 
 echo "Validating all resources in $TO_VALIDATE..."
-if ! java -jar "$VALIDATOR_LOCATION" "$TO_VALIDATE" \
+if ! java -Duser.home="$VALIDATOR_CACHE" -jar "$VALIDATOR_LOCATION" "$TO_VALIDATE" \
       -version "$FHIR_VERSION" \
       -output "$OUTPUT_DIR/results.json" \
-      -html-output "$OUTPUT_DIR/results.html"; then
+      -html-output "$OUTPUT_DIR/results.html" \
+      -txCache "$VALIDATOR_CACHE/tx"; then
   echo "Error: Validation failed." >&2
   exit 1
 fi

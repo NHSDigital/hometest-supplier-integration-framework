@@ -12,6 +12,10 @@ on:
         description: 'FHIR version to validate against'
         required: false
         default: '4.0.1'
+      validator_version:
+        description: 'FHIR validator version to use'
+        required: false
+        default: '6.9.5'
 
 jobs:
   validate:
@@ -26,6 +30,7 @@ jobs:
         id: vars
         run: |
           echo "fhir_version=${{ inputs.fhir_version || '4.0.1' }}" >> "$GITHUB_OUTPUT"
+          echo "validator_version=${{ inputs.validator_version || '6.9.5' }}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java
         uses: actions/setup-java@v5.2.0
@@ -33,16 +38,35 @@ jobs:
           distribution: temurin
           java-version: '25'
 
+      - name: Cache FHIR validator JAR
+        id: cache-jar
+        uses: actions/cache@v5.0.4
+        with:
+          path: .local/validator
+          key: fhir-validator-jar-${{ steps.vars.outputs.validator_version }}
+
       - name: Download FHIR validator JAR
+        if: steps.cache-jar.outputs.cache-hit != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p .local/validator
-          gh release download \
+          gh release download ${{ steps.vars.outputs.validator_version }} \
             --pattern '*.jar' \
             --repo 'hapifhir/org.hl7.fhir.core' \
             --dir .local/validator
-          echo "JAR=$(ls .local/validator/*.jar | head -1)" >> "$GITHUB_ENV"
+
+      - name: Set JAR path
+        run: echo "JAR=$(ls .local/validator/*.jar | head -1)" >> "$GITHUB_ENV"
+
+      - name: Cache FHIR validator cache
+        uses: actions/cache@v5.0.4
+        with:
+          path: .local/cache
+          key: fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-${{ steps.vars.outputs.validator_version }}
+          restore-keys: |
+            fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-
+            fhir-validator-cache-
 
       - name: Run FHIR validation (FHIR R${{ steps.vars.outputs.fhir_version }})
         id: validate
@@ -52,7 +76,8 @@ jobs:
             -j "$JAR" \
             -i examples/fhir \
             -o .local/results \
-            -v "${{ steps.vars.outputs.fhir_version }}"
+            -v "${{ steps.vars.outputs.fhir_version }}" \
+            -c ./local/cache
 
       - name: Upload validation results
         uses: actions/upload-artifact@v7.0.0
