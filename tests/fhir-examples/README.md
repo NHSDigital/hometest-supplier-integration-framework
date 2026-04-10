@@ -28,11 +28,11 @@ repository.
 Using the GitHub CLI:
 
 ```bash
-gh release download --pattern '*.jar' --repo 'hapifhir/org.hl7.fhir.core' --dir tests/schema
+gh release download --pattern '*.jar' --repo 'hapifhir/org.hl7.fhir.core' --dir .local/validator
 ```
 
 Or download it manually from
-the [releases page](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest) and place the JAR
+the [release page](https://github.com/hapifhir/org.hl7.fhir.core/releases/latest) and place the JAR
 in this directory.
 
 ---
@@ -48,25 +48,25 @@ in this directory.
 | `-j` | ✅        | —                                            | Path to the FHIR validator CLI JAR           |
 | `-i` | ✅        | —                                            | Directory of FHIR resource files to validate |
 | `-o` | ❌        | `<input_dir>/validation-results/<timestamp>` | Directory to write results to                |
-| `-v` | ❌        | `4.0`                                        | FHIR version to validate against             |
+| `-v` | ❌        | `4.0.1`                                      | FHIR version to validate against             |
 
 ### Examples
 
-Validate the example resources using a default FHIR version (4.0):
+Validate the example resources using a default FHIR version (4.0.1):
 
 ```bash
-./tests/schema/fhir-validator.sh \
-  -j tests/schema/validator_cli.jar \
+./tests/fhir-examples/fhir-validator.sh \
+  -j .local/validator/validator_cli.jar \
   -i examples/fhir
 ```
 
 Validate against a specific FHIR version and write results to a known location:
 
 ```bash
-./tests/schema/fhir-validator.sh \
-  -j tests/schema/validator_cli.jar \
+./tests/fhir-examples/fhir-validator.sh \
+  -j .local/validator/validator_cli.jar \
   -i examples/fhir \
-  -o /tmp/fhir-results \
+  -o .local/fhir-results \
   -v 4.0.1
 ```
 
