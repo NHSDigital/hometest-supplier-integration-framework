@@ -208,13 +208,15 @@ To avoid repeating git config steps across repositories or having it decalared g
 
     ```bash
     git config --global include.path ~/.gitconfig-signing
-    ```Or conditionally, e.g. only for repos under a specific directory:
+    ```
+    Or conditionally, e.g. only for repos under a specific directory:
 
     ```bash
-    git config --global includeIf.gitdir:~/work/.path ~/.gitconfig-signing
+    git config --global "includeIf.gitdir:~/work/.path" ~/.gitconfig-signing
     ```
+    Replace **`~/work`** with the correct path
 
-3. You can then skip the `git config` steps in the GPG setup above, as the partial will handle them.
+4. You can then skip the `git config` steps in the GPG setup above, as the partial will handle them.
 
 ## Making Changes
 
