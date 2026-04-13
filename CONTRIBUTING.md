@@ -223,9 +223,17 @@ To avoid repeating git config steps across repositories or having it decalared g
 3. Push your changes to your fork
 4. Create a Pull Request against the main repository
 
+## Running tests locally
+
+### FHIR example validation
+
+If you are adding or modifying FHIR example resources in [`examples/fhir/`](./examples/fhir), run the FHIR validator locally before opening a PR to catch issues early. See [`tests/fhir-examples/README.md`](./tests/fhir-examples/README.md) for prerequisites, usage, and how to interpret the output.
+
+Validation also runs automatically in CI and results are posted as a PR comment.
+
 ## Pull Request Requirements
 
 1. All commits must be GPG signed
 2. Include a clear description of the changes
 3. Follow the existing code style and conventions
-4. Ensure tests pass (if applicable)
+4. Ensure FHIR validation passes (no `error` or `fatal` issues) — see [Running tests locally](#running-tests-locally) above
