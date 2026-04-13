@@ -1,0 +1,50 @@
+name: Update FHIR Validator Version
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Check for new FHIR validator version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Get latest validator version
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(gh release view --repo hapifhir/org.hl7.fhir.core --json tagName --jq '.tagName')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get current validator version
+        id: current
+        run: |
+          VERSION=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yml)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update workflow file
+        if: steps.latest.outputs.version != steps.current.outputs.version
+        run: |
+          yq -i '.on.workflow_dispatch.inputs.validator_version.default = "${{ steps.latest.outputs.version }}"' .github/workflows/validate-fhir-examples.yml
+
+      - name: Open pull request
+        if: steps.latest.outputs.version != steps.current.outputs.version
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-fhir-validator-${{ steps.latest.outputs.version }}
+          commit-message: "chore: update FHIR validator to ${{ steps.latest.outputs.version }}"
+          title: "chore: update FHIR validator to ${{ steps.latest.outputs.version }}"
+          body: |
+            Bumps the FHIR validator CLI from `${{ steps.current.outputs.version }}` to `${{ steps.latest.outputs.version }}`.
+
+            Release notes: https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/${{ steps.latest.outputs.version }}
+          labels: dependencies
