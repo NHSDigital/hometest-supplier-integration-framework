@@ -85,7 +85,7 @@ jobs:
             -i examples/fhir \
             -o .local/results \
             -v "${{ steps.vars.outputs.fhir_version }}" \
-            -c ./local/cache
+            -c .local/cache
 
       - name: Upload validation results
         uses: actions/upload-artifact@v7.0.1
