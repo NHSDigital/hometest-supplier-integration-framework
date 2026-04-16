@@ -8,7 +8,7 @@
       "details": {
         "coding": [
           {
-            "system": "http://hometest.nhs.uk/fhir/CodeSystem/error-codes",
+            "system": "https://fhir.hometest.nhs.uk/CodeSystem/error-codes",
             "code": "test-not-available",
             "display": "Test not available"
           }

@@ -54,14 +54,12 @@
     "reference": "#patient-1"
   },
   "requester": {
-    "reference": "Organization/ORG001",
-    "type": "Organization"
+    "reference": "Organization/ORG001"
   },
   "performer": [
     {
       "reference": "Organization/SUP001",
-      "type": "Organization",
-      "display": "Supplier Organization Name"
+      "display": "Test Supplier Ltd"
     }
   ]
 }
