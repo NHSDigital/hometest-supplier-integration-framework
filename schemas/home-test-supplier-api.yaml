@@ -267,7 +267,7 @@ components:
         businessStatus:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Domain-specific business status (e.g., "order-received", "dispatched", "received-at-lab", "complete")
+            - description: Domain-specific business status (should be one of&#58; "order-accepted", "dispatched", "received-at-lab", "test-processed")
               example:
                 text: "dispatched"
 

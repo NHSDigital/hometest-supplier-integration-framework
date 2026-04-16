@@ -225,3 +225,12 @@ Changes to schemas/supplier-api-spec.yaml
 Added Example to clarify required Performer fields
 1. Updated Performer Organisation
    - Added Example to Performer Organisation
+
+**Version 1.0.8 - April 16, 2026 - Additon of order-accepted and test-processed statuses**
+
+1. Updated status-transitions.md documentation
+   - Added the two new statuses of order-accepted and test-processed
+   - Clarified that order-received and complete are not expected to be sent from a supplier system.
+2. Documentation-only changes to schemas/supplier-api-spec.yaml
+   - Added order-accepted and test-processed to the description of bussinessStatus within FHIRTask
+   - Removed order-received and complete from businessStatus description, as they should not be sent by suppliers.
