@@ -16,6 +16,7 @@ usage() {
   echo "    results.json   Bundle of OperationOutcomes as JSON  (-output)"
   echo "    results.html   Human-readable HTML report           (-html-output)"
   exit 1
+  return
 }
 
 VALIDATOR_LOCATION=""
@@ -33,24 +34,25 @@ while getopts ":j:i:o:v:c:" opt; do
     c) VALIDATOR_CACHE="$OPTARG" ;;
     :) echo "Error: Flag -$OPTARG requires an argument." >&2; usage ;;
     \?) echo "Error: Unknown flag -$OPTARG." >&2; usage ;;
+    *) echo "Error: Unexpected option -$opt." >&2; usage ;;
   esac
 done
 
-if [ -z "$VALIDATOR_LOCATION" ] || [ -z "$TO_VALIDATE" ]; then
+if [[ -z "$VALIDATOR_LOCATION" || -z "$TO_VALIDATE" ]]; then
   echo "Error: Flags -j and -e are required." >&2
   usage
 fi
 
-if [ -z "$OUTPUT_DIR" ]; then
+if [[ -z "$OUTPUT_DIR" ]]; then
   OUTPUT_DIR="$TO_VALIDATE/validation-results/$(date +%Y%m%dT%H%M%S)"
 fi
 
-if [ ! -f "$VALIDATOR_LOCATION" ]; then
+if [[ ! -f "$VALIDATOR_LOCATION" ]]; then
   echo "Error: Validator JAR not found: $VALIDATOR_LOCATION" >&2
   exit 1
 fi
 
-if [ ! -d "$TO_VALIDATE" ]; then
+if [[ ! -d "$TO_VALIDATE" ]]; then
   echo "Error: Input directory not found: $TO_VALIDATE" >&2
   exit 1
 fi
