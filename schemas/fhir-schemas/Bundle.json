@@ -36,6 +36,12 @@
         },
         "effectiveDateTime": "2025-11-04T15:45:00Z",
         "issued": "2025-11-04T16:00:00Z",
+        "performer": [
+          {
+            "reference": "Organization/SUP001",
+            "display": "Test Supplier Ltd"
+          }
+        ],
         "valueCodeableConcept": {
           "coding": [
             {
@@ -44,7 +50,19 @@
               "display": "Not detected"
             }
           ]
-        }
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ]
       }
     }
   ]

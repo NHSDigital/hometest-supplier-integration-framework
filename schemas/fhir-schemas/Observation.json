@@ -45,7 +45,8 @@
           "code": "N",
           "display": "Normal"
         }
-      ]
+      ],
+      "text": "Normal"
     }
   ]
 }

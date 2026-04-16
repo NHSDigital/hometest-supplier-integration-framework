@@ -1,6 +1,13 @@
 {
   "resourceType": "Patient",
   "id": "patient-1",
+  "identifier": [
+    {
+      "system": "https://fhir.nhs.uk/Id/nhs-number",
+      "value": "9876543210",
+      "use": "official"
+    }
+  ],
   "name": [
     {
       "use": "official",
