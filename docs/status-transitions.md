@@ -3,13 +3,15 @@
 
 **Allowed business statuses:**
 - `order-received`
+- `order-accepted`
 - `dispatched`
 - `received-at-lab`
+- `test-processed`
 - `complete`
 
 ## Allowed Transitions
 ```
-order-received -> dispatched -> received-at-lab -> complete
+order-received -> order-accepted -> dispatched -> received-at-lab -> test-processed -> complete
 ```
 
 ## Rules
