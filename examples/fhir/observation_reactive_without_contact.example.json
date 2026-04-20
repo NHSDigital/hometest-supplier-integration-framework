@@ -1,5 +1,6 @@
 {
   "resourceType": "Bundle",
+  "id": "42631cc0-6ca7-4460-a9d2-88b5c95f9f89",
   "type": "collection",
   "entry": [
     {
@@ -13,15 +14,26 @@
           }
         ],
         "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                "code": "LAB",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
         "code": {
           "coding": [
             {
               "system": "http://snomed.info/sct",
-              "code": "31676001",
-              "display": "HIV antigen test"
+              "code": "721981007",
+              "display": "Diagnostic studies report"
             }
           ],
-          "text": "HIV antigen test"
+          "text": "Diagnostic studies report"
         },
         "subject": {
           "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
@@ -47,9 +59,26 @@
         "resourceType": "Observation",
         "id": "550e8400-e29b-41d4-a716-446655440001",
         "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
         "code": {
           "coding": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
+                  "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                }
+              ],
               "system": "http://snomed.info/sct",
               "code": "31676001",
               "display": "HIV antigen test"
@@ -62,23 +91,18 @@
         "valueCodeableConcept": {
           "coding": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
+                  "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                }
+              ],
               "system": "http://snomed.info/sct",
-              "code": "260373001",
-              "display": "Detected"
+              "code": "165816005",
+              "display": "Human immunodeficiency virus detected"
             }
           ]
-        },
-        "interpretation": [
-          {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-                "code": "A",
-                "display": "Abnormal"
-              }
-            ]
-          }
-        ]
+        }
       }
     },
     {
@@ -86,7 +110,7 @@
       "resource": {
         "resourceType": "Communication",
         "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        "status": "not-done",
+        "status": "on-hold",
         "reasonReference": [
           {
             "reference": "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
