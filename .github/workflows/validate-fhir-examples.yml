@@ -48,7 +48,7 @@ jobs:
 
       - name: Cache FHIR validator JAR
         id: cache-jar
-        uses: actions/cache@v5.0.4
+        uses: actions/cache@v5.0.5
         with:
           path: .local/validator
           key: fhir-validator-jar-${{ steps.vars.outputs.validator_version }}
@@ -68,7 +68,7 @@ jobs:
         run: echo "JAR=$(ls .local/validator/*.jar | head -1)" >> "$GITHUB_ENV"
 
       - name: Cache FHIR validator cache
-        uses: actions/cache@v5.0.4
+        uses: actions/cache@v5.0.5
         with:
           path: .local/cache
           key: fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-${{ steps.vars.outputs.validator_version }}
