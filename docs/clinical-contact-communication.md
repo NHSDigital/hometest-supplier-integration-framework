@@ -12,20 +12,3 @@ A value of `on-hold` indicates that clinical contact has been attempted (usually
 Finally, a value of `not-done` indicates that clinical contact was not required, and is processed the same as if the Communication was absent from the bundle.
 ### ReasonReference
 This field is used to relate the communication to the 'Observation' that led to clinical contact being necessary.
-
-
-- **Category**: Coded to specify the type of communication (e.g., `phone` or `telecommunication`).
-- **Subject**: References the Patient resource for the individual whose HIV test results are being communicated.
-- **Recipient**: References the Practitioner or Organization initiating or receiving the call.
-- **Sender**: References the entity sending the communication (e.g., lab or healthcare provider).
-- **Sent**: Timestamp of when the communication was sent or initiated.
-- **Received**: Timestamp of when the communication was received.
-- **Reason Code**: Coded reason for the communication (e.g., `notification` or `results-delivery`).
-- **Payload**: Contains the content of the communication, such as a reference to DiagnosticReport for HIV test results or free text summarizing the call.
-
-## Relevant FHIR Resources
-- **Patient**: The subject of the communication.
-- **DiagnosticReport**: Referenced in payload for test results.
-- **Practitioner**: Involved as sender or recipient.
-
-This summary focuses on the Communication resource's application to phone-based patient contact for HIV testing outcomes.
