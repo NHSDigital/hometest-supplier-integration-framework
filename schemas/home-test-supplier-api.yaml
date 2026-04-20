@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.0.6
+  version: 1.0.8
 
 paths:
   /result:
@@ -267,7 +267,7 @@ components:
         businessStatus:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Domain-specific business status (e.g., "order-received", "dispatched", "received-at-lab", "complete")
+            - description: Domain-specific business status (should be one of&#58; "order-accepted", "dispatched", "received-at-lab", "test-processed")
               example:
                 text: "dispatched"
 
