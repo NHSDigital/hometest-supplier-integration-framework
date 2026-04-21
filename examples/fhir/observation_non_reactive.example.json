@@ -1,0 +1,103 @@
+{
+  "resourceType": "Bundle",
+  "id": "e48c7991-7bb6-45b4-9b1c-cb37bd3a8f5c",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "basedOn": [
+          {
+            "reference": "ServiceRequest/96fc8467-cfc5-46b6-9f6b-e08dc6cc533d"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                "code": "LAB",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "721981007",
+              "display": "Diagnostic studies report"
+            }
+          ],
+          "text": "Diagnostic studies report"
+        },
+        "subject": {
+          "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
+        },
+        "effectiveDateTime": "2025-11-04T15:45:00Z",
+        "issued": "2025-11-04T16:00:00Z",
+        "performer": [
+          {
+            "reference": "Organization/SUP001",
+            "display": "Test Supplier Ltd"
+          }
+        ],
+        "result": [
+          {
+            "reference": "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:550e8400-e29b-41d4-a716-446655440001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "550e8400-e29b-41d4-a716-446655440001",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
+                  "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                }
+              ],
+              "system": "http://snomed.info/sct",
+              "code": "31676001",
+              "display": "HIV antigen test"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "165815009",
+              "display": "Human immunodeficiency virus not detected"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
