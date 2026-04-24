@@ -73,6 +73,12 @@
         "code": {
           "coding": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
+                  "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                }
+              ],
               "system": "http://snomed.info/sct",
               "code": "31676001",
               "display": "HIV antigen test"
@@ -86,8 +92,8 @@
           "coding": [
             {
               "system": "http://snomed.info/sct",
-              "code": "260373001",
-              "display": "Detected"
+              "code": "165815009",
+              "display": "Human immunodeficiency virus detected"
             }
           ]
         }
