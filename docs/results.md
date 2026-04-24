@@ -7,7 +7,7 @@ Results for home test kits are deliberately kept seperate from less sensitive or
 To align with wider UK Pathology standards, particularly the [Pathology FHIR Implementation Guide](https://simplifier.net/guide/pathology-fhir-implementation-guide/Home?version=0.1). HomeTest expects results as a FHIR 'Bundle' type, containing a DiagnosticReport resource along with the related Observation resource.
 
 In addition, we also want to record whether patient contact has been made through the use of a 'Communication' resource, also included within the bundle.
-The use of Communication in this way is not within the scope of the Pathology FHIR Implementation guide, and is specific to HomeTest.
+The use of Communication in this way is not within the scope of the Pathology FHIR Implementation guide, and is specific to HomeTest. Guidance on using the Communication resource as part of HIV results can be found at [FHIR Communication Resource for HIV Test Results](./clinical-contact-communication.md).
 
 ## SNOMED-CT Codes for HomeTest kits
 
