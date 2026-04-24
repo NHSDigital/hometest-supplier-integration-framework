@@ -1,0 +1,66 @@
+name: Report FHIR Validation
+
+on:
+  workflow_run:
+    workflows: ["Validate FHIR Examples"]
+    types:
+      - completed
+
+jobs:
+  report:
+    name: Post validation report
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.event.workflow_run.base_branch }}
+          repository: ${{ github.repository }}
+
+      - name: Download validation results
+        uses: actions/download-artifact@v8.0.1
+        continue-on-error: true
+        with:
+          name: fhir-validation-results
+          path: .local/results/
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Get PR number
+        id: pr
+        run: echo "number=$(cat .local/results/pr-number.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 24
+
+      - name: Generate comment body
+        env:
+          RESULTS_PATH: .local/results/results.json
+          VALIDATION_OUTCOME: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          OUTPUT_PATH: .local/comment-body.md
+        run: node .github/scripts/generate-validation-comment.js
+
+      - name: Find existing validation comment
+        id: find-comment
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad
+        with:
+          issue-number: ${{ steps.pr.outputs.number }}
+          comment-author: github-actions[bot]
+          body-includes: '<!-- fhir-validation -->'
+
+      - name: Post or update PR comment
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ steps.pr.outputs.number }}
+          body-path: .local/comment-body.md
+          edit-mode: replace
