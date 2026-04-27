@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
+        with:
+          token: ${{ secrets.VALIDATOR_UPDATER_PAT }}
 
       - name: Get latest validator version
         id: latest
@@ -40,6 +42,7 @@ jobs:
         if: steps.latest.outputs.version != steps.current.outputs.version
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
         with:
+          token: ${{ secrets.VALIDATOR_UPDATER_PAT }}
           branch: chore/update-fhir-validator-${{ steps.latest.outputs.version }}
           commit-message: "chore: update FHIR validator to ${{ steps.latest.outputs.version }}"
           title: "chore: update FHIR validator to ${{ steps.latest.outputs.version }}"
