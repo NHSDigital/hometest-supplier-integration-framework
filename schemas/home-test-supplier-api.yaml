@@ -32,7 +32,7 @@ paths:
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundle'
+                $ref: '#/components/schemas/FHIRBundleResults'
               example:
                 resourceType: "Bundle"
                 id: "36716694-601b-4ad2-99e3-befb78d846ef"
@@ -45,23 +45,23 @@ paths:
                       status: "final"
                     category:
                       coding:
-                      - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                        code: "laboratory"
-                        display: "Laboratory"
-                    text: "Laboratory"
+                        - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                          code: "LAB"
+                          display: "Laboratory"
+                      text: "Laboratory"
                     code:
                       coding:
-                      - system: "http://snomed.info/sct"
-                        code: "721981007"
-                        display: "Diagnostic studies report"
-                        text: "Diagnostic studies report"
+                        - system: "http://snomed.info/sct"
+                          code: "721981007"
+                          display: "Diagnostic studies report"
+                      text: "Diagnostic studies report"
                     subject:
-                    reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                      reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
                     effectiveDateTime: "2025-11-04T15:45:00Z"
                     issued: "2025-11-04T16:00:00Z"
                     performer:
                       - reference: "Organization/SUPP001"
-                    display: "Test Supplier Ltd"
+                        display : "Test Supplier Ltd"
                     result:
                       - reference: "Observation/550e8400-e29b-41d4-a716-446655440001"
         '400':
@@ -132,6 +132,70 @@ components:
             type: object
           minItems: 3
           maxItems: 3
+      example:
+        resourceType: "Bundle"
+        id: "36716694-601b-4ad2-99e3-befb78d846ef"
+        type: "collection"
+        entry:
+          - resource:
+              resourceType: "DiagnosticReport"
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              basedOn:
+                - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+              status: "final"
+              category:
+                - coding:
+                    system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                    code: "laboratory"
+                    display: "Laboratory"
+              code:
+                - coding:
+                    system: "http://snomed.info/sct"
+                    code: "721981007"
+                    display: "Diagnostic studies report"
+                - text: "Diagnostic studies report"
+              subject:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              effectiveDateTime: "2025-11-04T15:45:00Z"
+              issued: "2025-11-04T16:00:00Z"
+              performer:
+                - reference: "Organization/SUPP001"
+              display: "Test Supplier Ltd"
+              result:
+                - reference: "Observation/550e8400-e29b-41d4-a716-446655440001"
+          - resource:
+              resourceType: "Observation"
+              id: "550e8400-e29b-41d4-a716-446655440001"
+              status: "final"
+              category:
+                - extension:
+                    url: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+                    valueUri: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                  coding:
+                  - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                    code: "laboratory"
+                    display: "Laboratory"
+              code:
+                coding:
+                  - extension:
+                     - url: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+                       valueUri: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                    system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+              subject:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              valueCodeableConcept:
+                coding:
+                - system: "http://snomed.info/sct"
+                  code: "165815009"
+                  display: "Human immunodeficiency virus not detected"
+          - resource:
+              resourceType: "Communication"
+              id: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+              status: "not-done"
+              reasonReference:
+                - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
     FHIRDiagnosticReport:
       type: object
       description: FHIR DiagnosticReport resource for grouping observations
