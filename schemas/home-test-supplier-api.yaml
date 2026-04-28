@@ -191,7 +191,7 @@ components:
             allOf:
               - $ref: '#/components/schemas/FHIRReference'
               - example:
-                  reference: "urn:uuid:550e8400-e29b-41d4
+                  reference: "urn:uuid:550e8400-e29b-41d4"
     FHIRObservation:
       type: object
       description: FHIR Observation resource for test results
