@@ -132,7 +132,7 @@ components:
           example: "36716694-601b-4ad2-99e3-befb78d846ef"
         basedOn:
           type: array
-          description: Reference to the ServiceRequest this report fulfills
+          description: Reference to the ServiceRequest this DiagnosticReport fulfills
           items:
             allOf:
               - $ref: '#/components/schemas/FHIRReference'
@@ -169,6 +169,11 @@ components:
             - description: Patient reference for matching with service request - PII removed for results
               example:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        effectiveDateTime:
+          type: string
+          format: date-time
+          description: Date/Time the observation was made (when the test was performed)
+          example: "2025-11-04T15:45:00Z"
         issued:
           type: string
           format: date-time
@@ -176,7 +181,7 @@ components:
           example: "2025-11-04T16:00:00Z"
         performer:
           type: array
-          description: Who is responsible for the diagnostic report
+          description: Organisation responsible for the diagnostic report
           items:
             $ref: '#/components/schemas/FHIRReference'
         result:
@@ -197,6 +202,8 @@ components:
         - category
         - code
         - subject
+        - effectiveDateTime
+        - issued
         - valueCodeableConcept
       properties:
         resourceType:
@@ -224,7 +231,7 @@ components:
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: The SNOMED-CT 'Observable Entity', coded using the SNOMED CT code for the specific test performed (e.g., HIV antigen test)
+            - description: The SNOMED-CT 'Observable Entity' code for the specific test performed (e.g., HIV antigen test)
               example:
                 coding:
                   - extension:
@@ -239,6 +246,11 @@ components:
             - description: Patient reference for matching with service request - PII removed for results
               example:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        effectiveDateTime:
+          type: string
+          format: date-time
+          description: Date/Time the observation was made (when the test was performed)
+          example: "2025-11-04T15:45:00Z"
         issued:
           type: string
           format: date-time
@@ -277,7 +289,7 @@ components:
           example: "550e8400-e29b-41d4-a716-446655440002"
         status:
           type: string
-          description: Status of the communication event. For results, 'completed' should be used for when clinical contact has been made. When clinical contact has not been made, 'in-progress' should be used until contact is made. If contact is not required, such as for non-reactive results, then 'not-done' should be used.
+          description: Status of the communication event. For results, 'completed' should be used for when clinical contact has been made. When clinical contact has not been made, 'on-hold' should be used until contact is made. If contact is not required, such as for non-reactive results, then 'not-done' should be used.
           enum: [completed, on-hold, not-done]
           example: "not-done"
         reasonReference:
@@ -521,6 +533,7 @@ components:
                 text: "Diagnostic studies report"
               subject:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              effectiveDateTime: "2025-11-04T15:45:00Z"
               issued: "2025-11-04T16:00:00Z"
               performer:
                 - reference: "Organization/SUPP001"
@@ -546,6 +559,7 @@ components:
                     display: "HIV antigen test"
               subject:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              effectiveDateTime: "2025-11-04T15:45:00Z"
               issued: "2025-11-04T15:45:00Z"
               valueCodeableConcept:
                 coding:
