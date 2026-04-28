@@ -91,12 +91,6 @@
         "valueCodeableConcept": {
           "coding": [
             {
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
-                  "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
-                }
-              ],
               "system": "http://snomed.info/sct",
               "code": "165816005",
               "display": "Human immunodeficiency virus detected"
