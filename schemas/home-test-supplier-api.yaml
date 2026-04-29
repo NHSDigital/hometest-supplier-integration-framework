@@ -105,13 +105,25 @@ components:
           description: The array should contain three FHIR resources - DiagnosticReport, Observation, and Communication
           items:
             type: object
+            required:
+              - fullUrl
+              - resource
+            properties:
+              fullUrl:
+                type: string
+                description: Absolute URL for the resource entry inside the Bundle (use urn:uuid followed by the id)
+                example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
+              resource:
+                oneOf:
+                  - $ref: '#/components/schemas/FHIRDiagnosticReport'
+                  - $ref: '#/components/schemas/FHIRObservation'
+                  - $ref: '#/components/schemas/FHIRCommunication'
           minItems: 3
           maxItems: 3
     FHIRDiagnosticReport:
       type: object
       description: FHIR DiagnosticReport resource for grouping observations
       required:
-        - fullUrl
         - resourceType
         - id
         - basedOn
@@ -123,10 +135,6 @@ components:
         - performer
         - result
       properties:
-        fullUrl:
-          type: string
-          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
-          example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
         resourceType:
           type: string
           enum: [DiagnosticReport]
@@ -149,15 +157,16 @@ components:
           enum: [final]
           example: "final"
         category:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Category of the diagnostic report (e.g., Laboratory)
-              example:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                    code: "laboratory"
-                    display: "Laboratory"
-                text: "Laboratory"
+          type: array
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the diagnostic report (should be LAB/Laboratory for test results)
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                  code: "LAB"
+                  display: "Laboratory"
+              text: "Laboratory"
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
@@ -201,7 +210,6 @@ components:
       type: object
       description: FHIR Observation resource for test results
       required:
-        - fullUrl
         - resourceType
         - id
         - status
@@ -210,12 +218,7 @@ components:
         - subject
         - effectiveDateTime
         - issued
-        - valueCodeableConcept
       properties:
-        fullUrl:
-          type: string
-          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
-          example: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
         resourceType:
           type: string
           enum: [Observation]
@@ -230,14 +233,15 @@ components:
           enum: [final]
           example: "final"
         category:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Category of the observation (e.g., Laboratory)
-              example:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                    code: "laboratory"
-                    display: "Laboratory"
+          type: array
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the observation (should be LAB/Laboratory for test results)
+          example:
+          - coding:
+            - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+              code: "laboratory"
+              display: "Laboratory"
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
@@ -278,22 +282,26 @@ components:
               example:
                 coding:
                   - system: "http://snomed.info/sct"
-                    code: "165816009"
+                    code: "165815009"
                     display: "Human immunodeficiency virus not detected"
+        dataAbsentReason:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: Reason why result is not present. Should only be present if valueCodeableConcept is absent.
+              example:
+                coding:
+                  - system: "http://terminology.hl7.org/CodeSystem/data-absent-reason"
+                    code: "not-performed"
+                    display: "Not Performed"
     FHIRCommunication:
       type: object
       description: FHIR Communication resource for sending messages to patients
       required:
-        - fullUrl
         - resourceType
         - id
         - status
         - reasonReference
       properties:
-        fullUrl:
-          type: string
-          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
-          example: "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479"
         resourceType:
           type: string
           enum: [Communication]
@@ -309,12 +317,12 @@ components:
           example: "not-done"
         reasonReference:
           type: array
-          description: Reference to the ServiceRequest this communication is about
+          description: Reference to the Observation this communication is about
           items:
             allOf:
               - $ref: '#/components/schemas/FHIRReference'
               - example:
-                  reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                  reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
     FHIRTask:
       type: object
       description: FHIR Task resource for tracking order status
@@ -492,6 +500,20 @@ components:
       type: object
       description: A Coding is a representation of a defined concept using a symbol from a defined code system (FHIR Coding datatype)
       properties:
+        extension:
+          type: array
+          description: Optional extensions for the coding (e.g., to indicate which value set the code is from)
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL of the extension
+                example: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+              valueUri:
+                type: string
+                description: URI of the value set this code is from
+                example: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
         system:
           type: string
           description: Identity of the terminology system
@@ -538,9 +560,9 @@ components:
               status: "final"
               category:
                 - coding:
-                    - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                      code: "laboratory"
-                      display: "Laboratory"
+                  - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                    code: "LAB"
+                    display: "Laboratory"
               code:
                 coding:
                   - system: "http://snomed.info/sct"

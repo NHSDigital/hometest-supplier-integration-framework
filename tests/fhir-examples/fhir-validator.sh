@@ -77,8 +77,7 @@ if ! java -Duser.home="$VALIDATOR_CACHE" -jar "$VALIDATOR_LOCATION" "$TO_VALIDAT
       -version "$FHIR_VERSION" \
       -output "$OUTPUT_DIR/results.json" \
       -html-output "$OUTPUT_DIR/results.html" \
-      -txCache "$VALIDATOR_CACHE/tx"
-      then
+      -txCache "$VALIDATOR_CACHE/tx"; then
   echo "Error: Validation failed." >&2
   exit 1
 fi
