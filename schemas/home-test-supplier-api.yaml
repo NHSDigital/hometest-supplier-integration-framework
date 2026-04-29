@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.0.8
+  version: 1.0.9
 
 paths:
   /result:
@@ -25,44 +25,20 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRObservation'
+              $ref: '#/components/schemas/FHIRBundleResults'
+            examples:
+              FHIRBundleResultsExample:
+                 $ref: '#/components/examples/FHIRBundleResultsExample'
       responses:
         '201':
           description: Results posted successfully
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRObservation'
-              example:
-                resourceType: "Observation"
-                id: "550e8400-e29b-41d4-a716-446655440001"
-                basedOn:
-                  - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
-                status: "final"
-                code:
-                  coding:
-                    - system: "http://snomed.info/sct"
-                      code: "31676001"
-                      display: "HIV antigen test"
-                  text: "HIV antigen test"
-                subject:
-                  reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
-                effectiveDateTime: "2025-11-04T15:45:00Z"
-                issued: "2025-11-04T16:00:00Z"
-                performer:
-                  - reference: "Organization/SUPP001"
-                    display: "Test Supplier Ltd"
-                valueCodeableConcept:
-                  coding:
-                    - system: "http://snomed.info/sct"
-                      code: "260415000"
-                      display: "Not detected"
-                interpretation:
-                  - coding:
-                      - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-                        code: "N"
-                        display: "Normal"
-                    text: "Normal"
+                $ref: '#/components/schemas/FHIRBundleResults'
+              examples:
+                FHIRBundleResultsExample:
+                   $ref: '#/components/examples/FHIRBundleResultsExample'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -103,28 +79,73 @@ paths:
 
 components:
   schemas:
-    FHIRObservation:
+    FHIRBundleResults:
       type: object
-      description: FHIR Observation resource for test results
+      description: FHIR Bundle resource for sending test results, containing DiagnosticReport, Observation and Communication resources
       required:
         - resourceType
-        - status
-        - code
-        - subject
-        - basedOn
-        - valueCodeableConcept
+        - id
+        - type
+        - entry
       properties:
         resourceType:
           type: string
-          enum: [Observation]
-          example: "Observation"
+          description:  FHIR resource type - always "Bundle" for this schema
+          example: "Bundle"
         id:
           type: string
           description: Logical id of this artifact
-          example: "550e8400-e29b-41d4-a716-446655440001"
+          example: "42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
+        type:
+          type: string
+          description: Type of bundle, should be "collection" for results submission
+          example: "collection"
+        entry:
+          type: array
+          description: The array should contain three FHIR resources - DiagnosticReport, Observation, and Communication
+          items:
+            type: object
+            required:
+              - fullUrl
+              - resource
+            properties:
+              fullUrl:
+                type: string
+                description: Absolute URL for the resource entry inside the Bundle (use urn:uuid followed by the id)
+                example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
+              resource:
+                oneOf:
+                  - $ref: '#/components/schemas/FHIRDiagnosticReport'
+                  - $ref: '#/components/schemas/FHIRObservation'
+                  - $ref: '#/components/schemas/FHIRCommunication'
+          minItems: 3
+          maxItems: 3
+    FHIRDiagnosticReport:
+      type: object
+      description: FHIR DiagnosticReport resource for grouping observations
+      required:
+        - resourceType
+        - id
+        - basedOn
+        - status
+        - category
+        - code
+        - subject
+        - issued
+        - performer
+        - result
+      properties:
+        resourceType:
+          type: string
+          enum: [DiagnosticReport]
+          example: "DiagnosticReport"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "36716694-601b-4ad2-99e3-befb78d846ef"
         basedOn:
           type: array
-          description: Reference to the ServiceRequest this observation fulfills
+          description: Reference to the ServiceRequest this DiagnosticReport fulfills
           items:
             allOf:
               - $ref: '#/components/schemas/FHIRReference'
@@ -132,19 +153,30 @@ components:
                   reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
         status:
           type: string
-          description: Status of the observation result
-          enum: [registered, preliminary, final, amended, corrected, cancelled, entered-in-error, unknown]
+          description: Status of the diagnostic report result
+          enum: [final]
           example: "final"
+        category:
+          type: array
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the diagnostic report (should be LAB/Laboratory for test results)
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                  code: "LAB"
+                  display: "Laboratory"
+              text: "Laboratory"
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Type of observation (SNOMED CT or LOINC)
+            - description: Always use SNOMED CT code 721981007 for "Diagnostic studies report"
               example:
                 coding:
                   - system: "http://snomed.info/sct"
-                    code: "31676001"
-                    display: "HIV antigen test"
-                text: "HIV antigen test"
+                    code: "721981007"
+                    display: "Diagnostic studies report"
+                text: "Diagnostic studies report"
         subject:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
@@ -154,29 +186,95 @@ components:
         effectiveDateTime:
           type: string
           format: date-time
-          description: When the observation was made
+          description: Date/Time the observation was made (when the test was performed)
           example: "2025-11-04T15:45:00Z"
         issued:
           type: string
           format: date-time
-          description: Date/Time this version was made available
+          description: Date/Time this diagnostic report was made available
           example: "2025-11-04T16:00:00Z"
         performer:
           type: array
-          description: Who is responsible for the observation
+          description: Organisation responsible for the diagnostic report
           items:
             $ref: '#/components/schemas/FHIRReference'
-        interpretation:
+        result:
           type: array
-          description: Clinical interpretation of the observation (e.g., Normal, Abnormal, Positive, Negative)
+          description: References to the observations that are part of this report
+          items:
+            allOf:
+              - $ref: '#/components/schemas/FHIRReference'
+              - example:
+                  reference: "urn:uuid:550e8400-e29b-41d4"
+    FHIRObservation:
+      type: object
+      description: FHIR Observation resource for test results
+      required:
+        - resourceType
+        - id
+        - status
+        - category
+        - code
+        - subject
+        - effectiveDateTime
+        - issued
+      properties:
+        resourceType:
+          type: string
+          enum: [Observation]
+          example: "Observation"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        status:
+          type: string
+          description: Status of the observation result
+          enum: [final]
+          example: "final"
+        category:
+          type: array
           items:
             $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the observation (should be LAB/Laboratory for test results)
           example:
-            - coding:
-                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-                  code: "N"
-                  display: "Normal"
-              text: "Normal"
+          - coding:
+            - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+              code: "laboratory"
+              display: "Laboratory"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: The SNOMED-CT 'Observable Entity' code for the specific test performed (e.g., HIV antigen test)
+              example:
+                coding:
+                  - extension:
+                     - url: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+                       valueUri: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                    system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Patient reference for matching with service request - PII removed for results
+              example:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        effectiveDateTime:
+          type: string
+          format: date-time
+          description: Date/Time the observation was made (when the test was performed)
+          example: "2025-11-04T15:45:00Z"
+        issued:
+          type: string
+          format: date-time
+          description: Date/Time this Observation was made available
+          example: "2025-11-04T16:00:00Z"
+        performer:
+          type: array
+          description: The Organisation responsible for the Observation
+          items:
+            $ref: '#/components/schemas/FHIRReference'
         valueCodeableConcept:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
@@ -184,9 +282,47 @@ components:
               example:
                 coding:
                   - system: "http://snomed.info/sct"
-                    code: "260415000"
-                    display: "Not detected"
-
+                    code: "165815009"
+                    display: "Human immunodeficiency virus not detected"
+        dataAbsentReason:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: Reason why result is not present. Should only be present if valueCodeableConcept is absent.
+              example:
+                coding:
+                  - system: "http://terminology.hl7.org/CodeSystem/data-absent-reason"
+                    code: "not-performed"
+                    display: "Not Performed"
+    FHIRCommunication:
+      type: object
+      description: FHIR Communication resource for sending messages to patients
+      required:
+        - resourceType
+        - id
+        - status
+        - reasonReference
+      properties:
+        resourceType:
+          type: string
+          enum: [Communication]
+          example: "Communication"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        status:
+          type: string
+          description: Status of the communication event. For results, 'completed' should be used for when clinical contact has been made. When clinical contact has not been made, 'on-hold' should be used until contact is made. If contact is not required, such as for non-reactive results, then 'not-done' should be used.
+          enum: [completed, on-hold, not-done]
+          example: "not-done"
+        reasonReference:
+          type: array
+          description: Reference to the Observation this communication is about
+          items:
+            allOf:
+              - $ref: '#/components/schemas/FHIRReference'
+              - example:
+                  reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
     FHIRTask:
       type: object
       description: FHIR Task resource for tracking order status
@@ -364,6 +500,20 @@ components:
       type: object
       description: A Coding is a representation of a defined concept using a symbol from a defined code system (FHIR Coding datatype)
       properties:
+        extension:
+          type: array
+          description: Optional extensions for the coding (e.g., to indicate which value set the code is from)
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL of the extension
+                example: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+              valueUri:
+                type: string
+                description: URI of the value set this code is from
+                example: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
         system:
           type: string
           description: Identity of the terminology system
@@ -393,7 +543,78 @@ components:
           description: The purpose of this identifier
           enum: [usual, official, temp, secondary, old]
           example: "official"
-
+  examples:
+    FHIRBundleResultsExample:
+       summary: Example FHIR Bundle for test results submission
+       value:
+        resourceType: "Bundle"
+        id: "36716694-601b-4ad2-99e3-befb78d846ef"
+        type: "collection"
+        entry:
+          - fullUrl: "urn:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            resource:
+              resourceType: "DiagnosticReport"
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              basedOn:
+                - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+              status: "final"
+              category:
+                - coding:
+                  - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                    code: "LAB"
+                    display: "Laboratory"
+              code:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "721981007"
+                    display: "Diagnostic studies report"
+                text: "Diagnostic studies report"
+              subject:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              effectiveDateTime: "2025-11-04T15:45:00Z"
+              issued: "2025-11-04T16:00:00Z"
+              performer:
+                - reference: "Organization/SUPP001"
+                  display: "Test Supplier Ltd"
+              result:
+                - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+          - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+            resource:
+              resourceType: "Observation"
+              id: "550e8400-e29b-41d4-a716-446655440001"
+              status: "final"
+              category:
+                - coding:
+                  - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                    code: "laboratory"
+                    display: "Laboratory"
+              code:
+                coding:
+                  - extension:
+                     - url: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+                       valueUri: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                    system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+              subject:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+              effectiveDateTime: "2025-11-04T15:45:00Z"
+              issued: "2025-11-04T15:45:00Z"
+              performer:
+                - reference: "Organization/SUPP001"
+                  display: "Test Supplier Ltd"
+              valueCodeableConcept:
+                coding:
+                - system: "http://snomed.info/sct"
+                  code: "165815009"
+                  display: "Human immunodeficiency virus not detected"
+          - fullUrl: "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            resource:
+              resourceType: "Communication"
+              id: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+              status: "not-done"
+              reasonReference:
+                - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
   responses:
     BadRequest:
       description: Bad request - invalid parameters
