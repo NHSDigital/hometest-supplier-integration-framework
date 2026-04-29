@@ -578,6 +578,9 @@ components:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
               effectiveDateTime: "2025-11-04T15:45:00Z"
               issued: "2025-11-04T15:45:00Z"
+              performer:
+                - reference: "Organization/SUPP001"
+                  display: "Test Supplier Ltd"
               valueCodeableConcept:
                 coding:
                 - system: "http://snomed.info/sct"

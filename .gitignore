@@ -17,4 +17,4 @@ schemas/home-test-consumer-api.yaml
 *.jar
 .local/
 validation-results/
-examples/openAPI_examples/dontcommit_FHIRexample.json
+examples/openAPI_examples/
