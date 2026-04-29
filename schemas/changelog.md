@@ -235,9 +235,9 @@ Added Example to clarify required Performer fields
    - Added order-accepted and test-processed to the description of bussinessStatus within FHIRTask
    - Removed order-received and complete from businessStatus description, as they should not be sent by suppliers.
 
-**Version 1.0.9- April 24, 2026 - Change results to use a Bundle of DiagnosticReport,Observation and Communication**
+**Version 1.0.9- April 24, 2026 - Change test results endpoint to use a Bundle of DiagnosticReport,Observation and Communication**
 
-1. Results are now expected to be sent in a Bundle, consisting of a DiagnosticReport, an Observation and a Communcaiton.
+1. Results are now expected to be sent in a Bundle, consisting of a DiagnosticReport, an Observation and a Communication.
    - Updated OpenAPI specs to reflect the new format.
    - Added examples for non-reactive, reactive-with-contact, and reactive-without-contact.
 2. Documentation changes to clarify and provide context around how DiagnosticReport, Observation and Communication should be populated.

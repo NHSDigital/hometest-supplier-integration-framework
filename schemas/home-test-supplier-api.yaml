@@ -111,6 +111,7 @@ components:
       type: object
       description: FHIR DiagnosticReport resource for grouping observations
       required:
+        - fullUrl
         - resourceType
         - id
         - basedOn
@@ -122,6 +123,10 @@ components:
         - performer
         - result
       properties:
+        fullUrl:
+          type: string
+          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
+          example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
         resourceType:
           type: string
           enum: [DiagnosticReport]
@@ -141,7 +146,7 @@ components:
         status:
           type: string
           description: Status of the diagnostic report result
-          enum: [registered, partial, preliminary, final, amended, corrected, cancelled, entered-in-error, unknown]
+          enum: [final]
           example: "final"
         category:
           allOf:
@@ -196,6 +201,7 @@ components:
       type: object
       description: FHIR Observation resource for test results
       required:
+        - fullUrl
         - resourceType
         - id
         - status
@@ -206,6 +212,10 @@ components:
         - issued
         - valueCodeableConcept
       properties:
+        fullUrl:
+          type: string
+          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
+          example: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
         resourceType:
           type: string
           enum: [Observation]
@@ -217,7 +227,7 @@ components:
         status:
           type: string
           description: Status of the observation result
-          enum: [registered, preliminary, final, amended, corrected, cancelled, entered-in-error, unknown]
+          enum: [final]
           example: "final"
         category:
           allOf:
@@ -274,11 +284,16 @@ components:
       type: object
       description: FHIR Communication resource for sending messages to patients
       required:
+        - fullUrl
         - resourceType
         - id
         - status
         - reasonReference
       properties:
+        fullUrl:
+          type: string
+          description: Absolute URL for this resource instance (use urn:uuid followed by the id)
+          example: "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479"
         resourceType:
           type: string
           enum: [Communication]
@@ -286,7 +301,7 @@ components:
         id:
           type: string
           description: Logical id of this artifact
-          example: "550e8400-e29b-41d4-a716-446655440002"
+          example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
         status:
           type: string
           description: Status of the communication event. For results, 'completed' should be used for when clinical contact has been made. When clinical contact has not been made, 'on-hold' should be used until contact is made. If contact is not required, such as for non-reactive results, then 'not-done' should be used.
@@ -514,7 +529,8 @@ components:
         id: "36716694-601b-4ad2-99e3-befb78d846ef"
         type: "collection"
         entry:
-          - resource:
+          - fullUrl: "urn:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            resource:
               resourceType: "DiagnosticReport"
               id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
               basedOn:
@@ -522,9 +538,9 @@ components:
               status: "final"
               category:
                 - coding:
-                    system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                    code: "laboratory"
-                    display: "Laboratory"
+                    - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                      code: "laboratory"
+                      display: "Laboratory"
               code:
                 coding:
                   - system: "http://snomed.info/sct"
@@ -540,12 +556,13 @@ components:
                   display: "Test Supplier Ltd"
               result:
                 - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
-          - resource:
+          - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+            resource:
               resourceType: "Observation"
               id: "550e8400-e29b-41d4-a716-446655440001"
               status: "final"
               category:
-                coding:
+                - coding:
                   - system: "http://terminology.hl7.org/CodeSystem/observation-category"
                     code: "laboratory"
                     display: "Laboratory"
@@ -566,7 +583,8 @@ components:
                 - system: "http://snomed.info/sct"
                   code: "165815009"
                   display: "Human immunodeficiency virus not detected"
-          - resource:
+          - fullUrl: "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            resource:
               resourceType: "Communication"
               id: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
               status: "not-done"
