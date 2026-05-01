@@ -352,7 +352,7 @@ components:
       properties:
         resourceType:
           type: string
-          description:  FHIR resource type - always "Bundle" for this schema
+          enum: [Bundle]
           example: "Bundle"
         id:
           type: string
@@ -360,7 +360,7 @@ components:
           example: "42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
         type:
           type: string
-          description: Type of bundle, should be "collection" for results submission
+          enum: [collection]
           example: "collection"
         entry:
           type: array
@@ -838,7 +838,14 @@ components:
           type: array
           description: Bundle entries, each containinng a DiagnosticReport, Observation and Communication resource
           items:
-            $ref: '#/components/schemas/FHIRBundleResults'
+            type: object
+            properties:
+              fullUrl:
+                type: string
+                description: Absolute URL for the resource entry inside the Bundle (use urn:uuid followed by the id)
+                example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
+              resource:
+                  $ref: '#/components/schemas/FHIRBundleResults'
   examples:
     FHIRBundleSearchsetResultsBundleExample:
        summary: Example 'Bundle of Bundles' for test results. Each entry in the outer bundle is a Bundle of type 'collection' containing the DiagnosticReport, Observation and Communication resources for a single test result.

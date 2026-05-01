@@ -90,7 +90,7 @@ components:
       properties:
         resourceType:
           type: string
-          description:  FHIR resource type - always "Bundle" for this schema
+          enum: [Bundle]
           example: "Bundle"
         id:
           type: string
@@ -98,7 +98,7 @@ components:
           example: "42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
         type:
           type: string
-          description: Type of bundle, should be "collection" for results submission
+          enum: [collection]
           example: "collection"
         entry:
           type: array
