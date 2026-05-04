@@ -1,5 +1,4 @@
 name: Validate FHIR Examples
-
 on:
   push:
     branches:
@@ -9,7 +8,7 @@ on:
       - 'tests/fhir-examples/**'
       - '.github/workflows/validate-fhir-examples.yml'
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, reopened, synchronize]
     paths:
       - 'examples/fhir/**'
       - 'tests/fhir-examples/**'
@@ -23,42 +22,35 @@ on:
       validator_version:
         description: 'FHIR validator version to use'
         required: false
-        default: '6.9.5'
-
+        default: '6.9.7'
 jobs:
   validate:
     name: Validate FHIR examples
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
-
       - name: Set CI variables
         id: vars
         run: |
           echo "fhir_version=${{ inputs.fhir_version || '4.0.1' }}" >> "$GITHUB_OUTPUT"
-          echo "validator_version=${{ inputs.validator_version || '6.9.5' }}" >> "$GITHUB_OUTPUT"
-
+          echo "validator_version=${{ inputs.validator_version || '6.9.7' }}" >> "$GITHUB_OUTPUT"
       - name: Save PR number
         if: github.event_name == 'pull_request'
         run: |
           mkdir -p .local/results
           echo "${{ github.event.pull_request.number }}" > .local/results/pr-number.txt
-
       - name: Set up Java
         uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
           java-version: '25'
-
       - name: Cache FHIR validator JAR
         id: cache-jar
         uses: actions/cache@v5.0.5
         with:
           path: .local/validator
           key: fhir-validator-jar-${{ steps.vars.outputs.validator_version }}
-
       - name: Download FHIR validator JAR
         if: steps.cache-jar.outputs.cache-hit != 'true'
         env:
@@ -69,10 +61,8 @@ jobs:
             --pattern '*.jar' \
             --repo 'hapifhir/org.hl7.fhir.core' \
             --dir .local/validator
-
       - name: Set JAR path
         run: echo "JAR=$(ls .local/validator/*.jar | head -1)" >> "$GITHUB_ENV"
-
       - name: Cache FHIR validator cache
         uses: actions/cache@v5.0.5
         with:
@@ -81,7 +71,6 @@ jobs:
           restore-keys: |
             fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-
             fhir-validator-cache-
-
       - name: Run FHIR validation (FHIR R${{ steps.vars.outputs.fhir_version }})
         id: validate
         continue-on-error: true
@@ -92,7 +81,6 @@ jobs:
             -o .local/results \
             -v "${{ steps.vars.outputs.fhir_version }}" \
             -c .local/cache
-
       - name: Upload validation results
         uses: actions/upload-artifact@v7.0.1
         with:
