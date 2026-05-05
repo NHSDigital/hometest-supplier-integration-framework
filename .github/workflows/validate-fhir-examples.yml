@@ -32,9 +32,14 @@ jobs:
         uses: actions/checkout@v6.0.2
       - name: Set CI variables
         id: vars
+        env:
+          INPUT_FHIR_VERSION: ${{ inputs.fhir_version }}
+          INPUT_VALIDATOR_VERSION: ${{ inputs.validator_version }}
         run: |
-          echo "fhir_version=${{ inputs.fhir_version || '4.0.1' }}" >> "$GITHUB_OUTPUT"
-          echo "validator_version=${{ inputs.validator_version || '6.9.7' }}" >> "$GITHUB_OUTPUT"
+          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yml)
+          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yml)
+          echo "fhir_version=${INPUT_FHIR_VERSION:-$DEFAULT_FHIR}" >> "$GITHUB_OUTPUT"
+          echo "validator_version=${INPUT_VALIDATOR_VERSION:-$DEFAULT_VALIDATOR}" >> "$GITHUB_OUTPUT"
       - name: Save PR number
         if: github.event_name == 'pull_request'
         run: |
