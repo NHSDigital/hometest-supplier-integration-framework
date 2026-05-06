@@ -419,15 +419,17 @@ components:
           enum: [final]
           example: "final"
         category:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Category of the diagnostic report (should be LAB/Laboratory for diagnostic reports)
-              example:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
-                    code: "LAB"
-                    display: "Laboratory"
-                text: "Laboratory"
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the diagnostic report (should be LAB/Laboratory for test results)
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                  code: "LAB"
+                  display: "Laboratory"
+              text: "Laboratory"
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
@@ -494,14 +496,16 @@ components:
           enum: [final]
           example: "final"
         category:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Category of the observation (e.g., Laboratory)
-              example:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                    code: "laboratory"
-                    display: "Laboratory"
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          description: Category of the observation (should be laboratory/Laboratory for observation category)
+          example:
+          - coding:
+            - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+              code: "laboratory"
+              display: "Laboratory"
         code:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'

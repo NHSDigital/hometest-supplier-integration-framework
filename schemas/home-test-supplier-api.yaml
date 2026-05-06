@@ -158,6 +158,7 @@ components:
           example: "final"
         category:
           type: array
+          minItems: 1
           items:
             $ref: '#/components/schemas/FHIRCodeableConcept'
           description: Category of the diagnostic report (should be LAB/Laboratory for test results)
@@ -234,9 +235,10 @@ components:
           example: "final"
         category:
           type: array
+          minItems: 1
           items:
             $ref: '#/components/schemas/FHIRCodeableConcept'
-          description: Category of the observation (should be LAB/Laboratory for test results)
+          description: Category of the observation (should be laboratory/Laboratory for observation category)
           example:
           - coding:
             - system: "http://terminology.hl7.org/CodeSystem/observation-category"
