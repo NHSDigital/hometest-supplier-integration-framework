@@ -817,6 +817,10 @@ components:
           type: string
           enum: [Bundle]
           example: "Bundle"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "d95bc671-03c6-4f0c-9cd5-793ab0da08b3"
         type:
           type: string
           enum: [searchset]
