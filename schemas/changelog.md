@@ -241,3 +241,7 @@ Added Example to clarify required Performer fields
    - Updated OpenAPI specs to reflect the new format.
    - Added examples for non-reactive, reactive-with-contact, and reactive-without-contact.
 2. Documentation changes to clarify and provide context around how DiagnosticReport, Observation and Communication should be populated.
+
+**Version 1.0.9- May 7, 2026 - Add discriminator to OpenAPI specs**
+
+1. This adds the discriminator field to the OpenAPI specs to allow code generation tools to typecast to the right schema, based on the 'resourceType' field. This is relevant within the Bundle of a result, where each entry can either be a DiagnosticReport, an Observation or a Communication resource.
