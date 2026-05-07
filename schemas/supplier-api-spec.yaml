@@ -380,6 +380,12 @@ components:
                   - $ref: '#/components/schemas/FHIRDiagnosticReport'
                   - $ref: '#/components/schemas/FHIRObservation'
                   - $ref: '#/components/schemas/FHIRCommunication'
+                discriminator:
+                  propertyName: resourceType
+                  mapping:
+                    DiagnosticReport: '#/components/schemas/FHIRDiagnosticReport'
+                    Observation: '#/components/schemas/FHIRObservation'
+                    Communication: '#/components/schemas/FHIRCommunication'
           minItems: 3
           maxItems: 3
     FHIRDiagnosticReport:
