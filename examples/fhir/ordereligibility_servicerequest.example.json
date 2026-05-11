@@ -1,0 +1,67 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "draft",
+  "intent": "order",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "31676001",
+        "display": "HIV antigen test"
+      }
+    ],
+    "text": "HIV antigen test"
+  },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "1d6efc98-78e7-4049-9d4f-e651a95d9727",
+      "name": [
+        {
+          "use": "official",
+          "family": "Smith",
+          "given": ["John"],
+          "text": "John Smith"
+        }
+      ],
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "+447700900123",
+          "use": "mobile"
+        },
+        {
+          "system": "email",
+          "value": "john.smith@example.com",
+          "use": "home"
+        }
+      ],
+      "address": [
+        {
+          "use": "home",
+          "type": "both",
+          "line": ["123 Main Street", "Apartment 2B"],
+          "city": "London",
+          "postalCode": "SW1A 1AA",
+          "country": "United Kingdom"
+        }
+      ],
+      "birthDate": "1985-03-15"
+    }
+  ],
+  "subject": {
+    "reference": "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+  },
+  "requester": {
+    "reference": "Organization/ORG001",
+    "type": "Organization"
+  },
+  "performer": [
+    {
+      "reference": "Organization/SUP001",
+      "type": "Organization",
+      "display": "Supplier Organization Name"
+    }
+  ]
+}

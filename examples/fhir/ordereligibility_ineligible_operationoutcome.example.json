@@ -1,0 +1,13 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "business-rule",
+      "details": {
+        "text": "Order has been deemed ineligible based on supplier rules"
+      },
+      "diagnostics": "Patient does not meet test supplier eligibility criteria for this test"
+    }
+  ]
+}
