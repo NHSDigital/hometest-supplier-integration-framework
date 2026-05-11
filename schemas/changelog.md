@@ -241,3 +241,16 @@ Added Example to clarify required Performer fields
    - Updated OpenAPI specs to reflect the new format.
    - Added examples for non-reactive, reactive-with-contact, and reactive-without-contact.
 2. Documentation changes to clarify and provide context around how DiagnosticReport, Observation and Communication should be populated.
+
+---
+
+**Version 1.1.0 - May 8, 2026 - Add Supplier Eligiblity Check Endpoint**
+
+Changes to supplier-api-spec.yaml
+1. Added /order-eligibility endpoint
+   - Added api spec for the eligibility check endpoint
+2. Added FHIR schema files for the new endpoint
+   - Added ServiceRequestEligibility.json
+   - Added OperationOutcomeEligibility.json
+
+---
