@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 1.0.10
+  version: 1.1.1
 
 paths:
   /oauth/token:
@@ -237,9 +237,67 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/FHIROperationOutcome'
-
+  /order-eligibility:
+    post:
+      summary: Check Eligibility for Test Order
+      description: Check if a new test order from the home test platform is eligible based on supplier rules
+      tags:
+        - Order Management
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          description: Unique identifier for request tracking and idempotency
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/FHIRServiceRequestEligibility'
+      responses:
+        '201':
+          description: Order received and is eligible for submission
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRServiceRequestEligibility'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '409':
+          description: Order is not eligible
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+              examples:
+                not_eligible:
+                  summary: Order has been deemed ineligible based on supplier rules
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Order has been deemed ineligible based on supplier rules"
+                        diagnostics: "Patient does not meet test supplier eligibility criteria for this test"
 components:
   schemas:
+    FHIRServiceRequestEligibility:
+      description: FHIR ServiceRequest for an eligibility check — status must be 'draft'
+      allOf:
+        - $ref: '#/components/schemas/FHIRServiceRequest'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: [draft]
+              example: "draft"
     FHIRServiceRequest:
       type: object
       description: FHIR ServiceRequest resource for test orders

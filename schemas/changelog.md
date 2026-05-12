@@ -226,6 +226,8 @@ Added Example to clarify required Performer fields
 1. Updated Performer Organisation
    - Added Example to Performer Organisation
 
+---
+
 **Version 1.0.8 - April 16, 2026 - Addition of order-accepted and test-processed statuses**
 
 1. Updated status-transitions.md documentation
@@ -235,6 +237,8 @@ Added Example to clarify required Performer fields
    - Added order-accepted and test-processed to the description of bussinessStatus within FHIRTask
    - Removed order-received and complete from businessStatus description, as they should not be sent by suppliers.
 
+---
+
 **Version 1.0.9 - April 24, 2026 - Change test results endpoint to use a Bundle of DiagnosticReport,Observation and Communication**
 
 1. Results are now expected to be sent in a Bundle, consisting of a DiagnosticReport, an Observation and a Communication.
@@ -242,6 +246,21 @@ Added Example to clarify required Performer fields
    - Added examples for non-reactive, reactive-with-contact, and reactive-without-contact.
 2. Documentation changes to clarify and provide context around how DiagnosticReport, Observation and Communication should be populated.
 
-**Version 1.0.10 - May 7, 2026 - Add discriminator to OpenAPI specs**
+---
+
+**Version 1.1.0 - May 8, 2026 - Add Supplier Eligiblity Check Endpoint**
+
+Changes to supplier-api-spec.yaml
+1. Added /order-eligibility endpoint
+   - Added api spec for the eligibility check endpoint
+2. Added FHIR schema files for the new endpoint
+   - Added ServiceRequestEligibility.json
+   - Added OperationOutcomeEligibility.json
+
+---
+
+**Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs**
 
 1. This adds the discriminator field to the OpenAPI specs to allow code generation tools to typecast to the right schema, based on the 'resourceType' field. This is relevant within the Bundle of a result, where each entry can either be a DiagnosticReport, an Observation or a Communication resource.
+
+---
