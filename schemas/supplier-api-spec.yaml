@@ -8,6 +8,7 @@ paths:
   /oauth/token:
     post:
       summary: OAuth 2.0 Token Endpoint
+      operationId: oauthTokenEndpoint
       description: Exchange client credentials for an access token
       tags:
         - Authentication
@@ -95,6 +96,7 @@ paths:
   /order:
     post:
       summary: Receive Test Order
+      operationId: receiveTestOrder
       description: Receive a new test order from the home test platform
       tags:
         - Order Management
@@ -195,6 +197,7 @@ paths:
   /results:
     get:
       summary: Get Test Results
+      operationId: getTestResults
       description: Retrieve test results from the home test platform for completed orders
       tags:
         - Results Management
@@ -240,6 +243,7 @@ paths:
   /order-eligibility:
     post:
       summary: Check Eligibility for Test Order
+      operationId: checkOrderEligibility
       description: Check if a new test order from the home test platform is eligible based on supplier rules
       tags:
         - Order Management
@@ -1052,3 +1056,11 @@ components:
 security:
   - OAuth2ClientCredentials: [orders, results]
   - SupplierAuth: []
+
+tags:
+  - name: Order Management
+    description: Endpoints for managing test orders, including eligibility checks
+  - name: Results Management
+    description: Endpoints for submitting and retrieving test results
+  - name: Authentication
+    description: Endpoints related to supplier authentication and token management
