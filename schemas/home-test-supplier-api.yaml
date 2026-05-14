@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.0
+  version: 1.1.1
 
 paths:
   /result:
@@ -118,6 +118,12 @@ components:
                   - $ref: '#/components/schemas/FHIRDiagnosticReport'
                   - $ref: '#/components/schemas/FHIRObservation'
                   - $ref: '#/components/schemas/FHIRCommunication'
+                discriminator:
+                  propertyName: resourceType
+                  mapping:
+                    DiagnosticReport: '#/components/schemas/FHIRDiagnosticReport'
+                    Observation: '#/components/schemas/FHIRObservation'
+                    Communication: '#/components/schemas/FHIRCommunication'
           minItems: 3
           maxItems: 3
     FHIRDiagnosticReport:
