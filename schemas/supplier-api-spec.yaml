@@ -12,7 +12,6 @@ paths:
   /oauth/token:
     post:
       summary: OAuth 2.0 Token Endpoint
-      operationId: oauthTokenEndpoint
       description: Exchange client credentials for an access token
       tags:
         - Authentication
