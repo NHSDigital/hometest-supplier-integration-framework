@@ -1,5 +1,5 @@
 
-extends: []
+extends: [spectral:oas]
 rules:
   operation-operationId-required:
     description: "Each operation should have an operationId"
@@ -10,14 +10,15 @@ rules:
       function: truthy
 
   use-fhir-content-type:
-    description: "FHIR payloads must use application/fhir+json"
-    given: "$..requestBody.content"
+    description: "FHIR payloads must use application/fhir+json, except for the OAuth token endpoint"
+    given: "$.paths[?(@property !== '/oauth/token')][*].requestBody.content"
     then:
       function: schema
       functionOptions:
         schema:
           type: object
           required: [application/fhir+json]
+
 
   problem-json-required-fields:
     description: "Problem+JSON must include type, title, status"
@@ -41,3 +42,4 @@ rules:
     given: "$.components.securitySchemes"
     then:
       function: truthy
+
