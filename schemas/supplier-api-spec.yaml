@@ -3,9 +3,6 @@ info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
   version: 1.1.1
-  contact:
-    name: NHS England - Digital Prevention Services Portfolio - Home Test Team
-    email: england.hometest@nhs.net
 
 paths:
   /oauth/token:
