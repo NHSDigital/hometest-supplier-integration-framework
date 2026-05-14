@@ -8,6 +8,7 @@ rules:
     then:
       field: operationId
       function: truthy
+    severity: error
 
   use-fhir-content-type:
     description: "FHIR payloads must use application/fhir+json, except for the OAuth token endpoint"
@@ -18,6 +19,7 @@ rules:
         schema:
           type: object
           required: [application/fhir+json]
+    severity: error
 
 
   problem-json-required-fields:
@@ -29,6 +31,7 @@ rules:
         schema:
           type: object
           required: [type, title, status]
+    severity: error
 
   no-get-requestBody:
     description: "GET operations must not define a requestBody"
@@ -36,10 +39,12 @@ rules:
     then:
       field: requestBody
       function: falsy
+    severity: error
 
   security-schemes-present:
     description: "API must declare security schemes"
     given: "$.components.securitySchemes"
     then:
       function: truthy
+    severity: error
 
