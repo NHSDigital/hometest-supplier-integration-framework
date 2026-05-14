@@ -9,6 +9,7 @@ paths:
   /result:
     post:
       summary: Post Test Results
+      operationId: postTestResultsToHomeTest
       description: Submit test results for a completed order
       tags:
         - Result Service
@@ -48,6 +49,7 @@ paths:
   /test-order/status:
     post:
       summary: Update Order Status
+      operationId: updateOrderStatus
       description: Update the status of an existing order using FHIR Task resource
       tags:
         - Order Management
@@ -681,3 +683,9 @@ components:
 security:
   - BearerAuth: []
   - NHS_Login: []
+
+tags:
+  - name: Order Management
+    description: Endpoints for managing test orders, including eligibility checks
+  - name: Result Service
+    description: Endpoints for submitting and retrieving test results
