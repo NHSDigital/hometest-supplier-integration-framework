@@ -22,7 +22,7 @@ on:
       validator_version:
         description: 'FHIR validator version to use'
         required: false
-        default: '6.9.7'
+        default: '6.9.8'
 jobs:
   validate:
     name: Validate FHIR examples
