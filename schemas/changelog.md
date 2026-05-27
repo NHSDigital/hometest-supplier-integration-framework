@@ -264,3 +264,7 @@ Changes to supplier-api-spec.yaml
 1. This adds the discriminator field to the OpenAPI specs to allow code generation tools to typecast to the right schema, based on the 'resourceType' field. This is relevant within the Bundle of a result, where each entry can either be a DiagnosticReport, an Observation or a Communication resource.
 
 ---
+
+**Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason**
+
+1. Add `haemolysed` as a valid `dataAbsentReason` when for error results.

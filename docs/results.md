@@ -31,17 +31,17 @@ Some tests also rarely lead to results such as 'borderline','equivocal', and 'un
 
 These possible results are summarised below, together with the matching known internal supplier codes.
 
-| Test Supplier code (internal) | SNOMED-CT Code    | SNOMED-CT Description          |
-|---------------|---------------|----------------------------------------------------|
-| Reactive      | `165816005`   | Human immunodeficiency virus detected (finding)    |
-| Low Reactive  | `165816005`   | Human immunodeficiency virus detected (finding)    |
-| Non Reactive  | `165815009`   | Human immunodeficiency virus not detected (finding)|
-| Not Detected  | `165815009`   | Human immunodeficiency virus not detected (finding)|
-| Negative      | `165815009`   | Human immunodeficiency virus not detected (finding)|
-| Borderline    | `419984006`   | Inconclusive                                       |
-| Equivocal     | `419984006`   | Inconclusive                                       |
-| Unconfirmed   | `419984006`   | Inconclusive                                       |
-| Borderline    | `419984006`   | Inconclusive                                       |
+| Test Supplier code (internal) | SNOMED-CT Code | SNOMED-CT Description                               |
+|-------------------------------|----------------|-----------------------------------------------------|
+| Reactive                      | `165816005`    | Human immunodeficiency virus detected (finding)     |
+| Low Reactive                  | `165816005`    | Human immunodeficiency virus detected (finding)     |
+| Non Reactive                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
+| Not Detected                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
+| Negative                      | `165815009`    | Human immunodeficiency virus not detected (finding) |
+| Borderline                    | `419984006`    | Inconclusive                                        |
+| Equivocal                     | `419984006`    | Inconclusive                                        |
+| Unconfirmed                   | `419984006`    | Inconclusive                                        |
+| Borderline                    | `419984006`    | Inconclusive                                        |
 
 ### Tests with absent results due to error
 
@@ -52,7 +52,7 @@ These all result in no value for the test, and so the value field should be left
 | Test Supplier code (internal) | dataAbsentReason |
 |-------------------------------|------------------|
 | Insufficient                  | `insufficient`   |
-| Haemolysed                    | `invalid`        |
+| Haemolysed                    | `haemolysed`     |
 | Invalid sample                | `invalid`        |
 | Out of Validation             | `invalid`        |
 | Lab Error                     | `invalid`        |
