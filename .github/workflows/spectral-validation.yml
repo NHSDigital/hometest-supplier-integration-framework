@@ -1,0 +1,24 @@
+name: Spectral OpenAPI Spec Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'schemas/*.yaml'
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'schemas/*.yaml'
+
+jobs:
+  spectral:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+      - name: Run Spectral linting
+        uses: stoplightio/spectral-action@6416fd018ae38e60136775066eb3e98172143141 #pin to version v0.8.13
+        with:
+          file_glob: 'schemas/*.yaml'
+          spectral_ruleset: 'tests/scripts/.spectral.yaml'
