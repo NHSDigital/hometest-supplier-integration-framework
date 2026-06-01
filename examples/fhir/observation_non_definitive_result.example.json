@@ -85,11 +85,17 @@
             }
           ]
         },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "281268007",
+              "display": "Insufficient sample"
+            }
+          ]
+        },
         "subject": {
           "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
-        },
-        "dataAbsentReason": {
-          "text": "insufficient"
         }
       }
     }

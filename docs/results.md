@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Results for home test kits are deliberately kept seperate from less sensitive order updates, with its own endpoint.
+Results for home test kits are deliberately kept separate from less sensitive order updates, with its own endpoint.
 
 To align with wider UK Pathology standards, particularly the [Pathology FHIR Implementation Guide](https://simplifier.net/guide/pathology-fhir-implementation-guide/Home?version=0.1). HomeTest expects results as a FHIR 'Bundle' type, containing a DiagnosticReport resource along with the related Observation resource.
 
@@ -21,7 +21,7 @@ Therefore the only expected 'observable entity' expected is `31676001 | Human im
 There are two competing representations of the 'value' of a UK Pathology test. Older UK pathology standards before FHIR recorded results using text only, and this is still the standardised way to record tests within the published Pathology implementation guidance to allow interoperatiblity with older, non-FHIR systems.
 However, we expect this guidance to change in the near future to recommend the use of SNOMED-CT 'finding' codes, also known as 'Reportables'.
 
-To anticipate this change of guidance, HomeTest expects suppliers to use a SNOMED-CT code in the 'valueCodeableConcept' field of the Observation. The code used is is specific to the findings of HIV testing.
+To anticipate this change of guidance, HomeTest expects suppliers to use a SNOMED-CT code in the 'valueCodeableConcept' field of the Observation. The code used is specific to the findings of HIV testing.
 
 For reactive (including low-reactive) results, the code `165816005 | Human immunodeficiency virus detected (finding)` should be used.
 
@@ -31,33 +31,31 @@ Some tests also rarely lead to results such as 'borderline','equivocal', and 'un
 
 These possible results are summarised below, together with the matching known internal supplier codes.
 
-| Test Supplier code (internal) | SNOMED-CT Code | SNOMED-CT Description                               |
-|-------------------------------|----------------|-----------------------------------------------------|
-| Reactive                      | `165816005`    | Human immunodeficiency virus detected (finding)     |
-| Low Reactive                  | `165816005`    | Human immunodeficiency virus detected (finding)     |
-| Non Reactive                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Not Detected                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Negative                      | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Borderline                    | `419984006`    | Inconclusive                                        |
-| Equivocal                     | `419984006`    | Inconclusive                                        |
-| Unconfirmed                   | `419984006`    | Inconclusive                                        |
-| Borderline                    | `419984006`    | Inconclusive                                        |
+| Test Supplier code (internal) | SNOMED-CT Code    | SNOMED-CT Description                               |
+|-------------------------------|-------------------|-----------------------------------------------------|
+| Reactive                      | `165816005`       | Human immunodeficiency virus detected (finding)     |
+| Low Reactive                  | `165816005`       | Human immunodeficiency virus detected (finding)     |
+| Non Reactive                  | `165815009`       | Human immunodeficiency virus not detected (finding) |
+| Not Detected                  | `165815009`       | Human immunodeficiency virus not detected (finding) |
+| Negative                      | `165815009`       | Human immunodeficiency virus not detected (finding) |
+| Borderline                    | `442777001`       | Borderline high (finding)                           |
+| Equivocal                     | `42425007`        | Equivocal (qualifier value)                         |
+| Unconfirmed                   | `384311000000106` | Inconclusive laboratory finding                     |
 
-### Tests with absent results due to error
+### Tests with non-definitive results
 
-There is finally a set of error results, including both laboratory errors (such as 'invalid', 'heamolysed', or 'out-of-validation') and user errors (particularly 'insufficient sample').
+There is finally a set of non-definitive results, including both laboratory errors (such as 'invalid', 'heamolysed') and user errors (particularly 'insufficient sample').
 
-These all result in no value for the test, and so the value field should be left empty in the Observation resource. Instead the 'dataAbsentReason' field should be populated.
+These should be determined by the test supplier and who then informs HomeTest of the mapping. Listed are some examples of these codes that could be used:
 
-| Test Supplier code (internal) | dataAbsentReason |
-|-------------------------------|------------------|
-| Insufficient                  | `insufficient`   |
-| Haemolysed                    | `haemolysed`     |
-| Invalid sample                | `invalid`        |
-| Out of Validation             | `invalid`        |
-| Lab Error                     | `invalid`        |
-| Not Processed                 | `invalid`        |
-| Unknown                       | `invalid`        |
+| Test Supplier code (internal) | Potential SNOMED-CT Code | SNOMED-CT Description              |
+|-------------------------------|--------------------------|------------------------------------|
+| Insufficient                  | `281268007`              | Insufficient sample                |
+| Haemolysed                    | `118128002`              | Sample haemolysed                  |
+| Invalid sample                | `455371000124106`        | Invalid result                     |
+| Lab Error                     | `384281000000108`        | Unsatisfactory laboratory analysis |
+| Not Processed                 | `373880007`              | Specimen rejected / not processed  |
+| Unknown                       | `240031000000109`        | Unknown problem                    |
 
 
 ## Other fields within DiagnosticReport
