@@ -31,16 +31,16 @@ Some tests also rarely lead to results such as 'borderline','equivocal', and 'un
 
 These possible results are summarised below, together with the matching known internal supplier codes.
 
-| Test Supplier code (internal) | SNOMED-CT Code    | SNOMED-CT Description                               |
-|-------------------------------|-------------------|-----------------------------------------------------|
-| Reactive                      | `165816005`       | Human immunodeficiency virus detected (finding)     |
-| Low Reactive                  | `165816005`       | Human immunodeficiency virus detected (finding)     |
-| Non Reactive                  | `165815009`       | Human immunodeficiency virus not detected (finding) |
-| Not Detected                  | `165815009`       | Human immunodeficiency virus not detected (finding) |
-| Negative                      | `165815009`       | Human immunodeficiency virus not detected (finding) |
-| Borderline                    | `442777001`       | Borderline high (finding)                           |
-| Equivocal                     | `42425007`        | Equivocal (qualifier value)                         |
-| Unconfirmed                   | `384311000000106` | Inconclusive laboratory finding                     |
+| Test Supplier code (internal) | SNOMED-CT Code    | SNOMED-CT Description                                 |
+|-------------------------------|-------------------|-------------------------------------------------------|
+| Reactive                      | `165816005`       | Human immunodeficiency virus detected (finding)       |
+| Low Reactive                  | `165816005`       | Human immunodeficiency virus detected (finding)       |
+| Non Reactive                  | `165815009`       | Human immunodeficiency virus not detected (finding)   |
+| Not Detected                  | `165815009`       | Human immunodeficiency virus not detected (finding)   |
+| Negative                      | `165815009`       | Human immunodeficiency virus not detected (finding)   |
+| Borderline                    | `442777001`       | Borderline high (finding)                             |
+| Equivocal                     | `248981000000107` | Human immunodeficiency virus test equivocal (finding) |
+| Unconfirmed                   | `384311000000106` | Inconclusive laboratory finding                       |
 
 ### Tests with non-definitive results
 

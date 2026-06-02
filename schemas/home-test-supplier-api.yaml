@@ -225,6 +225,7 @@ components:
         - subject
         - effectiveDateTime
         - issued
+        - valueCodeableConcept
       properties:
         resourceType:
           type: string

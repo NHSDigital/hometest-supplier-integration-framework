@@ -275,3 +275,4 @@ Changes to supplier-api-spec.yaml
 
 1. Updated the examples and api spec to reflect the new handling of non-definitive results.
    - Rather than using the `dataAbsentReason` field we will instead now expect it to conform with other result approaches and use a SNOMED CT code in the `valueCodeableConcept` field.
+2. Make `valueCodeableConcept` a required field in the Observation schema for results.
