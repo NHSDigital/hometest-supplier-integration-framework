@@ -24,6 +24,19 @@ jobs:
           restore-keys: |
             pre-commit-${{ runner.os }}-
 
+      - name: Install mise
+        shell: bash
+        run: |
+          echo "::group::Configure git"
+          git config --global --add safe.directory '*'
+          echo "::endgroup::"
+
+          echo "::group::Install pre-commit hooks"
+          curl https://mise.run | sh
+          echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
+          echo "::endgroup::"
+
       - name: Install pre-commit
         shell: bash
         run: |
