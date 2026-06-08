@@ -41,13 +41,8 @@
             ],
             "url": {
               "raw": "{{home_test_base_url}}/test-order/status",
-              "host": [
-                "{{home_test_base_url}}"
-              ],
-              "path": [
-                "test-order",
-                "status"
-              ]
+              "host": ["{{home_test_base_url}}"],
+              "path": ["test-order", "status"]
             },
             "body": {
               "mode": "raw",
@@ -90,13 +85,8 @@
             ],
             "url": {
               "raw": "{{home_test_base_url}}/test-order/status",
-              "host": [
-                "{{home_test_base_url}}"
-              ],
-              "path": [
-                "test-order",
-                "status"
-              ]
+              "host": ["{{home_test_base_url}}"],
+              "path": ["test-order", "status"]
             },
             "body": {
               "mode": "raw",
@@ -141,12 +131,8 @@
             ],
             "url": {
               "raw": "{{home_test_base_url}}/result",
-              "host": [
-                "{{home_test_base_url}}"
-              ],
-              "path": [
-                "result"
-              ]
+              "host": ["{{home_test_base_url}}"],
+              "path": ["result"]
             },
             "body": {
               "mode": "raw",

@@ -43,7 +43,6 @@ cd hometest-supplier-integration-framework
     - rollout/migration plan,
     - stakeholder sign-off if required.
 
-
 ## Testing
 
 ### FHIR example validation

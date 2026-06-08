@@ -1,0 +1,28 @@
+---
+name: "CI/CD pull request"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    if: inputs.run_pre_commit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Initialize mise
+        uses: NHSDigital/hometest-mgmt-terraform/.github/actions/install-mise@main
+      - name: "Initialize pnpm"
+        uses: ./.github/actions/init-pnpm
+      - name: Run pre-commit checks
+        uses: NHSDigital/hometest-mgmt-terraform/.github/actions/perform-pre-commit@main
+        with:
+          base_sha: "${{ inputs.pre_commit_base_sha }}"
+          all_files: "false"

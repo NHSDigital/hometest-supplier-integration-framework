@@ -1,3 +1,4 @@
+---
 name: Validate FHIR Examples
 on:
   push:
