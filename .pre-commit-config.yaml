@@ -55,6 +55,6 @@ repos:
     hooks:
       - id: gitleaks
         name: gitleaks
-        entry: gitleaks detect --no-git --redact --verbose --config=scripts/config/gitleaks.toml
+        entry: gitleaks detect --no-git --redact --verbose --config=tests/config/gitleaks.toml
         language: system
         pass_filenames: false
