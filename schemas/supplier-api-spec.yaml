@@ -316,7 +316,6 @@ components:
         - code
         - subject
         - requester
-        - contained
       properties:
         resourceType:
           type: string
@@ -329,12 +328,12 @@ components:
         status:
           type: string
           description: Status of the service request
-          enum: [draft, active, on-hold, revoked, completed, entered-in-error, unknown]
+          enum: [draft, active, revoked]
           example: "active"
         intent:
           type: string
           description: Intent of the service request
-          enum: [proposal, plan, directive, order, original-order, reflex-order, filler-order, instance-order, option]
+          enum: [ order]
           example: "order"
         code:
           allOf:
