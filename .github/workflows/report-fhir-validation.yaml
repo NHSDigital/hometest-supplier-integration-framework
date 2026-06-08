@@ -21,8 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.0.3
         with:
-          ref: ${{ github.event.workflow_run.base_branch }}
-          repository: ${{ github.repository }}
+          persist-credentials: false
 
       - name: Download validation results
         uses: actions/download-artifact@v8.0.1
@@ -49,6 +48,9 @@ jobs:
           RUN_URL: ${{ github.event.workflow_run.html_url }}
           OUTPUT_PATH: .local/comment-body.md
         run: node .github/scripts/generate-validation-comment.js
+
+      - name: Write validation results to workflow summary
+        run: cat .local/comment-body.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Find existing validation comment
         id: find-comment
