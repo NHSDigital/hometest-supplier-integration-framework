@@ -18,10 +18,10 @@ jobs:
       issues: write
 
     steps:
-      - name: Checkout repository
         # nosonar: S7631 - intentionally checking out the base branch of the triggering PR so that
         # the reporting scripts (.github/scripts/) are available. The workflow_run trigger already
         # isolates fork code from this privileged job; no fork-contributed code is executed here.
+      - name: Checkout repository
         uses: actions/checkout@v6.0.3
         with:
           ref: ${{ github.event.workflow_run.base_branch }}
