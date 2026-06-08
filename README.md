@@ -50,7 +50,7 @@ cd hometest-supplier-integration-framework
 
 The FHIR example resources in [`examples/fhir/`](./examples/fhir) are validated against the FHIR specification using the [HL7 FHIR Validator CLI](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator).
 
-Validation runs automatically in CI on every push and pull request via [`.github/workflows/validate-fhir-examples.yml`](./.github/workflows/validate-fhir-examples.yml). Results are posted as a comment on pull requests.
+Validation runs automatically in CI on every push and pull request via [`.github/workflows/validate-fhir-examples.yaml`](./.github/workflows/validate-fhir-examples.yaml). Results are posted as a comment on pull requests.
 
 To run validation locally, see [`tests/fhir-examples/README.md`](./tests/fhir-examples/README.md) for prerequisites, usage, and how to interpret the output.
 

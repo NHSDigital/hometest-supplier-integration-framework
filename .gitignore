@@ -18,5 +18,7 @@ schemas/home-test-consumer-api.yaml
 .local/
 validation-results/
 examples/openAPI_examples/
+
 node_modules/
+# Ignore .yml files, keep only .yaml files for consistency
 .yml

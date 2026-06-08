@@ -7,13 +7,13 @@ on:
     paths:
       - 'examples/fhir/**'
       - 'tests/fhir-examples/**'
-      - '.github/workflows/validate-fhir-examples.yml'
+      - '.github/workflows/validate-fhir-examples.yaml'
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
       - 'examples/fhir/**'
       - 'tests/fhir-examples/**'
-      - '.github/workflows/validate-fhir-examples.yml'
+      - '.github/workflows/validate-fhir-examples.yaml'
   workflow_dispatch:
     inputs:
       fhir_version:
@@ -37,8 +37,8 @@ jobs:
           INPUT_FHIR_VERSION: ${{ inputs.fhir_version }}
           INPUT_VALIDATOR_VERSION: ${{ inputs.validator_version }}
         run: |
-          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yml)
-          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yml)
+          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yaml)
+          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yaml)
           echo "fhir_version=${INPUT_FHIR_VERSION:-$DEFAULT_FHIR}" >> "$GITHUB_OUTPUT"
           echo "validator_version=${INPUT_VALIDATOR_VERSION:-$DEFAULT_VALIDATOR}" >> "$GITHUB_OUTPUT"
       - name: Save PR number
