@@ -1,6 +1,4 @@
 [settings]
-#locked = true
-#lockfile = true
 install_before = "7d"
 
 [settings.python]
@@ -22,10 +20,6 @@ cosign = false
 # Required by: markdownlint-cli, prettier, spectral, newman
 "core:node" = "22.22.3"
 
-# https://www.java.com/releases/
-# Required by: FHIR validator CLI (tests/fhir-examples/fhir-validator.sh)
-java = "temurin-21.0.11+10.0.LTS"
-
 # ─── Pre-commit ───────────────────────────────────────────────────────────────
 
 # https://github.com/pre-commit/pre-commit/releases
@@ -36,10 +30,6 @@ pre-commit = "4.6.0"
 # https://github.com/rhysd/actionlint/releases
 # Required by: pre-commit actionlint hook (system fallback)
 actionlint = "1.7.12"
-
-# https://github.com/hadolint/hadolint/releases
-# Required by: scripts/docker/dockerfile-linter.sh
-hadolint = "2.14.0"
 
 # https://github.com/crate-ci/typos/releases
 # Required by: pre-commit typos hook (system fallback)
@@ -54,20 +44,3 @@ yq = "4.53.2"
 # https://github.com/gitleaks/gitleaks/releases
 # Required by: pre-commit local gitleaks hook (language: system)
 gitleaks = "8.30.1"
-
-# https://github.com/anchore/syft/releases
-# Required by: pre-commit syft-sbom hook (currently commented out)
-syft = "1.44.0"
-
-# https://github.com/anchore/grype/releases
-# Required by: pre-commit grype-vuln-scan hook (currently commented out)
-grype = "0.112.0"
-
-# ─── npm tools (pinned in package.json) ──────────────────────────────────────
-# Run: npm install
-#
-# @stoplight/spectral-cli  — pre-commit spectral-lint hook (language: system)
-# markdownlint-cli         — pre-commit markdownlint hook
-# prettier                 — pre-commit prettier hook
-# newman                   — tests/scripts/run-newman.sh
-# newman-reporter-htmlextra — HTML test reports
