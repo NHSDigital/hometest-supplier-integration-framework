@@ -12,13 +12,14 @@
       "reference": "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
     }
   ],
-  "status": "accepted",
+  "status": "rejected",
   "intent": "order",
   "for": {
     "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
   },
   "lastModified": "2025-11-04T10:35:00Z",
   "businessStatus": {
-    "text": "order-accepted"
-  }
+    "text": "order-rejected"
+  },
+  "statusReason" : " Supplier has rejected the order because the address appears on a blocklist. The kit will not be dispatched"
 }

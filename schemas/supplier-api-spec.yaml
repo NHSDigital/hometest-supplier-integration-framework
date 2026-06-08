@@ -365,7 +365,7 @@ components:
               id:
                 type: string
                 description: Local identifier for contained resource
-                example: "patient-1"
+                example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
               name:
                 type: array
                 description: Patient name(s)
@@ -392,7 +392,7 @@ components:
             - $ref: '#/components/schemas/FHIRReference'
             - description: Reference to Patient - use contained resource reference
               example:
-                reference: "#patient-1"
+                reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
         requester:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
@@ -799,17 +799,17 @@ components:
         family:
           type: string
           description: Family/last name
-          example: "Smith"
+          example: "Doe"
         given:
           type: array
           description: Given/first names
           items:
             type: string
-          example: ["John"]
+          example: ["Alex"]
         text:
           type: string
           description: Full name as a single string
-          example: "John Smith"
+          example: "Alex Doe"
     FHIRContactPoint:
       type: object
       description: Details for all kinds of technology-mediated contact points (FHIR ContactPoint datatype)
@@ -824,7 +824,7 @@ components:
         value:
           type: string
           description: The actual contact point details
-          example: "+447700900123"
+          example: "+447700900000"
         use:
           type: string
           description: Purpose of this contact point
@@ -852,7 +852,7 @@ components:
           description: Street address lines
           items:
             type: string
-          example: ["123 Main Street", "Apartment 2B"]
+          example: ["123 Main Street", "Flat 4B"]
         city:
           type: string
           description: City name
