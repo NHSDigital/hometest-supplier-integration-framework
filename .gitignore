@@ -18,3 +18,5 @@ schemas/home-test-consumer-api.yaml
 .local/
 validation-results/
 examples/openAPI_examples/
+node_modules/
+.yml
