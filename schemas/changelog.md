@@ -258,7 +258,7 @@ Added Example to clarify required Performer fields
    - Added the two new statuses of order-accepted and test-processed
    - Clarified that order-received and complete are not expected to be sent from a supplier system.
 2. Documentation-only changes to schemas/supplier-api-spec.yaml
-   - Added order-accepted and test-processed to the description of bussinessStatus within FHIRTask
+   - Added order-accepted and test-processed to the description of businessStatus within FHIRTask
    - Removed order-received and complete from businessStatus description, as they should not be sent by suppliers.
 
 ---
@@ -272,7 +272,7 @@ Added Example to clarify required Performer fields
 
 ---
 
-**Version 1.1.0 - May 8, 2026 - Add Supplier Eligiblity Check Endpoint**
+**Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint**
 
 Changes to supplier-api-spec.yaml
 1. Added /order-eligibility endpoint

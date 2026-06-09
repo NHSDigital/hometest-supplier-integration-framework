@@ -1,3 +1,4 @@
+---
 name: Update FHIR Validator Version
 
 on:
@@ -30,13 +31,13 @@ jobs:
       - name: Get current validator version
         id: current
         run: |
-          VERSION=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yml)
+          VERSION=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yaml)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Update workflow file
         if: steps.latest.outputs.version != steps.current.outputs.version
         run: |
-          yq -i '.on.workflow_dispatch.inputs.validator_version.default = "${{ steps.latest.outputs.version }}"' .github/workflows/validate-fhir-examples.yml
+          yq -i '.on.workflow_dispatch.inputs.validator_version.default = "${{ steps.latest.outputs.version }}"' .github/workflows/validate-fhir-examples.yaml
 
       - name: Open pull request
         if: steps.latest.outputs.version != steps.current.outputs.version
