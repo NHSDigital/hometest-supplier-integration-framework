@@ -12,8 +12,8 @@ function ConvertYamlToJson {
 
     # Load the YAML as a structured object using .NET
     Add-Type -AssemblyName System.Web.Extensions
-    $set = New-Object System.Web.Script.Serialization.JavaScriptSerializer
-    $set.MaxJsonLength = [int]::MaxValue
+    $serialized = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+    $serialized.MaxJsonLength = [int]::MaxValue
 
     # Use ConvertFrom-Json with a workaround
     # Read and parse YAML manually

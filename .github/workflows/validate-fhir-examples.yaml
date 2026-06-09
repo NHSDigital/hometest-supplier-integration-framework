@@ -7,13 +7,13 @@ on:
     paths:
       - 'examples/fhir/**'
       - 'tests/fhir-examples/**'
-      - '.github/workflows/validate-fhir-examples.yml'
+      - '.github/workflows/validate-fhir-examples.yaml'
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
       - 'examples/fhir/**'
       - 'tests/fhir-examples/**'
-      - '.github/workflows/validate-fhir-examples.yml'
+      - '.github/workflows/validate-fhir-examples.yaml'
   workflow_dispatch:
     inputs:
       fhir_version:
@@ -28,6 +28,8 @@ jobs:
   validate:
     name: Validate FHIR examples
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.3
@@ -37,15 +39,17 @@ jobs:
           INPUT_FHIR_VERSION: ${{ inputs.fhir_version }}
           INPUT_VALIDATOR_VERSION: ${{ inputs.validator_version }}
         run: |
-          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yml)
-          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yml)
+          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yaml)
+          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yaml)
           echo "fhir_version=${INPUT_FHIR_VERSION:-$DEFAULT_FHIR}" >> "$GITHUB_OUTPUT"
           echo "validator_version=${INPUT_VALIDATOR_VERSION:-$DEFAULT_VALIDATOR}" >> "$GITHUB_OUTPUT"
       - name: Save PR number
         if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           mkdir -p .local/results
-          echo "${{ github.event.pull_request.number }}" > .local/results/pr-number.txt
+          echo "$PR_NUMBER" > .local/results/pr-number.txt
       - name: Set up Java
         uses: actions/setup-java@v5.2.0
         with:
@@ -61,14 +65,15 @@ jobs:
         if: steps.cache-jar.outputs.cache-hit != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          VALIDATOR_VERSION: ${{ steps.vars.outputs.validator_version }}
         run: |
           mkdir -p .local/validator
-          gh release download ${{ steps.vars.outputs.validator_version }} \
+          gh release download "$VALIDATOR_VERSION" \
             --pattern '*.jar' \
             --repo 'hapifhir/org.hl7.fhir.core' \
             --dir .local/validator
       - name: Set JAR path
-        run: echo "JAR=$(ls .local/validator/*.jar | head -1)" >> "$GITHUB_ENV"
+        run: echo "JAR=$(find .local/validator -name '*.jar' | head -1)" >> "$GITHUB_ENV"
       - name: Cache FHIR validator cache
         uses: actions/cache@v5.0.5
         with:
@@ -80,12 +85,14 @@ jobs:
       - name: Run FHIR validation (FHIR R${{ steps.vars.outputs.fhir_version }})
         id: validate
         continue-on-error: true
+        env:
+          FHIR_VERSION: ${{ steps.vars.outputs.fhir_version }}
         run: |
           tests/fhir-examples/fhir-validator.sh \
             -j "$JAR" \
             -i examples/fhir \
             -o .local/results \
-            -v "${{ steps.vars.outputs.fhir_version }}" \
+            -v "$FHIR_VERSION" \
             -c .local/cache
       - name: Upload validation results
         uses: actions/upload-artifact@v7.0.1
