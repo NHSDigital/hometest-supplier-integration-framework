@@ -52,4 +52,3 @@ Visit: https://validator.fhir.org/
 ## FHIR Version
 
 All resources conform to FHIR R4 (4.0.1)
-

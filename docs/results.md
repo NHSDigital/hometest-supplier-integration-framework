@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Results for home test kits are deliberately kept seperate from less sensitive order updates, with its own endpoint.
+Results for home test kits are deliberately kept separate from less sensitive order updates, with its own endpoint.
 
 To align with wider UK Pathology standards, particularly the [Pathology FHIR Implementation Guide](https://simplifier.net/guide/pathology-fhir-implementation-guide/Home?version=0.1). HomeTest expects results as a FHIR 'Bundle' type, containing a DiagnosticReport resource along with the related Observation resource.
 
@@ -81,7 +81,7 @@ The following should be used:
 It is possible to extend this field with additional information, but this is not necessary for HomeTest suppliers.
 
 ### Code
-Within the DiganosticReport this SHALL be populated with the following fixed value:
+Within the DiagnosticReport this SHALL be populated with the following fixed value:
 
 * DiagnosticReport.code.coding.system = http://snomed.info/sct
 * DiagnosticReport.code.coding.code = 721981007
@@ -110,7 +110,7 @@ HomeTest does not expect this field to be populated
 Within the Observation resource, this should be populated with the matching HIV SNOMED-CT 'observable entity' code. For the current HIV home-tests, this is `31676001 | Human immunodeficiency virus antigen test (procedure)`
 
 ### Subject
-As for the DiagnsoticReport, this should reference the HomeTest-specific patient-id.
+As for the DiagnosticReport, this should reference the HomeTest-specific patient-id.
 
 ### Status
 HomeTest only expects to receive Observations where the status is `final`. Whether clinical contact has been made is modelled with the 'Communication' resource (see [FHIR Communication Resource for HIV Test Results](./clinical-contact-communication.md)  ).

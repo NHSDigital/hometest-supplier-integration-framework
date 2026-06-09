@@ -189,7 +189,7 @@ All commits must be signed with a GPG key to ensure authenticity and integrity.
 
 #### Git Config Partial
 
-To avoid repeating git config steps across repositories or having it decalared globally, you can store your signing config in a reusable partial file.
+To avoid repeating git config steps across repositories or having it declared globally, you can store your signing config in a reusable partial file.
 
 1. Create a partial config file, e.g. `~/.gitconfig-signing`:
 

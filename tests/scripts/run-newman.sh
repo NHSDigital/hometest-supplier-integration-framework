@@ -1,5 +1,5 @@
-
 #!/usr/bin/env bash
+
 set -euo pipefail
 COLL_DIR=tests/postman/collections
 ENV=tests/postman/environments/local.postman_environment.json

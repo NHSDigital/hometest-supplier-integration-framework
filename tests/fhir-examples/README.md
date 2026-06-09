@@ -88,4 +88,3 @@ Two result files are written to the output directory for each run:
 | `error` / `fatal` | The resource does not conform to the FHIR specification    |
 | `warning`         | A best-practice recommendation — valid but worth reviewing |
 | `information`     | Informational only, no action required                     |
-
