@@ -1,6 +1,10 @@
 {
   "resourceType": "OperationOutcome",
   "id": "operation-outcome-001",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">OperationOutcome: Test not available</div>"
+  },
   "issue": [
     {
       "severity": "error",
