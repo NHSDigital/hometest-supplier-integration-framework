@@ -1,3 +1,27 @@
+# Changelog
+
+All notable changes to the NHS Home Test Supplier Integration Framework API schemas and examples are documented here.
+
+---
+
+## Table of Contents
+
+- [Version 1.1.3](#version-113---june-9-2026---fhir-example-file-compliance-fixes)
+- [Version 1.1.2](#version-112---may-18-2026---additional-dataabsent-result-reason)
+- [Version 1.1.1](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
+- [Version 1.1.0](#version-110---may-8-2026---add-supplier-eligiblity-check-endpoint)
+- [Version 1.0.9](#version-109---april-24-2026---change-test-results-endpoint-to-use-a-bundle-of-diagnosticreportobservation-and-communication)
+- [Version 1.0.8](#version-108---april-16-2026---addition-of-order-accepted-and-test-processed-statuses)
+- [Version 1.0.7](#version-107---april-8-2026---performer-example-update)
+- [Version 1.0.6](#version-106---march-20-2026---status-endpoint-method-update)
+- [Version 1.0.5](#version-105---march-10-2026---example-and-required-field-corrections)
+- [Version 1.0.4](#version-104---january-27-2026---business-critical-required-fields-fhir-profiling)
+- [Version 1.0.3](#version-103---january-27-2026---fhir-r4-validation-and-uuid-corrections)
+- [Version 1.0.2](#version-102---january-26-2026---additional-fhir-compliance-updates)
+- [Version 1.0.1](#version-101)
+
+---
+
 **Version 1.0.1**
 
 ---
