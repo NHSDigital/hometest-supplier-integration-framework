@@ -24,7 +24,7 @@ cosign = false
 
 # https://www.java.com/releases/
 # Required by: FHIR validator CLI (tests/fhir-examples/fhir-validator.sh)
-java = "temurin-21.0.11+10.0.LTS"
+java = "temurin-25"
 
 # ─── Pre-commit ───────────────────────────────────────────────────────────────
 
