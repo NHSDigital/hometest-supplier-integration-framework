@@ -20,6 +20,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint](#version-110---may-8-2026---add-supplier-eligibility-check-endpoint)
   - [Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
   - [Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason](#version-112---may-18-2026---additional-dataabsent-result-reason)
+  - [Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes\*\*](#version-113---june-9-2026---fhir-example-file-compliance-fixes)
 
 ---
 
@@ -307,7 +308,7 @@ Changes to supplier-api-spec.yaml
 
 ---
 
-**Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes**
+## Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes**
 
 Changes to examples/fhir/:
 
