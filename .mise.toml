@@ -1,0 +1,46 @@
+[settings]
+install_before = "7d"
+
+[settings.python]
+compile = false
+
+# Disable cosign verification to avoid GitHub API rate limits
+[settings.aqua]
+cosign = false
+
+[tools]
+# ─── Runtimes ────────────────────────────────────────────────────────────────
+
+# https://devguide.python.org/versions/
+# Required by: pre-commit, yamllint, shellcheck-py, check-jsonschema,
+#              conventional-pre-commit, sqlfluff
+"core:python" = "3.14.5"
+
+# https://nodejs.org/en/about/previous-releases
+# Required by: markdownlint-cli, prettier, spectral, newman
+"core:node" = "22.22.3"
+
+# ─── Pre-commit ───────────────────────────────────────────────────────────────
+
+# https://github.com/pre-commit/pre-commit/releases
+pre-commit = "4.6.0"
+
+# ─── Linting & formatting ────────────────────────────────────────────────────
+
+# https://github.com/rhysd/actionlint/releases
+# Required by: pre-commit actionlint hook (system fallback)
+actionlint = "1.7.12"
+
+# https://github.com/crate-ci/typos/releases
+# Required by: pre-commit typos hook (system fallback)
+typos = "1.47.0"
+
+# https://github.com/mikefarah/yq/releases
+# Required by: .github/workflows/ (yq to read/update YAML values)
+yq = "4.53.2"
+
+# ─── Security scanning ───────────────────────────────────────────────────────
+
+# https://github.com/gitleaks/gitleaks/releases
+# Required by: pre-commit local gitleaks hook (language: system)
+gitleaks = "8.30.1"

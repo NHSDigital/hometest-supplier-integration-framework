@@ -1,4 +1,4 @@
-
+---
 extends: []
 rules:
   operation-operationId-required:

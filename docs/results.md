@@ -57,58 +57,68 @@ These should be determined by the test supplier and who then informs HomeTest of
 | Not Processed                 | `373880007`              | Specimen rejected / not processed  |
 | Unknown                       | `240031000000109`        | Unknown problem                    |
 
-
 ## Other fields within DiagnosticReport
 
- The `DiagnosticReport` resource is a base FHIR type that represents the findings and interpretation of diagnostic tests performed on patients, specimens, or other entities. Most of this guidance is based on the Pathology FHIR Implementation Guide (https://simplifier.net/guide/pathology-fhir-implementation-guide/Home/FHIRAssets/AllAssets/AllProfiles/UKCore-DiagnosticReport-Lab?version=0.2.0), which should be treated as the authoritative source.
+ The `DiagnosticReport` resource is a base FHIR type that represents the findings and interpretation of diagnostic tests performed on patients, specimens, or other entities. Most of this guidance is based on the Pathology FHIR Implementation Guide (<https://simplifier.net/guide/pathology-fhir-implementation-guide/Home/FHIRAssets/AllAssets/AllProfiles/UKCore-DiagnosticReport-Lab?version=0.2.0>), which should be treated as the authoritative source.
 
 ### BasedOn
+
 This field should be a reference to the ServiceRequest (order) that initiated the test.
 
 ### Status
+
 HomeTest only expects to receive Diagnostic Reports where the status is `final`
 
 ### Category
 
 The following should be used:
 
-* DiagnosticReport.category.coding.system = http://terminology.hl7.org/CodeSystem/v2-0074
+* DiagnosticReport.category.coding.system = <http://terminology.hl7.org/CodeSystem/v2-0074>
 * DiagnosticReport.category.coding.code = LAB
 * DiagnosticReport.category.coding.display = Laboratory
 
 It is possible to extend this field with additional information, but this is not necessary for HomeTest suppliers.
 
 ### Code
-Within the DiganosticReport this SHALL be populated with the following fixed value:
 
-* DiagnosticReport.code.coding.system = http://snomed.info/sct
+Within the DiagnosticReport this SHALL be populated with the following fixed value:
+
+* DiagnosticReport.code.coding.system = <http://snomed.info/sct>
 * DiagnosticReport.code.coding.code = 721981007
 * DiagnosticReport.code.coding.display = Diagnostic studies report
 
 Note: The clinical code and name of a test result or a test group is defined in the code element of the relevant Observation resource.
 
 ### Subject
+
 Home Test does not pass full patient details to suppliers, and instead an pseudo-anonymous patient-id is sent, along with their name and contact details. Results returned to HomeTest should reference this patient-id only.
 
 ### Performer
+
 This should be referenced using the HomeTest-agreed supplier organisation ID. This may change in the future to include an organisation's ODS id, but currently not all suppliers have this identifier.
 
 ### Specimen
+
 HomeTest does not expect to receive references to the specimen used for the result, and this field should not be populated.
 
 ### Result
+
 References to `Observation` resources containing the actual test results and measurements.
 
 ### Conclusion
+
 HomeTest does not expect this field to be populated
 
 ## Other fields within Observation
 
 ### Code
+
 Within the Observation resource, this should be populated with the matching HIV SNOMED-CT 'observable entity' code. For the current HIV home-tests, this is `31676001 | Human immunodeficiency virus antigen test (procedure)`
 
 ### Subject
-As for the DiagnsoticReport, this should reference the HomeTest-specific patient-id.
+
+As for the DiagnosticReport, this should reference the HomeTest-specific patient-id.
 
 ### Status
+
 HomeTest only expects to receive Observations where the status is `final`. Whether clinical contact has been made is modelled with the 'Communication' resource (see [FHIR Communication Resource for HIV Test Results](./clinical-contact-communication.md)  ).
