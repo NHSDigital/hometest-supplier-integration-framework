@@ -6,26 +6,28 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
 
 ## Table of Contents
 
-- [Version 1.1.3](#version-113---june-9-2026---fhir-example-file-compliance-fixes)
-- [Version 1.1.2](#version-112---may-18-2026---additional-dataabsent-result-reason)
-- [Version 1.1.1](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
-- [Version 1.1.0](#version-110---may-8-2026---add-supplier-eligibility-check-endpoint)
-- [Version 1.0.9](#version-109---april-24-2026---change-test-results-endpoint-to-use-a-bundle-of-diagnosticreportobservation-and-communication)
-- [Version 1.0.8](#version-108---april-16-2026---addition-of-order-accepted-and-test-processed-statuses)
-- [Version 1.0.7](#version-107---april-8-2026---performer-example-update)
-- [Version 1.0.6](#version-106---march-20-2026---status-endpoint-method-update)
-- [Version 1.0.5](#version-105---march-10-2026---example-and-required-field-corrections)
-- [Version 1.0.4](#version-104---january-27-2026---business-critical-required-fields-fhir-profiling)
-- [Version 1.0.3](#version-103---january-27-2026---fhir-r4-validation-and-uuid-corrections)
-- [Version 1.0.2](#version-102---january-26-2026---additional-fhir-compliance-updates)
-- [Version 1.0.1](#version-101)
+- [Changelog](#changelog)
+  - [Table of Contents](#table-of-contents)
+  - [Version 1.0.1](#version-101)
+  - [Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates](#version-102---january-26-2026---additional-fhir-compliance-updates)
+  - [Version 1.0.3 - January 27, 2026 - FHIR R4 Validation and UUID Corrections](#version-103---january-27-2026---fhir-r4-validation-and-uuid-corrections)
+  - [Version 1.0.4 - January 27, 2026 - Business-Critical Required Fields (FHIR Profiling)](#version-104---january-27-2026---business-critical-required-fields-fhir-profiling)
+  - [Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections](#version-105---march-10-2026---example-and-required-field-corrections)
+  - [Version 1.0.6 - March 20, 2026 - Status Endpoint Method Update](#version-106---march-20-2026---status-endpoint-method-update)
+  - [Version 1.0.7 - April 8, 2026 - Performer Example Update](#version-107---april-8-2026---performer-example-update)
+  - [Version 1.0.8 - April 16, 2026 -](#version-108---april-16-2026--)
+  - [Version 1.0.9 - April 24, 2026 -](#version-109---april-24-2026--)
+  - [Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint](#version-110---may-8-2026---add-supplier-eligibility-check-endpoint)
+  - [Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
+  - [Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason](#version-112---may-18-2026---additional-dataabsent-result-reason)
 
 ---
 
-**Version 1.0.1**
+## Version 1.0.1
 
 ---
 Changes to supplier_api_spec.yaml
+
 1. Fixed FHIR ServiceRequest Structure
    - Added missing status property with FHIR-standard enum values
    - Added text field to code (CodeableConcept) for human-readable representation
@@ -50,9 +52,10 @@ Changes to supplier_api_spec.yaml
 5. Made Success Responses FHIR-Compliant
    - Changed POST /order 201 response from custom JSON {order_uid, order_status, estimated_delivery_date} to return the FHIR ServiceRequest resource
 
-----
+---
 
 Changes to home-test-supplier-api.yaml
+
 1. Fixed FHIRTask Status
    - Changed status enum from custom values [`order-received`, `dispatched`, `received-at-lab`, `complete`]
    - To FHIR-standard values: [`draft`, `requested`, `received`, `accepted`, `rejected`, `ready`, `cancelled`, `in-progress`, `on-hold`, `failed`, `completed`, `entered-in-error`]
@@ -76,7 +79,7 @@ Changes to home-test-supplier-api.yaml
 
 ---
 
-**Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates**
+## Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates
 
 Changes to both supplier_api_spec.yaml and home-test-supplier-api.yaml:
 
@@ -162,7 +165,7 @@ Renamed supplier-api-spec.yaml for conformity
 
 ---
 
-**Version 1.0.3 - January 27, 2026 - FHIR R4 Validation and UUID Corrections**
+## Version 1.0.3 - January 27, 2026 - FHIR R4 Validation and UUID Corrections
 
 Changes to both supplier-api-spec.yaml and home-test-supplier-api.yaml:
 
@@ -175,10 +178,9 @@ Changes to both supplier-api-spec.yaml and home-test-supplier-api.yaml:
        - Ensures Bundle fullUrl matches the Observation resource ID
        - Critical for FHIR Bundle validation where fullUrl must reference the correct resource
 
-
 ---
 
-**Version 1.0.4 - January 27, 2026 - Business-Critical Required Fields (FHIR Profiling)**
+## Version 1.0.4 - January 27, 2026 - Business-Critical Required Fields (FHIR Profiling)
 
 Changes to both supplier-api-spec.yaml and home-test-supplier-api.yaml:
 Added Required Fields for Business Operations (FHIR Constrained Profile)
@@ -212,21 +214,24 @@ Added Required Fields for Business Operations (FHIR Constrained Profile)
 
 ---
 
-**Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections**
+## Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections
 
 Changes to home-test-supplier-api.yaml:
 
 1. Fixed basedOn Example Values
+
 - FHIRObservation.basedOn: Changed items from bare `$ref` to `allOf` with context-specific example, replacing inherited `Organization/SUP001` example with correct `ServiceRequest/550e8400-e29b-41d4-a716-446655440000`
 - FHIRTask.basedOn: Same fix applied - updated description to "Reference to the ServiceRequest this task fulfills" and added correct ServiceRequest example
 
-2. Added Required Fields to FHIRTask
+1. Added Required Fields to FHIRTask
+
 - Made `for` required - Patient beneficiary must be identified on every status update
 - Made `lastModified` required - Timestamp of the status change is mandatory for audit and ordering
 
 Changes to examples/fhir/task_update_dispatched.example.json:
 
-3. Fixed task_update_dispatched Example
+1. Fixed task_update_dispatched Example
+
 - Corrected `status` from `"dispatched"` (invalid FHIR value) to `"in-progress"`
 - Added missing required `intent` field with value `"order"`
 - Added missing required `for` field referencing `Patient/123e4567-e89b-12d3-a456-426614174000`
@@ -235,24 +240,28 @@ Changes to examples/fhir/task_update_dispatched.example.json:
 
 ---
 
-**Version 1.0.6 - March 20, 2026 - Status Endpoint Method Update**
+## Version 1.0.6 - March 20, 2026 - Status Endpoint Method Update
 
 Changes to home-test-supplier-api.yaml
+
 1. Updated /test-order/status endpoint
    - Changed the method from PUT to POST
 
 ---
 
-**Version 1.0.7 - April 8, 2026 - Performer Example Update**
+## Version 1.0.7 - April 8, 2026 - Performer Example Update
 
 Changes to schemas/supplier-api-spec.yaml
 Added Example to clarify required Performer fields
+
 1. Updated Performer Organisation
    - Added Example to Performer Organisation
 
 ---
 
-**Version 1.0.8 - April 16, 2026 - Addition of order-accepted and test-processed statuses**
+## Version 1.0.8 - April 16, 2026 -
+
+Addition of order-accepted and test-processed statuses
 
 1. Updated status-transitions.md documentation
    - Added the two new statuses of order-accepted and test-processed
@@ -263,7 +272,9 @@ Added Example to clarify required Performer fields
 
 ---
 
-**Version 1.0.9 - April 24, 2026 - Change test results endpoint to use a Bundle of DiagnosticReport,Observation and Communication**
+## Version 1.0.9 - April 24, 2026 -
+
+Change test results endpoint to use a Bundle of DiagnosticReport,Observation and Communication
 
 1. Results are now expected to be sent in a Bundle, consisting of a DiagnosticReport, an Observation and a Communication.
    - Updated OpenAPI specs to reflect the new format.
@@ -272,9 +283,10 @@ Added Example to clarify required Performer fields
 
 ---
 
-**Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint**
+## Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint
 
 Changes to supplier-api-spec.yaml
+
 1. Added /order-eligibility endpoint
    - Added api spec for the eligibility check endpoint
 2. Added FHIR schema files for the new endpoint
@@ -283,13 +295,13 @@ Changes to supplier-api-spec.yaml
 
 ---
 
-**Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs**
+## Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs
 
 1. This adds the discriminator field to the OpenAPI specs to allow code generation tools to typecast to the right schema, based on the 'resourceType' field. This is relevant within the Bundle of a result, where each entry can either be a DiagnosticReport, an Observation or a Communication resource.
 
 ---
 
-**Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason**
+## Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason
 
 1. Add `haemolysed` as a valid `dataAbsentReason` when for error results.
 
