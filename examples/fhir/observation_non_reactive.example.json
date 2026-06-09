@@ -8,6 +8,10 @@
       "resource": {
         "resourceType": "DiagnosticReport",
         "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">DiagnosticReport: HIV antigen test - non-reactive</div>"
+        },
         "basedOn": [
           {
             "reference": "ServiceRequest/96fc8467-cfc5-46b6-9f6b-e08dc6cc533d"
@@ -58,6 +62,10 @@
       "resource": {
         "resourceType": "Observation",
         "id": "550e8400-e29b-41d4-a716-446655440001",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Observation: HIV antigen test - non-reactive</div>"
+        },
         "status": "final",
         "category": [
           {
@@ -88,6 +96,13 @@
         "subject": {
           "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
         },
+        "effectiveDateTime": "2025-11-04T15:45:00Z",
+        "performer": [
+          {
+            "reference": "Organization/SUP001",
+            "display": "Test Supplier Ltd"
+          }
+        ],
         "valueCodeableConcept": {
           "coding": [
             {
@@ -104,6 +119,10 @@
       "resource": {
         "resourceType": "Communication",
         "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Communication: not-done (no contact required)</div>"
+        },
         "status": "not-done",
         "reasonReference": [
           {
