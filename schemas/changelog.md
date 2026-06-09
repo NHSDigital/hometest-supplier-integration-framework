@@ -279,3 +279,11 @@ Changes to supplier-api-spec.yaml
 ## Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason
 
 1. Add `haemolysed` as a valid `dataAbsentReason` when for error results.
+
+---
+
+## Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results
+
+1. Updated the examples and api spec to reflect the new handling of non-definitive results.
+   - Rather than using the `dataAbsentReason` field we will instead now expect it to conform with other result approaches and use a SNOMED CT code in the `valueCodeableConcept` field.
+2. Make `valueCodeableConcept` a required field in the Observation schema for results.
