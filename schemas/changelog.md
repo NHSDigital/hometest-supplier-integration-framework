@@ -316,3 +316,14 @@ Changes to examples/fhir/:
 4. Fixed `get_test_results_non_reactive` searchset bundle compliance
    - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for type checking)
    - Added `search.mode: match` to the outer Bundle entry (required for searchset bundles)
+
+Changes to schemas/fhir-schemas/:
+
+1. Added `text` narrative to all DomainResource schema files (dom-6 best practice)
+   - Added `text.status` and `text.div` to `Observation.json`, `Task.json`, `OperationOutcome.json`, `ServiceRequest.json`, and `Patient.json`
+   - Aligns schema files with the same fixes applied to `examples/fhir/` in version 1.1.3
+
+2. Fixed `Bundle.json` searchset compliance
+   - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for FHIR type checking)
+   - Added `search.mode: match` to the entry (required for searchset bundles)
+   - Added `text` narrative to the inner Observation resource
