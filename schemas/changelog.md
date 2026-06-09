@@ -268,3 +268,27 @@ Changes to supplier-api-spec.yaml
 **Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason**
 
 1. Add `haemolysed` as a valid `dataAbsentReason` when for error results.
+
+---
+
+**Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes**
+
+Changes to examples/fhir/:
+
+1. Added `text` narrative to all DomainResource examples (dom-6 best practice)
+   - Added `text.status` and `text.div` to DiagnosticReport, Observation, Communication, ServiceRequest, OperationOutcome, and Task resources across all example files
+   - Affected files: `observation_non_reactive`, `observation_reactive_with_contact`, `observation_reactive_without_contact`, `observation_insufficient_result`, `observation_invalid_result`, `order_servicerequest`, `ordereligibility_servicerequest`, `ordereligibility_ineligible_operationoutcome`, `operationoutcome_business_rule`, `task_update_dispatched`
+
+2. Added missing `performer` and `effectiveDateTime` to Observation resources (best practice)
+   - All Observation resources in result bundle examples now include `performer` referencing `Organization/SUP001`
+   - All Observation resources now include `effectiveDateTime`
+   - Affected files: `observation_non_reactive`, `observation_reactive_with_contact`, `observation_reactive_without_contact`, `observation_insufficient_result`, `observation_invalid_result`
+
+3. Fixed `dataAbsentReason` to include a coded value from the DataAbsentReason value set
+   - `observation_insufficient_result`: Added `coding` with `system: http://terminology.hl7.org/CodeSystem/data-absent-reason`, `code: not-performed`
+   - `observation_invalid_result`: Added `coding` with `code: error`
+   - Previously only `text` was present, causing a validator warning
+
+4. Fixed `get_test_results_non_reactive` searchset bundle compliance
+   - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for type checking)
+   - Added `search.mode: match` to the outer Bundle entry (required for searchset bundles)
