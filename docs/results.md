@@ -24,6 +24,7 @@ However, we expect this guidance to change in the near future to recommend the u
 To anticipate this change of guidance, HomeTest expects suppliers to use a SNOMED-CT code in the 'valueCodeableConcept' field of the Observation. The code used is specific to the findings of HIV testing.
 
 We classify the results into two categories:
+
 * Definitive results
 * Non-definitive results
 
