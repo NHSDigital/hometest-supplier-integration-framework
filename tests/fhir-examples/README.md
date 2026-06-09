@@ -1,11 +1,11 @@
 # FHIR Example Validation
 
-This directory contains tooling to validate the FHIR example resources in [
-`examples/fhir/`](../../examples/fhir) against the FHIR specification using
+This directory contains tooling to validate the FHIR example resources in
+[`examples/fhir/`](../../examples/fhir) against the FHIR specification using
 the [HL7 FHIR Validator CLI](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator).
 
-Validation is also run automatically in CI on every push and pull request — see [
-`.github/workflows/validate-fhir-examples.yml`](../../.github/workflows/validate-fhir-examples.yml).
+Validation is also run automatically in CI on every push and pull request — see
+[`.github/workflows/validate-fhir-examples.yml`](../../.github/workflows/validate-fhir-examples.yml).
 
 ---
 
@@ -39,7 +39,7 @@ in this directory.
 
 ## Usage
 
-```
+```bash
 ./fhir-validator.sh -j <validator_jar> -i <input_dir> [-o <output_dir>] [-v <fhir_version>]
 ```
 

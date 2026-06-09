@@ -8,11 +8,14 @@ Thank you for your interest in contributing to this project! Please follow the g
 
 1. Fork this repository to your own GitHub account
 2. Clone your forked repository locally:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/hometest-supplier-integration-framework.git
    cd hometest-supplier-integration-framework
    ```
+
 3. Add the original repository as an upstream remote:
+
    ```bash
    git remote add upstream https://github.com/NHSDigital/hometest-supplier-integration-framework.git
    ```
@@ -209,11 +212,13 @@ To avoid repeating git config steps across repositories or having it declared gl
     ```bash
     git config --global include.path ~/.gitconfig-signing
     ```
+
     Or conditionally, e.g. only for repos under a specific directory:
 
     ```bash
     git config --global "includeIf.gitdir:~/work/.path" ~/.gitconfig-signing
     ```
+
     Replace **`~/work`** with the correct path
 
 3. You can then skip the `git config` steps in the GPG setup above, as the partial will handle them.

@@ -16,7 +16,8 @@ This directory contains example FHIR R4 resources extracted from the OpenAPI spe
 To validate these FHIR resources against FHIR R4 specification:
 
 ### Using HL7 FHIR Validator (Recommended)
-Download from: https://github.com/hapifhir/org.hl7.fhir.core/releases
+
+Download from: <https://github.com/hapifhir/org.hl7.fhir.core/releases>
 
 ```bash
 # Validate all files
@@ -27,24 +28,28 @@ java -jar validator_cli.jar schemas/fhir-schemas/ServiceRequest.json -version 4.
 ```
 
 ### Using HAPI FHIR Validator
+
 ```bash
 npm install -g fhir-validator-cli
 fhir-validator schemas/fhir-schemas/ServiceRequest.json
 ```
 
 ### Using Online Validator
-Visit: https://validator.fhir.org/
+
+Visit: <https://validator.fhir.org/>
 
 ## Resource Mappings
 
-### supplier-api-spec.json uses:
+### supplier-api-spec.json uses
+
 - **ServiceRequest** - POST /order request/response
 - **Observation** - GET /results response (inside Bundle)
 - **OperationOutcome** - Error responses (400, 409, 422, 404)
 - **Bundle** - GET /results response wrapper
 - **Patient** - Contained resource in ServiceRequest
 
-### home-test-supplier-api.json uses:
+### home-test-supplier-api.json uses
+
 - **Observation** - POST /result request/response
 - **Task** - POST /test-order/status request/response
 - **OperationOutcome** - Error responses (400, 401, 404)
