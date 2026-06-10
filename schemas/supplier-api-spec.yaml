@@ -3,12 +3,16 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 1.1.3
+  version: 1.1.4
+  contact:
+    name: NHS England - Digital Prevention Services Portfolio - Home Test Team
+    email: england.hometest@nhs.net
 
 paths:
   /oauth/token:
     post:
       summary: OAuth 2.0 Token Endpoint
+      operationId: oauthTokenEndpoint
       description: Exchange client credentials for an access token
       tags:
         - Authentication
@@ -96,6 +100,7 @@ paths:
   /order:
     post:
       summary: Receive Test Order
+      operationId: receiveTestOrder
       description: Receive a new test order from the home test platform
       tags:
         - Order Management
@@ -196,6 +201,7 @@ paths:
   /results:
     get:
       summary: Get Test Results
+      operationId: getTestResults
       description: Retrieve test results from the home test platform for completed orders
       tags:
         - Results Management
@@ -241,6 +247,7 @@ paths:
   /order-eligibility:
     post:
       summary: Check Eligibility for Test Order
+      operationId: checkOrderEligibility
       description: Check if a new test order from the home test platform is eligible based on supplier rules
       tags:
         - Order Management
@@ -897,7 +904,7 @@ components:
                 example: "self"
               url:
                 type: string
-                format: uri
+                format: uri-reference
                 example: "/results?order_uid=550e8400-e29b-41d4-a716-446655440000"
         entry:
           type: array
@@ -1045,3 +1052,11 @@ components:
 security:
   - OAuth2ClientCredentials: [orders, results]
   - SupplierAuth: []
+
+tags:
+  - name: Order Management
+    description: Endpoints for managing test orders, including eligibility checks
+  - name: Results Management
+    description: Endpoints for submitting and retrieving test results
+  - name: Authentication
+    description: Endpoints related to supplier authentication and token management

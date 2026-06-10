@@ -287,3 +287,13 @@ Changes to supplier-api-spec.yaml
 1. Updated the examples and api spec to reflect the new handling of non-definitive results.
    - Rather than using the `dataAbsentReason` field we will instead now expect it to conform with other result approaches and use a SNOMED CT code in the `valueCodeableConcept` field.
 2. Make `valueCodeableConcept` a required field in the Observation schema for results.
+
+## Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings
+
+1. Resolved errors produced from Spectral OpenAPI spec validation.
+   - Adding contact field
+   - Adding operationIDs for all endpoints
+   - Adding tags
+   - Updating 'uri' to 'uri-reference' in the format field of the urls
+   -
+2. Some updates to the Spectral validation, but currently still needs to be run manually
