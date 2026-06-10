@@ -30,16 +30,16 @@ We classify the results into two categories:
 
 #### Definitive results
 
-For reactive results, the code `165816005 | Human immunodeficiency virus detected (finding)` should be used.
+For reactive results, the code `165816005` should be used. Reactive results are for those where HIV is detected. This could, for example, be described as 'positive', 'detected', or 'reactive'.
 
-For non-reactive results, the code `165815009 | Human immunodeficiency virus not detected (finding)` should be used.
+For non-reactive results, the code `165815009` should be used. Non-reactive results are for those where HIV is not detected. This could, for example, be described as 'negative', 'not detected', or 'non-reactive'.
 
 These possible results are summarised below, together with the matching known internal supplier codes.
 
 | Test Supplier code (internal) | SNOMED-CT Code | SNOMED-CT Description                               |
 |-------------------------------|----------------|-----------------------------------------------------|
 | Reactive                      | `165816005`    | Human immunodeficiency virus detected (finding)     |
-| Negative                      | `165815009`    | Human immunodeficiency virus not detected (finding) |
+| Non-reactive                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
 
 #### Non-Definitive results
 
