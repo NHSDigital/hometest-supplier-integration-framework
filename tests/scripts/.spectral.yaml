@@ -1,4 +1,3 @@
-
 extends: [spectral:oas]
 rules:
   operation-operationId-required:
@@ -20,7 +19,6 @@ rules:
           type: object
           required: [application/fhir+json]
     severity: error
-
 
   problem-json-required-fields:
     description: "Problem+JSON must include type, title, status"
@@ -47,4 +45,3 @@ rules:
     then:
       function: truthy
     severity: error
-
