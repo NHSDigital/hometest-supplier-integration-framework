@@ -3,12 +3,16 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.2
+  version: 1.1.4
+  contact:
+    name: NHS England - Digital Prevention Services Portfolio - Home Test Team
+    email: england.hometest@nhs.net
 
 paths:
   /result:
     post:
       summary: Post Test Results
+      operationId: postTestResultsToHomeTest
       description: Submit test results for a completed order
       tags:
         - Result Service
@@ -48,6 +52,7 @@ paths:
   /test-order/status:
     post:
       summary: Update Order Status
+      operationId: updateOrderStatus
       description: Update the status of an existing order using FHIR Task resource
       tags:
         - Order Management
@@ -226,6 +231,7 @@ components:
         - subject
         - effectiveDateTime
         - issued
+        - valueCodeableConcept
       properties:
         resourceType:
           type: string
@@ -293,15 +299,6 @@ components:
                   - system: "http://snomed.info/sct"
                     code: "165815009"
                     display: "Human immunodeficiency virus not detected"
-        dataAbsentReason:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Reason why result is not present. Should only be present if valueCodeableConcept is absent.
-              example:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/data-absent-reason"
-                    code: "not-performed"
-                    display: "Not Performed"
     FHIRCommunication:
       type: object
       description: FHIR Communication resource for sending messages to patients
@@ -689,3 +686,9 @@ components:
 security:
   - BearerAuth: []
   - NHS_Login: []
+
+tags:
+  - name: Order Management
+    description: Endpoints for managing test orders, including eligibility checks
+  - name: Result Service
+    description: Endpoints for submitting and retrieving test results

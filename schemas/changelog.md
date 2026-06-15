@@ -20,7 +20,9 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint](#version-110---may-8-2026---add-supplier-eligibility-check-endpoint)
   - [Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
   - [Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason](#version-112---may-18-2026---additional-dataabsent-result-reason)
-  - [Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes\*\*](#version-113---june-9-2026---fhir-example-file-compliance-fixes)
+  - [Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results](#version-113---june-1-2026---change-handling-of-non-definitive-results)
+  - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
+  - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
 
 ---
 
@@ -308,7 +310,25 @@ Changes to supplier-api-spec.yaml
 
 ---
 
-## Version 1.1.3 - June 9, 2026 - FHIR Example File Compliance Fixes**
+## Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results
+
+1. Updated the examples and api spec to reflect the new handling of non-definitive results.
+   - Rather than using the `dataAbsentReason` field we will instead now expect it to conform with other result approaches and use a SNOMED CT code in the `valueCodeableConcept` field.
+2. Make `valueCodeableConcept` a required field in the Observation schema for results.
+
+## Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings
+
+1. Resolved errors produced from Spectral OpenAPI spec validation.
+   - Adding contact field
+   - Adding operationIDs for all endpoints
+   - Adding tags
+   - Updating 'uri' to 'uri-reference' in the format field of the urls
+   -
+2. Some updates to the Spectral validation, but currently still needs to be run manually
+
+---
+
+## Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes**
 
 Changes to examples/fhir/:
 
