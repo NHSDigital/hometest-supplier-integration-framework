@@ -93,6 +93,15 @@
             }
           ]
         },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "281268007",
+              "display": "Insufficient sample"
+            }
+          ]
+        },
         "subject": {
           "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
         },
@@ -102,17 +111,7 @@
             "reference": "Organization/SUP001",
             "display": "Test Supplier Ltd"
           }
-        ],
-        "dataAbsentReason": {
-          "coding": [
-            {
-              "system": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
-              "code": "not-performed",
-              "display": "Not Performed"
-            }
-          ],
-          "text": "insufficient"
-        }
+        ]
       }
     }
   ]
