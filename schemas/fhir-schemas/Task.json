@@ -1,6 +1,10 @@
 {
   "resourceType": "Task",
   "id": "task-550e8400-e29b-41d4-a716-446655440000",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Task status: in-progress, business status: dispatched</div>"
+  },
   "identifier": [
     {
       "system": "https://fhir.hometest.nhs.uk/Id/order-uid",

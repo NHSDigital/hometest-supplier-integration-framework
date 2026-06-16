@@ -1,6 +1,10 @@
 {
   "resourceType": "ServiceRequest",
   "id": "550e8400-e29b-41d4-a716-446655440000",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: HIV antigen test (order eligibility check)</div>"
+  },
   "status": "draft",
   "intent": "order",
   "code": {
