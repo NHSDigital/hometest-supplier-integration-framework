@@ -1,6 +1,10 @@
 {
   "resourceType": "ServiceRequest",
   "id": "7cb0623e-9cd7-4495-aa66-715c04a81903",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: HIV antigen test order cancelled by user</div>"
+  },
   "status": "revoked",
   "intent": "order",
   "code": {

@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 1.1.4
+  version: 1.1.6
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -101,7 +101,7 @@ paths:
     post:
       summary: Receive Test Order
       operationId: receiveTestOrder
-      description: Receive a new test order from the home test platform
+      description: Receive a new test order from the home test platform. This endpoint is also used to cancel orders, by sending an order with a status of 'revoked'.
       tags:
         - Order Management
       parameters:

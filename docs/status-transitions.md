@@ -5,7 +5,6 @@
 
 - `order-received`
 - `order-accepted`
-- `order-rejected`
 - `dispatched`
 - `cancelled`
 - `received-at-lab`
@@ -24,19 +23,22 @@ The states in blue are states that are contolled within HomeTest.
 title: Order State Machine
 ---
 stateDiagram-v2
-
     classDef supplierSent fill:#00A499, color:#fff
     classDef homeTestSent fill:#dceefb
+    state eligibility_check <<choice>>
 
+    orderEligibilityCheck: Supplier Order Eligibility Check
     orderReceived: order-received
     orderAccepted: order-accepted
-    orderRejected: order-rejected
+    orderRejected: No order created
     receivedAtLab: received-at-lab
     testProcessed: test-processed
 
-    [*] --> orderReceived :::homeTestSent
+    [*] --> orderEligibilityCheck
+    orderEligibilityCheck --> eligibility_check
+    eligibility_check --> orderReceived:::homeTestSent : if Eligible
+    eligibility_check --> orderRejected:::homeTestSent : if Not Eligible
     orderReceived --> orderAccepted:::supplierSent
-    orderReceived --> orderRejected:::supplierSent
     orderRejected --> [*]
     orderAccepted --> dispatched:::supplierSent
     dispatched --> receivedAtLab:::supplierSent
@@ -48,20 +50,22 @@ stateDiagram-v2
 ```
 
 ## Order Creation and Completion
-
 New orders are only created within the HomeTest platform.
 
 Orders can only be marked as 'complete' by the HomeTest platform, usually on receipt of a test result update from the test supplier.
 
-This means that while `order-received`, `cancelled` and `complete` are valid order statuses, they shouldn't be sent as order updates by suppliers. Only the status of `order-accepted`, `order-rejected`, `dispatched`, `received-at-lab` and `test processed` should be sent by test suppliers (marked in green on the diagram above)
+This means that while `order-received`, `cancelled` and `complete` are valid order statuses, they shouldn't be sent as order updates by suppliers. Only the status of `order-accepted`, `dispatched`, `received-at-lab` and `test-processed` should be sent by test suppliers (marked in green on the diagram above)
 
 ## Order Acceptance and Rejection
-Orders are accepted or rejected by the suppliers asychronously. This means that orders that are at `order-received` are submitted to the suppliers, and HomeTest then waits for an update from the test supplier, expecting either `order-accepted` or `order-rejected`.
+Before an order is formally created, a 'draft' order is sent to the supplier. This known as the 'Supplier Order Eligibility Check', and is the moment where a supplier decides whether to accept to reject the order.
 
-Once an order has been accepted by a supplier, the order must then move through to `dispatched`, and it cannot be later cancelled by the test supplier.
+If an order is rejected in the supplier eligibility check, a HomeTest order is not created, and the user is directed to other avenues. For example, this is a direction to the user's closest sexual health clinic for HIV tests.
+
+If the order is accepted through the supplier eligibility check, the order must then move through to `dispatched`, and it cannot be later cancelled by the test supplier. In other words, a test kit MUST be dispatched if the eligibility check has passed successfully.
 
 ## Order Cancellation
 Users can cancel an order only when it is in the `dispatched` state.
+Further updates to a 'cancelled' order are rejected by HomeTest, and an error is raised. Results for cancelled orders not currently handled by the HomeTest API, and are also rejected if they're received for a cancelled order.
 
 ## Rules
 

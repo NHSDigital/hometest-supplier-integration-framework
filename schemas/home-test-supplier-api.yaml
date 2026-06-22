@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.4
+  version: 1.1.6
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -371,12 +371,12 @@ components:
         status:
           type: string
           description: Current status of the task - FHIR standard values (use businessStatus for domain-specific states)
-          enum: [accepted, rejected,in-progress]
+          enum: [accepted, in-progress]
           example: "in-progress"
         businessStatus:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Domain-specific business status. If the FHIRTask status is "accepted", should be "order-accepted". If FHIRTask status is "rejected", should be "order-rejected". If FHIRTask status is "in-progress", then "dispatched","received-at-lab", and "test-processed" are all valid.
+            - $ref: '#/components/schemas/FHIRBusinessStatus'
+            - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
         intent:
@@ -418,8 +418,6 @@ components:
             - description: Responsible individual for the task
               example:
                 reference: "Organization/SUP001"
-
-
     FHIROperationOutcome:
       type: object
       description: FHIR OperationOutcome resource for reporting errors and warnings
@@ -477,7 +475,6 @@ components:
                 items:
                   type: string
                 example: ["Observation.status"]
-
     FHIRReference:
       type: object
       description: A reference from one resource to another (FHIR Reference datatype)
@@ -556,6 +553,19 @@ components:
           description: The purpose of this identifier
           enum: [usual, official, temp, secondary, old]
           example: "official"
+    FHIRBusinessStatus:
+      description: A specific example of a CodeableConcept for HomeTest status updates, using the businessStatus field of the FHIRTask
+      allOf:
+        - $ref: '#/components/schemas/FHIRCodeableConcept'
+        - type: object
+          required:
+            - text
+          properties:
+            text:
+              type: string
+              enum: [dispatched,received-at-lab,test-processed]
+          example:
+            text: dispatched
   examples:
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
