@@ -563,7 +563,7 @@ components:
           properties:
             text:
               type: string
-              enum: [dispatched,received-at-lab,test-processed]
+              enum: [dispatched, received-at-lab, test-processed]
           example:
             text: dispatched
   examples:

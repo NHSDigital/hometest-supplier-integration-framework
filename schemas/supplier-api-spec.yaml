@@ -333,7 +333,7 @@ components:
         intent:
           type: string
           description: Intent of the service request
-          enum: [ order]
+          enum: [order]
           example: "order"
         code:
           allOf:
