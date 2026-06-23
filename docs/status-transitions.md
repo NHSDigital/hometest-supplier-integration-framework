@@ -12,6 +12,7 @@
 - `complete`
 
 ## Allowed Transitions
+
 The following state machine shows the allowed transitions for HomeTest orders.
 
 The states in green are states that are controlled by the suppliers - i.e. the entry to that state comes from an update from the supplier.
