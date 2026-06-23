@@ -21,5 +21,7 @@
   "businessStatus": {
     "text": "order-rejected"
   },
-  "statusReason" : " Supplier has rejected the order because the address appears on a blocklist. The kit will not be dispatched"
+  "statusReason" : {
+    "text": " Supplier has rejected the order because the address appears on a blocklist. The kit will not be dispatched"
+  }
 }

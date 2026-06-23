@@ -21,5 +21,7 @@
   "businessStatus": {
     "text": "order-accepted"
   },
-  "statusReason" : " Supplier has accepted the order, and the kit will be dispatched"
+  "statusReason" : {
+    "text": " Supplier has accepted the order, and the kit will be dispatched"
+  }
 }

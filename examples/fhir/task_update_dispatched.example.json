@@ -25,5 +25,7 @@
   "businessStatus": {
     "text": "dispatched"
   },
-  "statusReason" : " Test kit dispatched to patient"
+  "statusReason" : {
+    "text": "Test kit dispatched to patient"
+  }
 }
