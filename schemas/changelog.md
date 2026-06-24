@@ -372,6 +372,5 @@ Changes to schemas/fhir-schemas/:
 
 2. Clarify the order eligibility check and other order states
    - Remove mentions of order rejection
-   - Add enum for allowed 'businessStatus' in FHIRTask
    - Add diagram for order states
    - Add documentation for order cancellation, and order acceptance (via eligibility check)
