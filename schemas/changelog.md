@@ -1,3 +1,31 @@
+# Changelog
+
+All notable changes to the NHS Home Test Supplier Integration Framework API schemas and examples are documented here.
+
+---
+
+## Table of Contents
+
+- [Changelog](#changelog)
+  - [Table of Contents](#table-of-contents)
+  - [Version 1.0.1](#version-101)
+  - [Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates](#version-102---january-26-2026---additional-fhir-compliance-updates)
+  - [Version 1.0.3 - January 27, 2026 - FHIR R4 Validation and UUID Corrections](#version-103---january-27-2026---fhir-r4-validation-and-uuid-corrections)
+  - [Version 1.0.4 - January 27, 2026 - Business-Critical Required Fields (FHIR Profiling)](#version-104---january-27-2026---business-critical-required-fields-fhir-profiling)
+  - [Version 1.0.5 - March 10, 2026 - Example and Required Field Corrections](#version-105---march-10-2026---example-and-required-field-corrections)
+  - [Version 1.0.6 - March 20, 2026 - Status Endpoint Method Update](#version-106---march-20-2026---status-endpoint-method-update)
+  - [Version 1.0.7 - April 8, 2026 - Performer Example Update](#version-107---april-8-2026---performer-example-update)
+  - [Version 1.0.8 - April 16, 2026 -](#version-108---april-16-2026--)
+  - [Version 1.0.9 - April 24, 2026 -](#version-109---april-24-2026--)
+  - [Version 1.1.0 - May 8, 2026 - Add Supplier Eligibility Check Endpoint](#version-110---may-8-2026---add-supplier-eligibility-check-endpoint)
+  - [Version 1.1.1 - May 12, 2026 - Add discriminator to OpenAPI specs](#version-111---may-12-2026---add-discriminator-to-openapi-specs)
+  - [Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason](#version-112---may-18-2026---additional-dataabsent-result-reason)
+  - [Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results](#version-113---june-1-2026---change-handling-of-non-definitive-results)
+  - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
+  - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
+
+---
+
 ## Version 1.0.1
 
 ---
@@ -279,3 +307,56 @@ Changes to supplier-api-spec.yaml
 ## Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason
 
 1. Add `haemolysed` as a valid `dataAbsentReason` when for error results.
+
+---
+
+## Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results
+
+1. Updated the examples and api spec to reflect the new handling of non-definitive results.
+   - Rather than using the `dataAbsentReason` field we will instead now expect it to conform with other result approaches and use a SNOMED CT code in the `valueCodeableConcept` field.
+2. Make `valueCodeableConcept` a required field in the Observation schema for results.
+
+## Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings
+
+1. Resolved errors produced from Spectral OpenAPI spec validation.
+   - Adding contact field
+   - Adding operationIDs for all endpoints
+   - Adding tags
+   - Updating 'uri' to 'uri-reference' in the format field of the urls
+   -
+2. Some updates to the Spectral validation, but currently still needs to be run manually
+
+---
+
+## Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes**
+
+Changes to examples/fhir/:
+
+1. Added `text` narrative to all DomainResource examples (dom-6 best practice)
+   - Added `text.status` and `text.div` to DiagnosticReport, Observation, Communication, ServiceRequest, OperationOutcome, and Task resources across all example files
+   - Affected files: `observation_non_reactive`, `observation_reactive_with_contact`, `observation_reactive_without_contact`, `observation_insufficient_result`, `observation_invalid_result`, `order_servicerequest`, `ordereligibility_servicerequest`, `ordereligibility_ineligible_operationoutcome`, `operationoutcome_business_rule`, `task_update_dispatched`
+
+2. Added missing `performer` and `effectiveDateTime` to Observation resources (best practice)
+   - All Observation resources in result bundle examples now include `performer` referencing `Organization/SUP001`
+   - All Observation resources now include `effectiveDateTime`
+   - Affected files: `observation_non_reactive`, `observation_reactive_with_contact`, `observation_reactive_without_contact`, `observation_insufficient_result`, `observation_invalid_result`
+
+3. Fixed `dataAbsentReason` to include a coded value from the DataAbsentReason value set
+   - `observation_insufficient_result`: Added `coding` with `system: http://terminology.hl7.org/CodeSystem/data-absent-reason`, `code: not-performed`
+   - `observation_invalid_result`: Added `coding` with `code: error`
+   - Previously only `text` was present, causing a validator warning
+
+4. Fixed `get_test_results_non_reactive` searchset bundle compliance
+   - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for type checking)
+   - Added `search.mode: match` to the outer Bundle entry (required for searchset bundles)
+
+Changes to schemas/fhir-schemas/:
+
+1. Added `text` narrative to all DomainResource schema files (dom-6 best practice)
+   - Added `text.status` and `text.div` to `Observation.json`, `Task.json`, `OperationOutcome.json`, `ServiceRequest.json`, and `Patient.json`
+   - Aligns schema files with the same fixes applied to `examples/fhir/` in version 1.1.3
+
+2. Fixed `Bundle.json` searchset compliance
+   - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for FHIR type checking)
+   - Added `search.mode: match` to the entry (required for searchset bundles)
+   - Added `text` narrative to the inner Observation resource

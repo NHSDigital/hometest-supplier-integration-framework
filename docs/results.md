@@ -14,50 +14,48 @@ The use of Communication in this way is not within the scope of the Pathology FH
 ### Observable Entity code for HIV Testing
 
 For the Beta stage of HomeTest, only HIV HomeTest Kits are used.
-Therefore the only expected 'observable entity' expected is `31676001 | Human immunodeficiency virus antigen test (procedure)`, which is the SNOMED-CT code for the HIV testing we're doing. This appears in the 'code' field of the Observation.
+Therefore, the only expected 'observable entity' expected is `31676001 | Human immunodeficiency virus antigen test (procedure)`, which is the SNOMED-CT code for the HIV testing we're doing. This appears in the 'code' field of the Observation.
 
 ### Test result (value) codes for HIV testing
 
-There are two competing representations of the 'value' of a UK Pathology test. Older UK pathology standards before FHIR recorded results using text only, and this is still the standardised way to record tests within the published Pathology implementation guidance to allow interoperatiblity with older, non-FHIR systems.
+There are two competing representations of the 'value' of a UK Pathology test. Older UK pathology standards before FHIR recorded results using text only, and this is still the standardised way to record tests within the published Pathology implementation guidance to allow interoperability with older, non-FHIR systems.
 However, we expect this guidance to change in the near future to recommend the use of SNOMED-CT 'finding' codes, also known as 'Reportables'.
 
-To anticipate this change of guidance, HomeTest expects suppliers to use a SNOMED-CT code in the 'valueCodeableConcept' field of the Observation. The code used is is specific to the findings of HIV testing.
+To anticipate this change of guidance, HomeTest expects suppliers to use a SNOMED-CT code in the 'valueCodeableConcept' field of the Observation. The code used is specific to the findings of HIV testing.
 
-For reactive (including low-reactive) results, the code `165816005 | Human immunodeficiency virus detected (finding)` should be used.
+We classify the results into two categories:
 
-For non-reactive (including 'not detected' and 'negative) results, the code `165815009 | Human immunodeficiency virus not detected (finding)` should be used.
+* Definitive results
+* Non-definitive results
 
-Some tests also rarely lead to results such as 'borderline','equivocal', and 'unconfirmed'. These should use the result code `419984006 | Inconclusive`
+#### Definitive results
+
+For reactive results, the code `165816005` should be used. Reactive results are for those where HIV is detected. This could, for example, be described as 'positive', 'detected', or 'reactive'.
+
+For non-reactive results, the code `165815009` should be used. Non-reactive results are for those where HIV is not detected. This could, for example, be described as 'negative', 'not detected', or 'non-reactive'.
 
 These possible results are summarised below, together with the matching known internal supplier codes.
 
 | Test Supplier code (internal) | SNOMED-CT Code | SNOMED-CT Description                               |
 |-------------------------------|----------------|-----------------------------------------------------|
 | Reactive                      | `165816005`    | Human immunodeficiency virus detected (finding)     |
-| Low Reactive                  | `165816005`    | Human immunodeficiency virus detected (finding)     |
-| Non Reactive                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Not Detected                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Negative                      | `165815009`    | Human immunodeficiency virus not detected (finding) |
-| Borderline                    | `419984006`    | Inconclusive                                        |
-| Equivocal                     | `419984006`    | Inconclusive                                        |
-| Unconfirmed                   | `419984006`    | Inconclusive                                        |
-| Borderline                    | `419984006`    | Inconclusive                                        |
+| Non-reactive                  | `165815009`    | Human immunodeficiency virus not detected (finding) |
 
-### Tests with absent results due to error
+#### Non-Definitive results
 
-There is finally a set of error results, including both laboratory errors (such as 'invalid', 'heamolysed', or 'out-of-validation') and user errors (particularly 'insufficient sample').
+Anything that is not reactive or non-reactive is classified as a non-definitive result.
+This includes both laboratory errors (such as 'invalid', 'heamolysed') and user errors (particularly 'insufficient sample').
 
-These all result in no value for the test, and so the value field should be left empty in the Observation resource. Instead the 'dataAbsentReason' field should be populated.
+The exact list of result codes should be determined by the test supplier who then informs HomeTest of the mapping. Listed are some examples of these codes that could be used:
 
-| Test Supplier code (internal) | dataAbsentReason |
-|-------------------------------|------------------|
-| Insufficient                  | `insufficient`   |
-| Haemolysed                    | `haemolysed`     |
-| Invalid sample                | `invalid`        |
-| Out of Validation             | `invalid`        |
-| Lab Error                     | `invalid`        |
-| Not Processed                 | `invalid`        |
-| Unknown                       | `invalid`        |
+| Test Supplier code (internal) | Potential SNOMED-CT Code | SNOMED-CT Description              |
+|-------------------------------|--------------------------|------------------------------------|
+| Insufficient                  | `281268007`              | Insufficient sample                |
+| Haemolysed                    | `118128002`              | Sample haemolysed                  |
+| Invalid sample                | `455371000124106`        | Invalid result                     |
+| Lab Error                     | `384281000000108`        | Unsatisfactory laboratory analysis |
+| Not Processed                 | `373880007`              | Specimen rejected / not processed  |
+| Unknown                       | `240031000000109`        | Unknown problem                    |
 
 ## Other fields within DiagnosticReport
 

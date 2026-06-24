@@ -1,5 +1,9 @@
 {
   "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Order ineligible: Order has been deemed ineligible based on supplier rules</div>"
+  },
   "issue": [
     {
       "severity": "error",

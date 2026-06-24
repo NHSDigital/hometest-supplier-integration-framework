@@ -23,7 +23,7 @@ on:
       validator_version:
         description: 'FHIR validator version to use'
         required: false
-        default: '6.9.9'
+        default: '6.9.10'
 jobs:
   validate:
     name: Validate FHIR examples
@@ -32,7 +32,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7
       - name: Set CI variables
         id: vars
         env:
@@ -51,13 +51,13 @@ jobs:
           mkdir -p .local/results
           echo "$PR_NUMBER" > .local/results/pr-number.txt
       - name: Set up Java
-        uses: actions/setup-java@v5.2.0
+        uses: actions/setup-java@v5.3.0
         with:
           distribution: temurin
           java-version: '25'
       - name: Cache FHIR validator JAR
         id: cache-jar
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@v6
         with:
           path: .local/validator
           key: fhir-validator-jar-${{ steps.vars.outputs.validator_version }}
@@ -75,7 +75,7 @@ jobs:
       - name: Set JAR path
         run: echo "JAR=$(find .local/validator -name '*.jar' | head -1)" >> "$GITHUB_ENV"
       - name: Cache FHIR validator cache
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@v6
         with:
           path: .local/cache
           key: fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-${{ steps.vars.outputs.validator_version }}

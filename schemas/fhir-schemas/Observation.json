@@ -1,6 +1,10 @@
 {
   "resourceType": "Observation",
   "id": "550e8400-e29b-41d4-a716-446655440001",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Observation: HIV antigen test - non-reactive</div>"
+  },
   "basedOn": [
     {
       "reference": "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"

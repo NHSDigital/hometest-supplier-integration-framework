@@ -1,5 +1,9 @@
 {
   "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Business rule error: Individual quota already used</div>"
+  },
   "issue": [
     {
       "severity": "error",
