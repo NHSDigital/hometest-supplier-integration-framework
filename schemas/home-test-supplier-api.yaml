@@ -375,7 +375,7 @@ components:
           example: "in-progress"
         businessStatus:
           allOf:
-            - $ref: '#/components/schemas/FHIRBusinessStatus'
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
             - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
@@ -553,19 +553,6 @@ components:
           description: The purpose of this identifier
           enum: [usual, official, temp, secondary, old]
           example: "official"
-    FHIRBusinessStatus:
-      description: A specific example of a CodeableConcept for HomeTest status updates, using the businessStatus field of the FHIRTask
-      allOf:
-        - $ref: '#/components/schemas/FHIRCodeableConcept'
-        - type: object
-          required:
-            - text
-          properties:
-            text:
-              type: string
-              enum: [dispatched, received-at-lab, test-processed]
-          example:
-            text: dispatched
   examples:
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
