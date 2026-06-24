@@ -197,7 +197,7 @@ paths:
                         details:
                           text: "Individual not eligible due to local authority rules"
                         diagnostics: "Patient does not meet local authority eligibility criteria for this test"
-    delete:
+    patch:
       summary: Cancel Test Order
       operationId: cancelTestOrder
       description: This endpoint is used to cancel orders, by sending an order with a status of 'revoked'.
