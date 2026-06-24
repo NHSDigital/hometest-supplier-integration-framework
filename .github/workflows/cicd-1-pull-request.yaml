@@ -17,7 +17,7 @@ jobs:
 
       - name: Restore cache pre-commit hooks
         id: cache-pre-commit
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -55,7 +55,7 @@ jobs:
       - name: "Save cache pre-commit hooks"
         if: always()
         continue-on-error: true
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
