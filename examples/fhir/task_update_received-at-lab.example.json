@@ -12,16 +12,16 @@
       "reference": "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
     }
   ],
-  "status": "accepted",
+  "status": "in-progress",
   "intent": "order",
   "for": {
     "reference": "Patient/123e4567-e89b-12d3-a456-426614174000"
   },
   "lastModified": "2025-11-04T10:35:00Z",
   "businessStatus": {
-    "text": "order-accepted"
+    "text": "received-at-lab"
   },
   "statusReason" : {
-    "text": " Supplier has accepted the order, and the kit will be dispatched"
+    "text": " Test kit has been received at the lab and is being processed"
   }
 }
