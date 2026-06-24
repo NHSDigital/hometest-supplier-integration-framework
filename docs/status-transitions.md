@@ -64,7 +64,7 @@ Before an order is formally created, a 'draft' order is sent to the supplier. Th
 
 If an order is rejected in the supplier eligibility check, a HomeTest order is not created, and the user is directed to other avenues. For example, this is a direction to the user's closest sexual health clinic for HIV tests.
 
-If the order is accepted through the supplier eligibility check, the order must then move through to `dispatched`, and it cannot be later cancelled by the test supplier. In other words, a test kit MUST be dispatched if the eligibility check has passed successfully.
+If the order is accepted through the supplier eligibility check, the order is sent to the supplier and must then move through to `dispatched`, and it cannot be later cancelled by the test supplier. In other words, a test kit MUST be dispatched if the eligibility check has passed successfully.
 
 ## Order Cancellation
 
