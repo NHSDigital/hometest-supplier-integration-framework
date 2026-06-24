@@ -241,10 +241,10 @@ paths:
                   value:
                     resourceType: "OperationOutcome"
                     issue:
-                    - severity: "error"
-                      code: "not-found"
-                      details:
-                        text: "Order not found"
+                      - severity: "error"
+                        code: "not-found"
+                        details:
+                          text: "Order not found"
                         diagnostics: "The requested order was not found"
         '409':
           description: Business rule conflict - order cancellation cannot be processed
@@ -258,10 +258,10 @@ paths:
                   value:
                     resourceType: "OperationOutcome"
                     issue:
-                    - severity: "error"
-                      code: "business-rule"
-                      details:
-                        text: "Order already processed"
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Order already processed"
                         diagnostics: "The requested order has already been processed, and cannot be cancelled"
 
   /results:
