@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.4
+  version: 1.1.7
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -172,7 +172,7 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/FHIRCodeableConcept'
+            $ref: '#/components/schemas/FHIRDiagnosticCoding'
           description: Category of the diagnostic report (should be LAB/Laboratory for test results)
           example:
             - coding:
@@ -250,7 +250,7 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/FHIRCodeableConcept'
+            $ref: '#/components/schemas/FHIRObservationCoding'
           description: Category of the observation (should be laboratory/Laboratory for observation category)
           example:
             - coding:
@@ -365,19 +365,19 @@ components:
         status:
           type: string
           description: Current status of the task - FHIR standard values (use businessStatus for domain-specific states)
-          enum: [draft, requested, received, accepted, rejected, ready, cancelled, in-progress, on-hold, failed, completed, entered-in-error]
+          enum: [accepted, in-progress]
           example: "in-progress"
         intent:
           type: string
           description: Indicates the "level" of actionability associated with the Task
-          enum: [unknown, proposal, plan, order, original-order, reflex-order, filler-order, instance-order, option]
+          enum: [order]
           example: "order"
         statusReason:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
             - description: Reason for current status
               example:
-                text: "Sample collected and being processed"
+                text: "Test kit dispatched to patient"
         for:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
@@ -408,7 +408,7 @@ components:
                 reference: "Organization/SUP001"
         businessStatus:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: '#/components/schemas/FHIRBusinessStatusCoding'
             - description: Domain-specific business status (should be one of&#58; "order-accepted", "dispatched", "received-at-lab", "test-processed")
               example:
                 text: "dispatched"
@@ -549,6 +549,71 @@ components:
           description: The purpose of this identifier
           enum: [usual, official, temp, secondary, old]
           example: "official"
+    FHIRBusinessStatusCoding:
+      type: object
+      description: A specific example of a CodeableConcept for status updates, using the businessStatus field of the FHIRTask
+      required:
+        - text
+      properties:
+        coding:
+          type: array
+          description: Code defined by a terminology system
+          items:
+            $ref: '#/components/schemas/FHIRCoding'
+        text:
+          $ref: '#/components/schemas/FHIRBusinessStatusText'
+      example:
+        text: dispatched
+    FHIRBusinessStatusText:
+      type: string
+      description: Domain-specific business status values for status updates
+      enum: [dispatched, received-at-lab, test-processed]
+    FHIRDiagnosticCoding:
+      type: object
+      description: A specific example of a CodeableConcept for DiagnosticReport category.
+      required:
+        - text
+      properties:
+        coding:
+          type: array
+          description: Code defined by a terminology system
+          items:
+            $ref: '#/components/schemas/FHIRCoding'
+        text:
+          $ref: '#/components/schemas/FHIRDiagnosticCodingText'
+      example:
+        coding:
+          - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+            code: "LAB"
+            display: "Laboratory"
+        text: Laboratory
+    FHIRDiagnosticCodingText:
+      type: string
+      description: Diagnostic report category text values
+      enum: [Laboratory]
+    FHIRObservationCoding:
+      type: object
+      description: A specific example of a CodeableConcept for Observation category.
+      required:
+        - text
+      properties:
+        coding:
+          type: array
+          description: Code defined by a terminology system
+          items:
+            $ref: '#/components/schemas/FHIRCoding'
+        text:
+          $ref: '#/components/schemas/FHIRObservationCodingText'
+      example:
+        coding:
+          - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+            code: "laboratory"
+            display: "Laboratory"
+        text: Laboratory
+    FHIRObservationCodingText:
+      type: string
+      description: Observation category text values
+      enum: [Laboratory]
   examples:
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
