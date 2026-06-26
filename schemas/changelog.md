@@ -368,7 +368,7 @@ Changes to schemas/fhir-schemas/:
 
 1. Add order cancellation process
    - Allow 'revoked' as a status of the ServiceRequest
-   - Use 'PATCH' verb on the /order endpoint when orders are being cancelled. This allows specific errors to be defined, and helps to separate cancellation from creating a new order.
+   - Use 'DELETE' verb on the /order endpoint when orders are being cancelled. This allows specific errors to be defined, and helps to separate cancellation from creating a new order.
    - Add documentation for rejection of further updates to cancelled orders
 
 2. Clarify the order eligibility check and other order states
