@@ -1,0 +1,13 @@
+{
+  "name": "hometest-supplier-integration-framework",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dev tooling dependencies for the hometest supplier integration framework",
+  "devDependencies": {
+    "@stoplight/spectral-cli": "6.16.0",
+    "markdownlint-cli": "0.48.0",
+    "newman": "6.2.2",
+    "newman-reporter-htmlextra": "1.23.1",
+    "prettier": "3.8.3"
+  }
+}
