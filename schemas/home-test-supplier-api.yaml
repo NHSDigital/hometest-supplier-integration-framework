@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.4
+  version: 1.1.6
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -71,6 +71,9 @@ paths:
           application/fhir+json:
             schema:
               $ref: '#/components/schemas/FHIRTask'
+            examples:
+              FHIRTaskExample:
+                $ref: '#/components/examples/FHIRTaskExample'
       responses:
         '200':
           description: Status updated successfully
@@ -78,6 +81,9 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/FHIRTask'
+              examples:
+                FHIRTaskExample:
+                  $ref: '#/components/examples/FHIRTaskExample'
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -365,19 +371,25 @@ components:
         status:
           type: string
           description: Current status of the task - FHIR standard values (use businessStatus for domain-specific states)
-          enum: [draft, requested, received, accepted, rejected, ready, cancelled, in-progress, on-hold, failed, completed, entered-in-error]
+          enum: [accepted, in-progress]
           example: "in-progress"
+        businessStatus:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
+              example:
+                text: "dispatched"
         intent:
           type: string
           description: Indicates the "level" of actionability associated with the Task
-          enum: [unknown, proposal, plan, order, original-order, reflex-order, filler-order, instance-order, option]
+          enum: [order]
           example: "order"
         statusReason:
           allOf:
             - $ref: '#/components/schemas/FHIRCodeableConcept'
             - description: Reason for current status
               example:
-                text: "Sample collected and being processed"
+                text: "Test kit dispatched to patient"
         for:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
@@ -406,13 +418,6 @@ components:
             - description: Responsible individual for the task
               example:
                 reference: "Organization/SUP001"
-        businessStatus:
-          allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
-            - description: Domain-specific business status (should be one of&#58; "order-accepted", "dispatched", "received-at-lab", "test-processed")
-              example:
-                text: "dispatched"
-
     FHIROperationOutcome:
       type: object
       description: FHIR OperationOutcome resource for reporting errors and warnings
@@ -470,7 +475,6 @@ components:
                 items:
                   type: string
                 example: ["Observation.status"]
-
     FHIRReference:
       type: object
       description: A reference from one resource to another (FHIR Reference datatype)
@@ -621,6 +625,30 @@ components:
               status: "not-done"
               reasonReference:
                 - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+    FHIRTaskExample:
+      summary: Example FHIR Task for a 'dispatched' update, see examples folder for further examples.
+      value:
+        resourceType: "Task"
+        id: "task-550e8400-e29b-41d4-a716-446655440000"
+        identifier:
+          - system: "https://fhir.hometest.nhs.uk/Id/order-uid"
+            value: "550e8400-e29b-41d4-a716-446655440000"
+        basedOn:
+          - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+        status: "in-progress"
+        businessStatus:
+          text: "dispatched"
+        intent: "order"
+        for:
+          reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        authoredOn: "2025-11-04T10:30:00Z"
+        lastModified: "2025-11-04T10:35:00Z"
+        requester:
+          reference: "Organization/ORG001"
+          display: "HomeTest"
+        owner:
+          reference: "Organization/SUP001"
+          display: "Test Supplier Ltd"
   responses:
     BadRequest:
       description: Bad request - invalid parameters

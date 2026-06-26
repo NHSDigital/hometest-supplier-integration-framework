@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 1.1.4
+  version: 1.1.6
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -101,7 +101,7 @@ paths:
     post:
       summary: Receive Test Order
       operationId: receiveTestOrder
-      description: Receive a new test order from the home test platform
+      description: Receive a new test order from the home test platform. This endpoint is also used to cancel orders, by sending an order with a status of 'revoked'.
       tags:
         - Order Management
       parameters:
@@ -197,6 +197,72 @@ paths:
                         details:
                           text: "Individual not eligible due to local authority rules"
                         diagnostics: "Patient does not meet local authority eligibility criteria for this test"
+    delete:
+      summary: Cancel Test Order
+      operationId: cancelTestOrder
+      description: This endpoint is used to cancel orders, by sending an order with a status of 'revoked'.
+      tags:
+        - Order Management
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          description: Unique identifier for request tracking and idempotency
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/FHIRServiceRequest'
+      responses:
+        '200':
+          description: Order cancellation received and processed successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRServiceRequest'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '404':
+          description: Order not found
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+              examples:
+                order_not_found:
+                  summary: Order not found
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "not-found"
+                        details:
+                          text: "Order not found"
+                        diagnostics: "The requested order was not found"
+        '409':
+          description: Business rule conflict - order cancellation cannot be processed
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+              examples:
+                order_already_processed:
+                  summary: Order already processed
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Order already processed"
+                        diagnostics: "The requested order has already been processed, and cannot be cancelled"
 
   /results:
     get:
@@ -316,7 +382,6 @@ components:
         - code
         - subject
         - requester
-        - contained
       properties:
         resourceType:
           type: string
@@ -329,12 +394,12 @@ components:
         status:
           type: string
           description: Status of the service request
-          enum: [draft, active, on-hold, revoked, completed, entered-in-error, unknown]
+          enum: [draft, active, revoked]
           example: "active"
         intent:
           type: string
           description: Intent of the service request
-          enum: [proposal, plan, directive, order, original-order, reflex-order, filler-order, instance-order, option]
+          enum: [order]
           example: "order"
         code:
           allOf:
@@ -366,7 +431,7 @@ components:
               id:
                 type: string
                 description: Local identifier for contained resource
-                example: "patient-1"
+                example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
               name:
                 type: array
                 description: Patient name(s)
@@ -393,7 +458,7 @@ components:
             - $ref: '#/components/schemas/FHIRReference'
             - description: Reference to Patient - use contained resource reference
               example:
-                reference: "#patient-1"
+                reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
         requester:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
@@ -800,17 +865,17 @@ components:
         family:
           type: string
           description: Family/last name
-          example: "Smith"
+          example: "Doe"
         given:
           type: array
           description: Given/first names
           items:
             type: string
-          example: ["John"]
+          example: ["Alex"]
         text:
           type: string
           description: Full name as a single string
-          example: "John Smith"
+          example: "Alex Doe"
     FHIRContactPoint:
       type: object
       description: Details for all kinds of technology-mediated contact points (FHIR ContactPoint datatype)
@@ -825,7 +890,7 @@ components:
         value:
           type: string
           description: The actual contact point details
-          example: "+447700900123"
+          example: "+447700900000"
         use:
           type: string
           description: Purpose of this contact point
@@ -853,7 +918,7 @@ components:
           description: Street address lines
           items:
             type: string
-          example: ["123 Main Street", "Apartment 2B"]
+          example: ["123 Main Street", "Flat 4B"]
         city:
           type: string
           description: City name

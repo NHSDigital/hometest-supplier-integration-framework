@@ -1,9 +1,5 @@
 {
   "resourceType": "Task",
-  "text": {
-    "status": "generated",
-    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Task status: in-progress, business status: dispatched</div>"
-  },
   "identifier": [
     {
       "system": "https://fhir.hometest.nhs.uk/Id/order-uid",
@@ -23,9 +19,9 @@
   },
   "lastModified": "2025-11-04T10:35:00Z",
   "businessStatus": {
-    "text": "dispatched"
+    "text": "received-at-lab"
   },
   "statusReason" : {
-    "text": "Test kit dispatched to patient"
+    "text": " Test kit has been received at the lab and is being processed"
   }
 }
