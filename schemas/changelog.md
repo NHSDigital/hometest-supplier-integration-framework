@@ -22,7 +22,8 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.2 - May 18, 2026 - Additional DataAbsent Result reason](#version-112---may-18-2026---additional-dataabsent-result-reason)
   - [Version 1.1.3 - June 1, 2026 - Change handling of non-definitive results](#version-113---june-1-2026---change-handling-of-non-definitive-results)
   - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
-  - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
+  - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
+  - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
 
 ---
 
@@ -360,3 +361,17 @@ Changes to schemas/fhir-schemas/:
    - Changed `link.self` URL from `/results?order_uid=...` to `Bundle?identifier=...` (resource-type-qualified URL required for FHIR type checking)
    - Added `search.mode: match` to the entry (required for searchset bundles)
    - Added `text` narrative to the inner Observation resource
+
+---
+
+## Version 1.1.6 - June 22, 2026 - Add order cancellation**
+
+1. Add order cancellation process
+   - Allow 'revoked' as a status of the ServiceRequest
+   - Use 'DELETE' verb on the /order endpoint when orders are being cancelled. This allows specific errors to be defined, and helps to separate cancellation from creating a new order.
+   - Add documentation for rejection of further updates to cancelled orders
+
+2. Clarify the order eligibility check and other order states
+   - Remove mentions of order rejection
+   - Add diagram for order states
+   - Add documentation for order cancellation, and order acceptance (via eligibility check)
