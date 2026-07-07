@@ -781,9 +781,9 @@ components:
             display: "Laboratory"
         text: Laboratory
     FHIRDiagnosticCodingText:
-        type: string
-        description: Diagnostic report category status values.
-        enum: [Laboratory]
+      type: string
+      description: Diagnostic report category status values.
+      enum: [Laboratory]
     FHIRObservationCoding:
       type: object
       description: A specific example of a CodeableConcept for Observation category.
@@ -805,9 +805,9 @@ components:
             display: "Laboratory"
         text: Laboratory
     FHIRObservationCodingText:
-        type: string
-        description: Observation category status values.
-        enum: [Laboratory]
+      type: string
+      description: Observation category status values.
+      enum: [Laboratory]
   examples:
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
