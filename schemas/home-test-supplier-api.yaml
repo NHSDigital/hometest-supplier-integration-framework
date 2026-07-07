@@ -530,7 +530,7 @@ components:
           example: "in-progress"
         businessStatus:
           allOf:
-            - $ref: "#/components/schemas/FHIRCodeableConcept"
+            - $ref: '#/components/schemas/FHIRBusinessStatusCoding'
             - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
@@ -573,13 +573,6 @@ components:
             - description: Responsible individual for the task
               example:
                 reference: "Organization/SUP001"
-        businessStatus:
-          allOf:
-            - $ref: '#/components/schemas/FHIRBusinessStatusCoding'
-            - description: Domain-specific business status (should be one of&#58; "order-accepted", "dispatched", "received-at-lab", "test-processed")
-              example:
-                text: "dispatched"
-
     FHIROperationOutcome:
       type: object
       description: FHIR OperationOutcome resource for reporting errors and warnings
@@ -760,13 +753,13 @@ components:
           items:
             $ref: '#/components/schemas/FHIRCoding'
         text:
-          $ref: '#/components/schemas/FHIRBusinessStatusText'
-      example:
-        text: dispatched
-    FHIRBusinessStatusText:
+          $ref: '#/components/schemas/FHIRBusinessStatusCodingText'
+          description: Business status category text.
+          example: dispatched
+    FHIRBusinessStatusCodingText:
       type: string
-      description: Domain-specific business status values for status updates
-      enum: [dispatched, received-at-lab, test-processed]
+      description: Business status values.
+      enum: [order-accepted, dispatched, received-at-lab, test-processed]
     FHIRDiagnosticCoding:
       type: object
       description: A specific example of a CodeableConcept for DiagnosticReport category.
@@ -780,6 +773,7 @@ components:
             $ref: '#/components/schemas/FHIRCoding'
         text:
           $ref: '#/components/schemas/FHIRDiagnosticCodingText'
+          description: Diagnostic report status text.
       example:
         coding:
           - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
@@ -787,9 +781,9 @@ components:
             display: "Laboratory"
         text: Laboratory
     FHIRDiagnosticCodingText:
-      type: string
-      description: Diagnostic report category text values
-      enum: [Laboratory]
+        type: string
+        description: Diagnostic report category status values.
+        enum: [Laboratory]
     FHIRObservationCoding:
       type: object
       description: A specific example of a CodeableConcept for Observation category.
@@ -803,6 +797,7 @@ components:
             $ref: '#/components/schemas/FHIRCoding'
         text:
           $ref: '#/components/schemas/FHIRObservationCodingText'
+          description: Observation category status values
       example:
         coding:
           - system: "http://terminology.hl7.org/CodeSystem/observation-category"
@@ -810,9 +805,9 @@ components:
             display: "Laboratory"
         text: Laboratory
     FHIRObservationCodingText:
-      type: string
-      description: Observation category text values
-      enum: [Laboratory]
+        type: string
+        description: Observation category status values.
+        enum: [Laboratory]
   examples:
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
