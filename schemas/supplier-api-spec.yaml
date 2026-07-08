@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 1.1.6
+  version: 1.1.7
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -101,7 +101,7 @@ paths:
     post:
       summary: Receive Test Order
       operationId: receiveTestOrder
-      description: Receive a new test order from the home test platform. This endpoint is also used to cancel orders, by sending an order with a status of 'revoked'.
+      description: Receive a new test order from the home test platform. The request body must be a FHIR ServiceRequest with the status 'active', including a contained Patient resource with full demographics and a subject reference pointing to that contained Patient (e.g. '#<patient-id>').
       tags:
         - Order Management
       parameters:
@@ -118,14 +118,20 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRServiceRequest'
+              $ref: '#/components/schemas/FHIRServiceRequestNewOrder'
+            examples:
+              newOrder:
+                $ref: '#/components/examples/FHIRServiceRequestNewOrderExample'
       responses:
         '201':
           description: Order received and processed successfully
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRServiceRequest'
+                $ref: '#/components/schemas/FHIRServiceRequestNewOrder'
+              examples:
+                newOrder:
+                  $ref: '#/components/examples/FHIRServiceRequestNewOrderExample'
         '400':
           $ref: '#/components/responses/BadRequest'
         '422':
@@ -200,7 +206,7 @@ paths:
     delete:
       summary: Cancel Test Order
       operationId: cancelTestOrder
-      description: This endpoint is used to cancel orders, by sending an order with a status of 'revoked'.
+      description: Cancel an existing order by sending a FHIR ServiceRequest with the status 'revoked'. Unlike a new order, the cancellation body does NOT include a contained Patient resource - instead the patient is referenced externally via subject.reference (e.g. 'Patient/<patient-id>').
       tags:
         - Order Management
       parameters:
@@ -217,14 +223,20 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRServiceRequest'
+              $ref: '#/components/schemas/FHIRServiceRequestCancellation'
+            examples:
+              cancellation:
+                $ref: '#/components/examples/FHIRServiceRequestCancellationExample'
       responses:
         '200':
           description: Order cancellation received and processed successfully
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRServiceRequest'
+                $ref: '#/components/schemas/FHIRServiceRequestCancellation'
+              examples:
+                cancellation:
+                  $ref: '#/components/examples/FHIRServiceRequestCancellationExample'
         '400':
           $ref: '#/components/responses/BadRequest'
         '422':
@@ -332,6 +344,9 @@ paths:
           application/fhir+json:
             schema:
               $ref: '#/components/schemas/FHIRServiceRequestEligibility'
+            examples:
+              eligibility:
+                $ref: '#/components/examples/FHIRServiceRequestEligibilityExample'
       responses:
         '201':
           description: Order received and is eligible for submission
@@ -339,6 +354,9 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/FHIRServiceRequestEligibility'
+              examples:
+                eligibility:
+                  $ref: '#/components/examples/FHIRServiceRequestEligibilityExample'
         '400':
           $ref: '#/components/responses/BadRequest'
         '422':
@@ -362,16 +380,213 @@ paths:
                         diagnostics: "Patient does not meet test supplier eligibility criteria for this test"
 components:
   schemas:
-    FHIRServiceRequestEligibility:
-      description: FHIR ServiceRequest for an eligibility check — status must be 'draft'
+    FHIRServiceRequestNewOrder:
+      description: >
+        FHIR ServiceRequest for placing a new test order, the status must be 'active'.
+        The full Patient demographics must be supplied as a contained resource, and
+        subject.reference must point to that contained Patient using a fragment
+        reference (e.g. '#<patient-id>').
       allOf:
         - $ref: '#/components/schemas/FHIRServiceRequest'
         - type: object
+          required:
+            - contained
+          properties:
+            status:
+              type: string
+              enum: [active]
+              example: "active"
+            contained:
+              type: array
+              description: >
+                Required for new orders. Must contain at least one Patient resource
+                with full demographics (name, telecom, address). The subject field
+                must reference this contained Patient using a fragment identifier
+                (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
+              minItems: 1
+              items:
+                type: object
+                required:
+                  - resourceType
+                  - id
+                  - name
+                  - telecom
+                  - address
+                properties:
+                  resourceType:
+                    type: string
+                    enum: [Patient]
+                    example: "Patient"
+                  id:
+                    type: string
+                    description: Local identifier for the contained Patient resource
+                    example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
+                  name:
+                    type: array
+                    description: Patient name(s)
+                    items:
+                      $ref: '#/components/schemas/FHIRHumanName'
+                  telecom:
+                    type: array
+                    description: Contact details - must include both phone and email contact points
+                    minItems: 2
+                    items:
+                      $ref: '#/components/schemas/FHIRContactPoint'
+                  address:
+                    type: array
+                    description: Patient address(es)
+                    items:
+                      $ref: '#/components/schemas/FHIRAddress'
+                  birthDate:
+                    type: string
+                    format: date
+                    description: Patient's date of birth
+                    example: "1985-03-15"
+            subject:
+              allOf:
+                - $ref: '#/components/schemas/FHIRReference'
+                - description: >
+                    Reference to the contained Patient resource using a fragment
+                    identifier. Must match the id of the contained Patient.
+                  example:
+                    reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+
+    FHIRServiceRequestCancellation:
+      description: >
+        FHIR ServiceRequest for cancelling an existing order, the status must be 'revoked'.
+        Unlike a new order, cancellations do NOT include a contained Patient resource.
+        Instead the patient is identified via an external reference in subject
+        (e.g. 'Patient/<patient-id>'), matching the same patient id that was
+        returned when the original order was created.
+      type: object
+      required:
+        - resourceType
+        - id
+        - status
+        - intent
+        - code
+        - subject
+        - requester
+      properties:
+        resourceType:
+          type: string
+          enum: [ServiceRequest]
+          example: "ServiceRequest"
+        id:
+          type: string
+          description: The id of the order being cancelled - must match the original order id
+          example: "7cb0623e-9cd7-4495-aa66-715c04a81903"
+        status:
+          type: string
+          enum: [revoked]
+          example: "revoked"
+        intent:
+          type: string
+          enum: [order]
+          example: "order"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: The test type being cancelled (SNOMED CT)
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+                text: "HIV antigen test"
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: >
+                External reference to the Patient. Does NOT use a fragment reference
+                - instead uses the patient id as returned in the original order response
+                (e.g. 'Patient/<patient-id>'). No contained Patient resource is included.
+              example:
+                reference: "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        requester:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Organization making the cancellation request
+              example:
+                reference: "Organization/ORG001"
+        performer:
+          type: array
+          description: The supplier this order was assigned to
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+          example:
+            - reference: "Organization/SUP001"
+
+    FHIRServiceRequestEligibility:
+      description: >
+        FHIR ServiceRequest for an eligibility check, the status must be 'draft'.
+        It follows the same structure as a new order: contained Patient with full
+        demographics is required, and subject.reference must point to that
+        contained Patient using a fragment identifier (e.g. '#<patient-id>').
+      allOf:
+        - $ref: '#/components/schemas/FHIRServiceRequest'
+        - type: object
+          required:
+            - contained
           properties:
             status:
               type: string
               enum: [draft]
               example: "draft"
+            contained:
+              type: array
+              description: >
+                Required for eligibility checks. Must contain at least one Patient
+                resource with full demographics (name, telecom, address). The subject
+                field must reference this contained Patient using a fragment identifier
+                (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
+              minItems: 1
+              items:
+                type: object
+                required:
+                  - resourceType
+                  - id
+                  - name
+                  - telecom
+                  - address
+                properties:
+                  resourceType:
+                    type: string
+                    enum: [Patient]
+                    example: "Patient"
+                  id:
+                    type: string
+                    description: Local identifier for the contained Patient resource
+                    example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
+                  name:
+                    type: array
+                    description: Patient name(s)
+                    items:
+                      $ref: '#/components/schemas/FHIRHumanName'
+                  telecom:
+                    type: array
+                    description: Contact details - must include both phone and email contact points
+                    minItems: 2
+                    items:
+                      $ref: '#/components/schemas/FHIRContactPoint'
+                  address:
+                    type: array
+                    description: Patient address(es)
+                    items:
+                      $ref: '#/components/schemas/FHIRAddress'
+                  birthDate:
+                    type: string
+                    format: date
+                    description: Patient's date of birth
+                    example: "1985-03-15"
+            subject:
+              allOf:
+                - $ref: '#/components/schemas/FHIRReference'
+                - description: >
+                    Reference to the contained Patient resource using a fragment
+                    identifier. Must match the id of the contained Patient.
+                  example:
+                    reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
     FHIRServiceRequest:
       type: object
       description: FHIR ServiceRequest resource for test orders
@@ -984,6 +1199,112 @@ components:
               resource:
                 $ref: '#/components/schemas/FHIRBundleResults'
   examples:
+    FHIRServiceRequestNewOrderExample:
+      summary: New test order - status 'active', contained Patient with full demographics, subject references contained Patient via fragment identifier
+      value:
+        resourceType: "ServiceRequest"
+        id: "7cb0623e-9cd7-4495-aa66-715c04a81903"
+        status: "active"
+        intent: "order"
+        code:
+          coding:
+            - system: "http://snomed.info/sct"
+              code: "31676001"
+              display: "HIV antigen test"
+          text: "HIV antigen test"
+        contained:
+          - resourceType: "Patient"
+            id: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
+            name:
+              - use: "official"
+                family: "Doe"
+                given: ["Alex"]
+                text: "Alex Doe"
+            telecom:
+              - system: "phone"
+                value: "+447700900000"
+                use: "mobile"
+              - system: "email"
+                value: "alex.doe@example.com"
+                use: "home"
+            address:
+              - use: "home"
+                type: "both"
+                line: ["123 Main Street", "Flat 4B"]
+                city: "London"
+                postalCode: "SW1A 1AA"
+                country: "United Kingdom"
+            birthDate: "1990-01-01"
+        subject:
+          reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        requester:
+          reference: "Organization/ORG001"
+        performer:
+          - reference: "Organization/SUP001"
+
+    FHIRServiceRequestCancellationExample:
+      summary: Order cancellation - status 'revoked', no contained Patient, subject references patient externally via 'Patient/<id>'
+      value:
+        resourceType: "ServiceRequest"
+        id: "7cb0623e-9cd7-4495-aa66-715c04a81903"
+        status: "revoked"
+        intent: "order"
+        code:
+          coding:
+            - system: "http://snomed.info/sct"
+              code: "31676001"
+              display: "HIV antigen test"
+          text: "HIV antigen test"
+        subject:
+          reference: "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        requester:
+          reference: "Organization/ORG001"
+        performer:
+          - reference: "Organization/SUP001"
+
+    FHIRServiceRequestEligibilityExample:
+      summary: Eligibility check - status 'draft', contained Patient with full demographics, subject references contained Patient via fragment identifier
+      value:
+        resourceType: "ServiceRequest"
+        id: "7cb0623e-9cd7-4495-aa66-715c04a81903"
+        status: "draft"
+        intent: "order"
+        code:
+          coding:
+            - system: "http://snomed.info/sct"
+              code: "31676001"
+              display: "HIV antigen test"
+          text: "HIV antigen test"
+        contained:
+          - resourceType: "Patient"
+            id: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
+            name:
+              - use: "official"
+                family: "Doe"
+                given: ["Alex"]
+                text: "Alex Doe"
+            telecom:
+              - system: "phone"
+                value: "+447700900000"
+                use: "mobile"
+              - system: "email"
+                value: "alex.doe@example.com"
+                use: "home"
+            address:
+              - use: "home"
+                type: "both"
+                line: ["123 Main Street", "Flat 4B"]
+                city: "London"
+                postalCode: "SW1A 1AA"
+                country: "United Kingdom"
+            birthDate: "1990-01-01"
+        subject:
+          reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        requester:
+          reference: "Organization/ORG001"
+        performer:
+          - reference: "Organization/SUP001"
+
     FHIRBundleSearchsetResultsBundleExample:
       summary: Example 'Bundle of Bundles' for test results. Each entry in the outer bundle is a Bundle of type 'collection' containing the DiagnosticReport, Observation and Communication resources for a single test result.
       value:

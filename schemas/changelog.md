@@ -24,6 +24,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
   - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
+  - [Version 1.1.7 - July 8, 2026 - Clarify per-endpoint ServiceRequest requirements](#version-117---july-8-2026---clarify-per-endpoint-servicerequest-requirements)
 
 ---
 
@@ -375,3 +376,29 @@ Changes to schemas/fhir-schemas/:
    - Remove mentions of order rejection
    - Add diagram for order states
    - Add documentation for order cancellation, and order acceptance (via eligibility check)
+
+---
+
+## Version 1.1.7 - July 8, 2026 - Clarify per-endpoint ServiceRequest requirements
+
+Changes to `schemas/supplier-api-spec.yaml`:
+
+1. Split ServiceRequest request/response schemas by endpoint intent
+   - Added `FHIRServiceRequestNewOrder` for `POST /order` payloads and responses
+   - Added `FHIRServiceRequestCancellation` for `DELETE /order` payloads and responses
+   - Kept `FHIRServiceRequestEligibility` for `POST /order-eligibility`, with explicit eligibility constraints
+
+2. Made required fields explicit per operation instead of relying on examples
+   - New order and eligibility schemas now explicitly require `contained` Patient demographics and a fragment subject reference (`#<patient-id>`)
+   - Cancellation schema now explicitly models no `contained` resources and requires the external patient reference format (`Patient/<patient-id>`)
+   - Added operation-specific examples for all three flows in `components/examples`
+
+3. Updated endpoint contracts to use operation-specific schemas
+   - `POST /order` now references `FHIRServiceRequestNewOrder`
+   - `DELETE /order` now references `FHIRServiceRequestCancellation`
+   - `POST /order-eligibility` now references `FHIRServiceRequestEligibility` with a dedicated example
+
+4. Extracted shared patient payload definitions to reusable schema components
+   - Added `FHIRContainedPatient` to define contained Patient demographics once and reference it from ServiceRequest schemas
+   - Added `FHIRServiceRequestWithContainedPatient` as a shared base for order and eligibility payloads
+
