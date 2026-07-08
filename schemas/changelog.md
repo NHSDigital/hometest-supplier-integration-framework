@@ -383,21 +383,14 @@ Changes to schemas/fhir-schemas/:
 
 Changes to `schemas/supplier-api-spec.yaml`:
 
-1. Split ServiceRequest request/response contracts by endpoint intent
-   - Introduced shared base schema `FHIRServiceRequest`
-   - Composed endpoint-specific order, cancellation, and eligibility payload contracts using inline `allOf`
+1. Clarified endpoint-specific ServiceRequest contracts using inline `allOf`
+   - `POST /order`, `DELETE /order`, and `POST /order-eligibility` now compose a shared `FHIRServiceRequest` base with endpoint-specific required fields and `status` constraints
+   - This keeps the contract maintenance-friendly while still allowing generated schemas to show the right request/response shape per operation
 
-2. Made required fields explicit per operation instead of relying on examples
-   - New order and eligibility schemas now explicitly require `contained` Patient demographics and a fragment subject reference (`#<patient-id>`)
-   - Cancellation schema now explicitly models no `contained` resources and requires the external patient reference format (`Patient/<patient-id>`)
-   - Cancellation schema now explicitly requires `id` so the order being cancelled is unambiguous
-   - Added operation-specific examples for all three flows in `components/examples`
-
-3. Updated endpoint contracts to trial endpoint-level `allOf` overrides for request and response bodies
-   - Introduced shared base schema `FHIRServiceRequest`
-   - `POST /order`, `DELETE /order`, and `POST /order-eligibility` request/response schemas now compose `FHIRServiceRequest` with per-endpoint required fields and status constraints via inline `allOf`
-   - Dedicated examples are retained for new order, cancellation, and eligibility flows
-
-4. Extracted the shared contained Patient structure into a reusable component
-   - Added `FHIRContainedPatient` to define the Patient demographics structure once and reference it from the new order and eligibility schemas
+2. Extracted the shared contained Patient structure into a reusable component
+   - Added `FHIRContainedPatient` so the contained Patient demographics are defined once and referenced from the order and eligibility request bodies
    - Constrained new order and eligibility payloads to exactly one contained Patient using `minItems: 1` and `maxItems: 1`
+
+3. Added endpoint-specific examples alongside the schema definitions
+   - Added operation-specific examples for new order, cancellation, and eligibility flows in `components/examples`
+   - Preserved the examples as the clearest place to show the different `subject.reference` formats (`#<patient-id>` vs `Patient/<patient-id>`)
