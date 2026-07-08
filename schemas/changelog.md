@@ -402,4 +402,3 @@ Changes to `schemas/supplier-api-spec.yaml`:
 4. Extracted the shared contained Patient structure into a reusable component
    - Added `FHIRContainedPatient` to define the Patient demographics structure once and reference it from the new order and eligibility schemas
    - Constrained new order and eligibility payloads to exactly one contained Patient using `minItems: 1` and `maxItems: 1`
-
