@@ -386,11 +386,12 @@ Changes to `schemas/supplier-api-spec.yaml`:
 1. Split ServiceRequest request/response schemas by endpoint intent
    - Added `FHIRServiceRequestNewOrder` for `POST /order` payloads and responses
    - Added `FHIRServiceRequestCancellation` for `DELETE /order` payloads and responses
-   - Kept `FHIRServiceRequestEligibility` for `POST /order-eligibility`, with explicit eligibility constraints
+   - Updated `FHIRServiceRequestEligibility` for `POST /order-eligibility`, with explicit eligibility constraints
 
 2. Made required fields explicit per operation instead of relying on examples
    - New order and eligibility schemas now explicitly require `contained` Patient demographics and a fragment subject reference (`#<patient-id>`)
    - Cancellation schema now explicitly models no `contained` resources and requires the external patient reference format (`Patient/<patient-id>`)
+   - Cancellation schema now explicitly requires `id` so the order being cancelled is unambiguous
    - Added operation-specific examples for all three flows in `components/examples`
 
 3. Updated endpoint contracts to use operation-specific schemas
@@ -398,7 +399,7 @@ Changes to `schemas/supplier-api-spec.yaml`:
    - `DELETE /order` now references `FHIRServiceRequestCancellation`
    - `POST /order-eligibility` now references `FHIRServiceRequestEligibility` with a dedicated example
 
-4. Extracted shared patient payload definitions to reusable schema components
-   - Added `FHIRContainedPatient` to define contained Patient demographics once and reference it from ServiceRequest schemas
-   - Added `FHIRServiceRequestWithContainedPatient` as a shared base for order and eligibility payloads
+4. Extracted the shared contained Patient structure into a reusable component
+   - Added `FHIRContainedPatient` to define the Patient demographics structure once and reference it from the new order and eligibility schemas
+   - Constrained new order and eligibility payloads to exactly one contained Patient using `minItems: 1` and `maxItems: 1`
 

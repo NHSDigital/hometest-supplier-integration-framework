@@ -380,85 +380,126 @@ paths:
                         diagnostics: "Patient does not meet test supplier eligibility criteria for this test"
 components:
   schemas:
+    FHIRContainedPatient:
+      type: object
+      description: A contained FHIR Patient resource carrying the demographics.
+      required:
+        - resourceType
+        - id
+        - name
+        - telecom
+        - address
+      properties:
+        resourceType:
+          type: string
+          enum: [Patient]
+          example: "Patient"
+        id:
+          type: string
+          description: Local identifier for the contained Patient resource
+          example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        name:
+          type: array
+          description: Patient name(s)
+          items:
+            $ref: '#/components/schemas/FHIRHumanName'
+        telecom:
+          type: array
+          description: Contact details - must include both a phone and an email contact point
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/FHIRContactPoint'
+        address:
+          type: array
+          description: Patient address(es)
+          items:
+            $ref: '#/components/schemas/FHIRAddress'
+        birthDate:
+          type: string
+          format: date
+          description: Patient's date of birth
+          example: "1985-03-15"
+
     FHIRServiceRequestNewOrder:
+      type: object
       description: >
-        FHIR ServiceRequest for placing a new test order, the status must be 'active'.
-        The full Patient demographics must be supplied as a contained resource, and
-        subject.reference must point to that contained Patient using a fragment
-        reference (e.g. '#<patient-id>').
-      allOf:
-        - $ref: '#/components/schemas/FHIRServiceRequest'
-        - type: object
-          required:
-            - contained
-          properties:
-            status:
-              type: string
-              enum: [active]
-              example: "active"
-            contained:
-              type: array
-              description: >
-                Required for new orders. Must contain at least one Patient resource
-                with full demographics (name, telecom, address). The subject field
-                must reference this contained Patient using a fragment identifier
-                (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
-              minItems: 1
-              items:
-                type: object
-                required:
-                  - resourceType
-                  - id
-                  - name
-                  - telecom
-                  - address
-                properties:
-                  resourceType:
-                    type: string
-                    enum: [Patient]
-                    example: "Patient"
-                  id:
-                    type: string
-                    description: Local identifier for the contained Patient resource
-                    example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
-                  name:
-                    type: array
-                    description: Patient name(s)
-                    items:
-                      $ref: '#/components/schemas/FHIRHumanName'
-                  telecom:
-                    type: array
-                    description: Contact details - must include both phone and email contact points
-                    minItems: 2
-                    items:
-                      $ref: '#/components/schemas/FHIRContactPoint'
-                  address:
-                    type: array
-                    description: Patient address(es)
-                    items:
-                      $ref: '#/components/schemas/FHIRAddress'
-                  birthDate:
-                    type: string
-                    format: date
-                    description: Patient's date of birth
-                    example: "1985-03-15"
-            subject:
-              allOf:
-                - $ref: '#/components/schemas/FHIRReference'
-                - description: >
-                    Reference to the contained Patient resource using a fragment
-                    identifier. Must match the id of the contained Patient.
-                  example:
-                    reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        FHIR ServiceRequest for placing a new test order. Status must be 'active'.
+        Full Patient demographics must be supplied as a single contained Patient resource,
+        and subject.reference must point to it using a fragment identifier (e.g. '#<patient-id>').
+      required:
+        - resourceType
+        - status
+        - intent
+        - code
+        - contained
+        - subject
+        - requester
+      properties:
+        resourceType:
+          type: string
+          enum: [ServiceRequest]
+          example: "ServiceRequest"
+        id:
+          type: string
+          description: The id of the order being submitted
+          example: "7cb0623e-9cd7-4495-aa66-715c04a81903"
+        status:
+          type: string
+          enum: [active]
+          example: "active"
+        intent:
+          type: string
+          enum: [order]
+          example: "order"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: What is being requested/ordered (SNOMED CT)
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+                text: "HIV antigen test"
+        contained:
+          type: array
+          description: >
+            Must contain exactly one Patient resource with full demographics
+            (name, telecom, address). subject.reference must use a fragment
+            identifier matching this Patient's id (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/FHIRContainedPatient'
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: >
+                Fragment reference to the contained Patient.
+                Must match the id of the contained Patient (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
+              example:
+                reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
+        requester:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Organization making the request
+              example:
+                reference: "Organization/ORG001"
+        performer:
+          type: array
+          description: Requested performer (this supplier)
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+          example:
+            - reference: "Organization/SUP001"
 
     FHIRServiceRequestCancellation:
-      description: >
-        FHIR ServiceRequest for cancelling an existing order, the status must be 'revoked'.
-        Unlike a new order, cancellations do NOT include a contained Patient resource.
-        Instead the patient is identified via an external reference in subject
-        (e.g. 'Patient/<patient-id>'), matching the same patient id that was
-        returned when the original order was created.
       type: object
+      description: >
+        FHIR ServiceRequest for cancelling an existing order. Status must be 'revoked'.
+        The id field is required to identify which order is being cancelled.
+        No contained Patient is included - instead the patient is referenced externally
+        via subject using the patient id returned in the original order (e.g. 'Patient/<patient-id>').
       required:
         - resourceType
         - id
@@ -498,8 +539,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
             - description: >
-                External reference to the Patient. Does NOT use a fragment reference
-                - instead uses the patient id as returned in the original order response
+                External reference to the Patient using the patient id from the original order response
                 (e.g. 'Patient/<patient-id>'). No contained Patient resource is included.
               example:
                 reference: "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
@@ -518,83 +558,18 @@ components:
             - reference: "Organization/SUP001"
 
     FHIRServiceRequestEligibility:
-      description: >
-        FHIR ServiceRequest for an eligibility check, the status must be 'draft'.
-        It follows the same structure as a new order: contained Patient with full
-        demographics is required, and subject.reference must point to that
-        contained Patient using a fragment identifier (e.g. '#<patient-id>').
-      allOf:
-        - $ref: '#/components/schemas/FHIRServiceRequest'
-        - type: object
-          required:
-            - contained
-          properties:
-            status:
-              type: string
-              enum: [draft]
-              example: "draft"
-            contained:
-              type: array
-              description: >
-                Required for eligibility checks. Must contain at least one Patient
-                resource with full demographics (name, telecom, address). The subject
-                field must reference this contained Patient using a fragment identifier
-                (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
-              minItems: 1
-              items:
-                type: object
-                required:
-                  - resourceType
-                  - id
-                  - name
-                  - telecom
-                  - address
-                properties:
-                  resourceType:
-                    type: string
-                    enum: [Patient]
-                    example: "Patient"
-                  id:
-                    type: string
-                    description: Local identifier for the contained Patient resource
-                    example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
-                  name:
-                    type: array
-                    description: Patient name(s)
-                    items:
-                      $ref: '#/components/schemas/FHIRHumanName'
-                  telecom:
-                    type: array
-                    description: Contact details - must include both phone and email contact points
-                    minItems: 2
-                    items:
-                      $ref: '#/components/schemas/FHIRContactPoint'
-                  address:
-                    type: array
-                    description: Patient address(es)
-                    items:
-                      $ref: '#/components/schemas/FHIRAddress'
-                  birthDate:
-                    type: string
-                    format: date
-                    description: Patient's date of birth
-                    example: "1985-03-15"
-            subject:
-              allOf:
-                - $ref: '#/components/schemas/FHIRReference'
-                - description: >
-                    Reference to the contained Patient resource using a fragment
-                    identifier. Must match the id of the contained Patient.
-                  example:
-                    reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
-    FHIRServiceRequest:
       type: object
-      description: FHIR ServiceRequest resource for test orders
+      description: >
+        FHIR ServiceRequest for an eligibility check. Status must be 'draft'.
+        Follows the same structure as a new order: full Patient demographics must be
+        supplied as a single contained Patient resource, and subject.reference must
+        point to it using a fragment identifier (e.g. '#<patient-id>').
       required:
         - resourceType
         - status
         - intent
         - code
+        - contained
         - subject
         - requester
       properties:
@@ -604,16 +579,14 @@ components:
           example: "ServiceRequest"
         id:
           type: string
-          description: Logical id of this artifact
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          description: The id of the order being checked
+          example: "7cb0623e-9cd7-4495-aa66-715c04a81903"
         status:
           type: string
-          description: Status of the service request
-          enum: [draft, active, revoked]
-          example: "active"
+          enum: [draft]
+          example: "draft"
         intent:
           type: string
-          description: Intent of the service request
           enum: [order]
           example: "order"
         code:
@@ -628,50 +601,20 @@ components:
                 text: "HIV antigen test"
         contained:
           type: array
-          description: Contained resources including Patient demographics
+          description: >
+            Must contain exactly one Patient resource with full demographics
+            (name, telecom, address). subject.reference must use a fragment
+            identifier matching this Patient's id (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
           minItems: 1
+          maxItems: 1
           items:
-            type: object
-            required:
-              - resourceType
-              - id
-              - name
-              - telecom
-              - address
-            properties:
-              resourceType:
-                type: string
-                enum: [Patient]
-                example: "Patient"
-              id:
-                type: string
-                description: Local identifier for contained resource
-                example: "1d6efc98-78e7-4049-9d4f-e651a95d9727"
-              name:
-                type: array
-                description: Patient name(s)
-                items:
-                  $ref: '#/components/schemas/FHIRHumanName'
-              telecom:
-                type: array
-                description: Contact details - must include both phone and email contact points
-                minItems: 2
-                items:
-                  $ref: '#/components/schemas/FHIRContactPoint'
-              address:
-                type: array
-                description: Patient address(es) - FHIR compliant
-                items:
-                  $ref: '#/components/schemas/FHIRAddress'
-              birthDate:
-                type: string
-                format: date
-                description: Patient's date of birth (FHIR standard field name)
-                example: "1985-03-15"
+            $ref: '#/components/schemas/FHIRContainedPatient'
         subject:
           allOf:
             - $ref: '#/components/schemas/FHIRReference'
-            - description: Reference to Patient - use contained resource reference
+            - description: >
+                Fragment reference to the contained Patient.
+                Must match the id of the contained Patient (e.g. '#1d6efc98-78e7-4049-9d4f-e651a95d9727').
               example:
                 reference: "#1d6efc98-78e7-4049-9d4f-e651a95d9727"
         requester:
