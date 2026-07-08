@@ -24,12 +24,14 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
   - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
+  - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
 
 ---
 
 ## Version 1.0.1
 
 ---
+
 Changes to supplier_api_spec.yaml
 
 1. Fixed FHIR ServiceRequest Structure
@@ -90,9 +92,9 @@ Changes to both supplier_api_spec.yaml and home-test-supplier-api.yaml:
 1. Added FHIRReference Reusable Schema
    - Created FHIRReference component schema for proper FHIR Reference datatype
    - Schema includes:
-       - reference (required): Literal reference, Relative, internal or absolute URL
-       - type (optional): Type the reference refers to (e.g., "Organization")
-       - display (optional): Text alternative for the resource
+     - reference (required): Literal reference, Relative, internal or absolute URL
+     - type (optional): Type the reference refers to (e.g., "Organization")
+     - display (optional): Text alternative for the resource
    - Ensures proper typing for code generation (TypeScript/Java/C#)
 
 2. Updated All Reference Fields in supplier_api_spec.yaml
@@ -119,8 +121,8 @@ Changes to both supplier_api_spec.yaml and home-test-supplier-api.yaml:
 5. Added FHIRCodeableConcept Reusable Schema
    - Created FHIRCodeableConcept component schema for proper FHIR CodeableConcept datatype
    - Schema includes:
-       - coding (optional): Array of Coding objects with system, code, and display
-       - text (optional): Plain text representation of the concept
+     - coding (optional): Array of Coding objects with system, code, and display
+     - text (optional): Plain text representation of the concept
    - Ensures proper typing for code generation and consistency across all coded values
 
 6. Updated All CodeableConcept Fields in supplier-api-spec.yaml
@@ -138,20 +140,20 @@ Changes to both supplier_api_spec.yaml and home-test-supplier-api.yaml:
 
 8. Added Reusable FHIR Datatype Schemas
    - Created FHIRCoding component schema for proper FHIR Coding datatype
-       - Properties: system, code, display
-       - Used within FHIRCodeableConcept.coding arrays
+     - Properties: system, code, display
+     - Used within FHIRCodeableConcept.coding arrays
    - Created FHIRIdentifier component schema for proper FHIR Identifier datatype
-       - Properties: system, value, use
-       - Used in Task.identifier arrays
+     - Properties: system, value, use
+     - Used in Task.identifier arrays
    - Created FHIRHumanName component schema for proper FHIR HumanName datatype
-       - Properties: use, family, given, text
-       - Used in Patient.name arrays (supplier-api-spec only)
+     - Properties: use, family, given, text
+     - Used in Patient.name arrays (supplier-api-spec only)
    - Created FHIRContactPoint component schema for proper FHIR ContactPoint datatype
-       - Properties: system, value, use
-       - Used in Patient.telecom arrays (supplier-api-spec only)
+     - Properties: system, value, use
+     - Used in Patient.telecom arrays (supplier-api-spec only)
    - Created FHIRAddress component schema for proper FHIR Address datatype
-       - Properties: use, type, line, city, postalCode, country
-       - Used in Patient.address arrays (supplier-api-spec only)
+     - Properties: use, type, line, city, postalCode, country
+     - Used in Patient.address arrays (supplier-api-spec only)
 
 9. Updated All Inline Datatype Usages in supplier-api-spec.yaml
    - FHIRCodeableConcept.coding: Changed from inline Coding objects to FHIRCoding array
@@ -175,12 +177,12 @@ Changes to both supplier-api-spec.yaml and home-test-supplier-api.yaml:
 
 1. Fixed UUID Validation Issues in Observation Resources
    - **supplier-api-spec.yaml**: Changed FHIRObservation.id example from "550e8400-e29b-41d4-a716-446655440000" to "550e8400-e29b-41d4-a716-446655440001"
-       - Reason: Observation ID conflicted with ServiceRequest ID causing reference validation errors
-       - Ensures unique UUIDs across all resources to prevent FHIR reference mismatches
+     - Reason: Observation ID conflicted with ServiceRequest ID causing reference validation errors
+     - Ensures unique UUIDs across all resources to prevent FHIR reference mismatches
    - **home-test-supplier-api.yaml**: Observation.id example already correctly set to "550e8400-e29b-41d4-a716-446655440001"
    - **supplier-api-spec.yaml**: Updated FHIRBundleSearchsetObservations.entry.fullUrl example to "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
-       - Ensures Bundle fullUrl matches the Observation resource ID
-       - Critical for FHIR Bundle validation where fullUrl must reference the correct resource
+     - Ensures Bundle fullUrl matches the Observation resource ID
+     - Critical for FHIR Bundle validation where fullUrl must reference the correct resource
 
 ---
 
@@ -329,7 +331,7 @@ Changes to supplier-api-spec.yaml
 
 ---
 
-## Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes**
+## Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*
 
 Changes to examples/fhir/:
 
@@ -364,7 +366,7 @@ Changes to schemas/fhir-schemas/:
 
 ---
 
-## Version 1.1.6 - June 22, 2026 - Add order cancellation**
+## Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*
 
 1. Add order cancellation process
    - Allow 'revoked' as a status of the ServiceRequest
@@ -375,3 +377,17 @@ Changes to schemas/fhir-schemas/:
    - Remove mentions of order rejection
    - Add diagram for order states
    - Add documentation for order cancellation, and order acceptance (via eligibility check)
+
+---
+
+## Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication
+
+Changes to home-test-supplier-api.yaml:
+
+This spec is the single source of truth for the supplier API contract and its NHS API Platform (APIM) publication.
+
+1. Add the full APIM documentation in `info.description` in accordance with the published style guides (new sections added - overview, who can use, related APIs, status, service level, technology, network access, security, errors, open source, environments, onboarding)
+
+2. Replace the `BearerAuth` + `NHS_Login` security schemes with a single `bearerAuth` (system-to-system consumers; no NHS Login)
+
+3. Add `servers` (APIM sandbox URL) and `x-spec-publication` (Try this API disabled)
