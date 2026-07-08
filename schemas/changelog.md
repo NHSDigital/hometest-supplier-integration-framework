@@ -383,10 +383,9 @@ Changes to schemas/fhir-schemas/:
 
 Changes to `schemas/supplier-api-spec.yaml`:
 
-1. Split ServiceRequest request/response schemas by endpoint intent
-   - Added `FHIRServiceRequestNewOrder` for `POST /order` payloads and responses
-   - Added `FHIRServiceRequestCancellation` for `DELETE /order` payloads and responses
-   - Updated `FHIRServiceRequestEligibility` for `POST /order-eligibility`, with explicit eligibility constraints
+1. Split ServiceRequest request/response contracts by endpoint intent
+   - Introduced shared base schema `FHIRServiceRequest`
+   - Composed endpoint-specific order, cancellation, and eligibility payload contracts using inline `allOf`
 
 2. Made required fields explicit per operation instead of relying on examples
    - New order and eligibility schemas now explicitly require `contained` Patient demographics and a fragment subject reference (`#<patient-id>`)
@@ -394,10 +393,10 @@ Changes to `schemas/supplier-api-spec.yaml`:
    - Cancellation schema now explicitly requires `id` so the order being cancelled is unambiguous
    - Added operation-specific examples for all three flows in `components/examples`
 
-3. Updated endpoint contracts to use operation-specific schemas
-   - `POST /order` now references `FHIRServiceRequestNewOrder`
-   - `DELETE /order` now references `FHIRServiceRequestCancellation`
-   - `POST /order-eligibility` now references `FHIRServiceRequestEligibility` with a dedicated example
+3. Updated endpoint contracts to trial endpoint-level `allOf` overrides for request and response bodies
+   - Introduced shared base schema `FHIRServiceRequest`
+   - `POST /order`, `DELETE /order`, and `POST /order-eligibility` request/response schemas now compose `FHIRServiceRequest` with per-endpoint required fields and status constraints via inline `allOf`
+   - Dedicated examples are retained for new order, cancellation, and eligibility flows
 
 4. Extracted the shared contained Patient structure into a reusable component
    - Added `FHIRContainedPatient` to define the Patient demographics structure once and reference it from the new order and eligibility schemas
