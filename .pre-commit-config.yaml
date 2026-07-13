@@ -62,8 +62,9 @@ repos:
     hooks:
       - id: biome
         name: biome
-        entry: biome ci --verbose
+        entry: biome ci
         language: system
+        pass_filenames: false
 
   - repo: local
     hooks:

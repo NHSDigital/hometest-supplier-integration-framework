@@ -21,7 +21,7 @@
   "businessStatus": {
     "text": "received-at-lab"
   },
-  "statusReason" : {
+  "statusReason": {
     "text": " Test kit has been received at the lab and is being processed"
   }
 }
