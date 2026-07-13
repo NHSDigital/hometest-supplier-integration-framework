@@ -12,6 +12,7 @@
 
 # Please, add your custom content below!
 /.idea/
+.vscode/
 schemas/home-test-consumer-api.yaml
 
 *.jar
