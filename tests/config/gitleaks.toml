@@ -16,4 +16,4 @@ regexes = [
 ]
 
 [allowlist]
-paths = ['''.terraform.lock.hcl''', '''poetry.lock''', '''yarn.lock''', '''.pre-commit-config.yaml''']
+paths = ['''.terraform.lock.hcl''', '''poetry.lock''', '''yarn.lock''', '''.pre-commit-config.yaml''', '''\.local''']

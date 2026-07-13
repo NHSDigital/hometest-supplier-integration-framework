@@ -20,7 +20,9 @@
         "text": "Test not available"
       },
       "diagnostics": "The requested test is not available from this supplier",
-      "expression": ["ServiceRequest.code"]
+      "expression": [
+        "ServiceRequest.code"
+      ]
     }
   ]
 }
