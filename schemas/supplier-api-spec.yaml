@@ -269,11 +269,6 @@ paths:
                       type: string
                       enum: [revoked]
                       example: "revoked"
-                    subject:
-                      allOf:
-                        - $ref: '#/components/schemas/FHIRReference'
-                        - example:
-                            reference: "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
             examples:
               cancellation:
                 $ref: '#/components/examples/FHIRServiceRequestCancellationExample'
@@ -299,11 +294,6 @@ paths:
                         type: string
                         enum: [revoked]
                         example: "revoked"
-                      subject:
-                        allOf:
-                          - $ref: '#/components/schemas/FHIRReference'
-                          - example:
-                              reference: "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
               examples:
                 cancellation:
                   $ref: '#/components/examples/FHIRServiceRequestCancellationExample'
@@ -396,7 +386,7 @@ paths:
     post:
       summary: Check Eligibility for Test Order
       operationId: checkOrderEligibility
-      description: Check if a new test order from the home test platform is eligible based on supplier rules
+      description: Check if a new test order from the home test platform is eligible based on supplier rules. This uses a FHIR ServiceRequest resource with status 'draft'.
       tags:
         - Order Management
       parameters:
