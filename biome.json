@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false,
+    "ignoreUnknown": true,
     "includes": [
       "**",
       "!/tests/postman"
@@ -31,7 +31,7 @@
   },
   "json": {
     "formatter": {
-      "expand": "always",
+      "expand": "always"
     }
   },
   "assist": {
