@@ -1,4 +1,4 @@
-# WARNING: Please, DO NOT edit this section of the file! It is maintained in the repository template.
+.DS_Store
 
 .scannerwork
 *cloc*report*.json
