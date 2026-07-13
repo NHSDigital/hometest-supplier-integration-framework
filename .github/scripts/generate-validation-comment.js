@@ -32,23 +32,23 @@ function fileDetails(operationOutcome) {
   const fullPath = operationOutcome.extension?.find(e =>
     e.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-file'
   )?.valueString;
-  if  (!fullPath) {
-    return { filename: 'UNKNOWN', url: null}
+  if (!fullPath) {
+    return {filename: 'UNKNOWN', url: null}
   }
   const filename = path.basename(fullPath);
   const url = fileUrl(fullPath);
 
-  return { filename, url }
+  return {filename, url}
 }
 
-const SEVERITY_ICON = { error: '❌', fatal: '❌', warning: '⚠️', information: 'ℹ️' };
+const SEVERITY_ICON = {error: '❌', fatal: '❌', warning: '⚠️', information: 'ℹ️'};
 
 let body;
 
 if (!fs.existsSync(resultsPath)) {
   body = `## 🔬 FHIR Validation Results\n\n` +
-         `❌ Validation did not produce a results file. ` +
-         `Check the [workflow run](${runUrl}) for details.`;
+    `❌ Validation did not produce a results file. ` +
+    `Check the [workflow run](${runUrl}) for details.`;
 } else {
   const raw = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
 
@@ -74,14 +74,21 @@ if (!fs.existsSync(resultsPath)) {
       const message = issue.details?.text ?? issue.diagnostics ?? '—';
       const row = `| ${icon} \`${sev}\` | \`${location}\` | ${message} |`;
 
-      if (sev === 'error' || sev === 'fatal') { errors++; fileErrors.push(row); }
-      else if (sev === 'warning') { warnings++; fileWarnings.push(row); }
-      else { info++; fileInfo.push(row); }
+      if (sev === 'error' || sev === 'fatal') {
+        errors++;
+        fileErrors.push(row);
+      } else if (sev === 'warning') {
+        warnings++;
+        fileWarnings.push(row);
+      } else if (sev === 'information' && message.trim() !== 'All OK') {
+        info++;
+        fileInfo.push(row);
+      }
     }
 
     const allRows = [...fileErrors, ...fileWarnings, ...fileInfo];
     if (allRows.length > 0) {
-      byFile.push({ filename, url, rows: allRows, hasErrors: fileErrors.length > 0 });
+      byFile.push({filename, url, rows: allRows, hasErrors: fileErrors.length > 0});
     }
   }
 
@@ -95,7 +102,7 @@ if (!fs.existsSync(resultsPath)) {
 
   let details = '';
   if (byFile.length > 0) {
-    for (const { filename, url, rows, hasErrors } of byFile) {
+    for (const {filename, url, rows, hasErrors} of byFile) {
       const open = hasErrors ? ' open' : '';
       const label = url ? `<a href="${url}"><code>${filename}</code></a>` : `<code>${filename}</code>`;
       details += `\n<details${open}>\n<summary>${label}</summary>\n\n`;
@@ -108,9 +115,9 @@ if (!fs.existsSync(resultsPath)) {
   }
 
   body = `## 🔬 FHIR Validation Results\n\n` +
-         `${overall} — ${summary}\n` +
-         details +
-         `\n> Full HTML report available in the [workflow run artifacts](${runUrl}).`;
+    `${overall} — ${summary}\n` +
+    details +
+    `\n> Full HTML report available in the [workflow run artifacts](${runUrl}).`;
 }
 
 const warning = validationOutcome === 'failure'
