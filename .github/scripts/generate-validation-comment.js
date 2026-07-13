@@ -83,7 +83,7 @@ if (!fs.existsSync(resultsPath)) {
       } else if (sev === "warning") {
         warnings++;
         fileWarnings.push(row);
-      } else {
+      } else if (sev === "information" && message.trim() !== "All OK") {
         info++;
         fileInfo.push(row);
       }
