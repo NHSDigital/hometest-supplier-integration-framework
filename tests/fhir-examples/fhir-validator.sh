@@ -29,9 +29,9 @@ while getopts ":j:i:o:v:c:" opt; do
   case $opt in
     j) VALIDATOR_LOCATION="$(realpath "$OPTARG")" ;;
     i) TO_VALIDATE="$(realpath "$OPTARG")" ;;
-    o) OUTPUT_DIR="$OPTARG" ;;
+    o) OUTPUT_DIR="$(realpath "$OPTARG")" ;;
     v) FHIR_VERSION="$OPTARG" ;;
-    c) VALIDATOR_CACHE="$OPTARG" ;;
+    c) VALIDATOR_CACHE="$(realpath "$OPTARG")" ;;
     :) echo "Error: Flag -$OPTARG requires an argument." >&2; usage ;;
     \?) echo "Error: Unknown flag -$OPTARG." >&2; usage ;;
     *) echo "Error: Unexpected option -$opt." >&2; usage ;;

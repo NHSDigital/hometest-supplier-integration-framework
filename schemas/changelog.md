@@ -24,6 +24,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.4 - June 10, 2026 - Resolve OpenAPI spec Spectral validation warnings](#version-114---june-10-2026---resolve-openapi-spec-spectral-validation-warnings)
   - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
+  - [Version 1.1.7 - July 8, 2026 - Clarify per-endpoint ServiceRequest requirements](#version-117---july-8-2026---clarify-per-endpoint-servicerequest-requirements)
 
 ---
 
@@ -375,3 +376,21 @@ Changes to schemas/fhir-schemas/:
    - Remove mentions of order rejection
    - Add diagram for order states
    - Add documentation for order cancellation, and order acceptance (via eligibility check)
+
+---
+
+## Version 1.1.7 - July 8, 2026 - Clarify per-endpoint ServiceRequest requirements
+
+Changes to `schemas/supplier-api-spec.yaml`:
+
+1. Clarified endpoint-specific ServiceRequest contracts using inline `allOf`
+   - `POST /order`, `DELETE /order`, and `POST /order-eligibility` now compose a shared `FHIRServiceRequest` base with endpoint-specific required fields and `status` constraints
+   - This keeps the contract maintenance-friendly while still allowing generated schemas to show the right request/response shape per operation
+
+2. Extracted the shared contained Patient structure into a reusable component
+   - Added `FHIRContainedPatient` so the contained Patient demographics are defined once and referenced from the order and eligibility request bodies
+   - Constrained new order and eligibility payloads to exactly one contained Patient using `minItems: 1` and `maxItems: 1`
+
+3. Added endpoint-specific examples alongside the schema definitions
+   - Added operation-specific examples for new order, cancellation, and eligibility flows in `components/examples`
+   - Preserved the examples as the clearest place to show the different `subject.reference` formats (`#<patient-id>` vs `Patient/<patient-id>`)
