@@ -33,13 +33,8 @@
             ],
             "url": {
               "raw": "{{supplier_base_url}}/oauth/token",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "oauth",
-                "token"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["oauth", "token"]
             },
             "body": {
               "mode": "urlencoded",
@@ -129,12 +124,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         },
@@ -165,12 +156,8 @@
             "method": "GET",
             "url": {
               "raw": "{{supplier_base_url}}/results?order_uid={{order_uid}}",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "results"
-              ],
+              "host": ["{{supplier_base_url}}"],
+              "path": ["results"],
               "query": [
                 {
                   "key": "order_uid",
@@ -229,12 +216,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         },
@@ -279,12 +262,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         },
@@ -329,12 +308,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         },
@@ -381,12 +356,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         },
@@ -436,12 +407,8 @@
             },
             "url": {
               "raw": "{{supplier_base_url}}/order",
-              "host": [
-                "{{supplier_base_url}}"
-              ],
-              "path": [
-                "order"
-              ]
+              "host": ["{{supplier_base_url}}"],
+              "path": ["order"]
             }
           }
         }

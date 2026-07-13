@@ -25,9 +25,7 @@
         {
           "use": "official",
           "family": "Doe",
-          "given": [
-            "Alex"
-          ],
+          "given": ["Alex"],
           "text": "Alex Doe"
         }
       ],
@@ -47,10 +45,7 @@
         {
           "use": "home",
           "type": "both",
-          "line": [
-            "123 Main Street",
-            "Flat 4B"
-          ],
+          "line": ["123 Main Street", "Flat 4B"],
           "city": "London",
           "postalCode": "SW1A 1AA",
           "country": "United Kingdom"
