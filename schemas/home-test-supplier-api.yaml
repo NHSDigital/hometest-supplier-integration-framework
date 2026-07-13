@@ -2,18 +2,140 @@
 openapi: 3.0.3
 info:
   title: Home Test Supplier API
-  description: API for supplier domain operations - managing test results and order status updates
-  version: 1.1.6
+  description: |
+    ## Overview
+
+    Use this API to send completed home test results and order status updates to the HomeTest service.
+
+    HomeTest is the API producer and test kit suppliers are the API consumers. Suppliers use this API after they have received an order through the companion supplier-hosted API and need to tell HomeTest what happened next.
+
+    You can:
+
+    * submit a completed test result
+    * update the status of a test order
+
+    You cannot use this API to:
+
+    * create a new test order
+    * check whether a person is eligible for a test
+    * retrieve patient demographic details
+    * retrieve historical test results
+
+    Payloads use [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#fhir) resources encoded as `application/fhir+json`.
+
+    ## Who can use this API
+
+    This API is intended for approved home test suppliers integrating with the HomeTest service.
+
+    Suppliers must agree their use case and onboarding route with the HomeTest team before using this API.
+
+    ## Related APIs
+
+    The companion supplier-hosted API is used by HomeTest to send orders to suppliers and check order eligibility. This API is the reverse direction: suppliers use it to send results and order status updates back to HomeTest.
+
+    ## API status and roadmap
+
+    This API is being prepared for private beta on the NHS API Platform.
+
+    A sandbox instance is available for testing purposes with canned responses.
+
+    For questions about the roadmap, use the [NHS Digital Developer Community](https://developer.community.nhs.uk/) or contact the HomeTest team.
+
+    ## Service level
+
+    This API is a bronze service for private beta.
+
+    For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
+
+    ## Technology
+
+    This API is a RESTful API using OpenAPI 3.0.3.
+
+    Request and response bodies use FHIR JSON resources. The FHIR resources are constrained by this API specification and the HomeTest integration guidance.
+
+    ## Network access
+
+    The API is expected to be available over the internet through the NHS API Platform when deployed.
+
+    ## Security and authorisation
+
+    This draft uses bearer token authorisation because suppliers are system-to-system API consumers.
+
+    The final access level must be confirmed with the NHS API Platform team before production use.
+
+    ## Errors
+
+    This API uses standard HTTP status codes:
+
+    * `200` to `299` means the request succeeded
+    * `400` to `499` means the request failed because of a client error
+    * `500` to `599` means the request failed because of a server error
+
+    Error responses use FHIR OperationOutcome resources where possible.
+
+    ## Open source
+
+    The API contract is maintained in the publicly accessible [HomeTest supplier integration framework repository](https://github.com/NHSDigital/hometest-supplier-integration-framework).
+
+    ## Environments and testing
+
+    A sandbox has been deployed to the NHS API Platform and is available under the `https://sandbox.api.service.nhs.uk/hometest-api` base URL.
+
+    The "Try this API" feature is disabled for this documentation-only publication until a sandbox endpoint is available.
+
+    ## Onboarding
+
+    Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.
+  version: 1.1.7
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
 
+x-spec-publication:
+  try-this-api:
+    disabled: true
+
+servers:
+  - url: https://sandbox.api.service.nhs.uk/hometest-api
+    description: Sandbox environment
+
 paths:
   /result:
     post:
-      summary: Post Test Results
+      summary: Submit test results
       operationId: postTestResultsToHomeTest
-      description: Submit test results for a completed order
+      description: |
+        ## Overview
+
+        Submit a completed home test result to HomeTest.
+
+        Use this endpoint when a supplier has processed a test and needs to send the result back to HomeTest.
+
+        The request body is a FHIR Bundle containing:
+
+        * a DiagnosticReport
+        * an Observation
+        * a Communication
+
+        The `X-Correlation-ID` header is required for request tracking and idempotency.
+
+        ## Business rules
+
+        The bundle must describe the result for an existing HomeTest order.
+
+        The DiagnosticReport groups the result resources. The Observation carries the coded test result. The Communication records whether clinical contact has been completed, is on hold, or is not needed.
+
+        ## Responses
+
+        A successful request returns `201` with the accepted FHIR Bundle.
+
+        An invalid request returns `400` with a FHIR OperationOutcome.
+
+        An unauthorised request returns `401` with a FHIR OperationOutcome.
+
+        ## Sandbox test scenarios
+
+        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
       tags:
         - Result Service
       parameters:
@@ -30,30 +152,63 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRBundleResults'
+              $ref: "#/components/schemas/FHIRBundleResults"
             examples:
               FHIRBundleResultsExample:
-                $ref: '#/components/examples/FHIRBundleResultsExample'
+                $ref: "#/components/examples/FHIRBundleResultsExample"
       responses:
-        '201':
+        "201":
           description: Results posted successfully
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundleResults'
+                $ref: "#/components/schemas/FHIRBundleResults"
               examples:
                 FHIRBundleResultsExample:
-                  $ref: '#/components/examples/FHIRBundleResultsExample'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                  $ref: "#/components/examples/FHIRBundleResultsExample"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
 
   /test-order/status:
     post:
-      summary: Update Order Status
+      summary: Update order status
       operationId: updateOrderStatus
-      description: Update the status of an existing order using FHIR Task resource
+      description: |
+        ## Overview
+
+        Update the status of an existing HomeTest order.
+
+        Use this endpoint when a supplier needs to tell HomeTest that an order has moved to a new supplier-side state.
+
+        The request body is a FHIR Task resource. The FHIR Task.status value gives the standard FHIR task state. The businessStatus.text value gives the HomeTest-specific order state.
+
+        Expected HomeTest business status values are:
+
+        * `dispatched`
+        * `received-at-lab`
+        * `test-processed`
+
+        The `X-Correlation-ID` header is required for request tracking and idempotency.
+
+        ## Business rules
+
+        The status update must refer to an existing HomeTest order.
+
+        Use `businessStatus.text` for the HomeTest-specific supplier state. Use `Task.status` for the standard FHIR task state.
+
+        ## Responses
+
+        A successful request returns `200` with the accepted FHIR Task.
+
+        An invalid request returns `400` with a FHIR OperationOutcome.
+
+        A request for an unknown order returns `404` with a FHIR OperationOutcome.
+
+        ## Sandbox test scenarios
+
+        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
       tags:
         - Order Management
       parameters:
@@ -70,24 +225,24 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRTask'
+              $ref: "#/components/schemas/FHIRTask"
             examples:
               FHIRTaskExample:
-                $ref: '#/components/examples/FHIRTaskExample'
+                $ref: "#/components/examples/FHIRTaskExample"
       responses:
-        '200':
+        "200":
           description: Status updated successfully
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRTask'
+                $ref: "#/components/schemas/FHIRTask"
               examples:
                 FHIRTaskExample:
-                  $ref: '#/components/examples/FHIRTaskExample'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                  $ref: "#/components/examples/FHIRTaskExample"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
 components:
   schemas:
@@ -127,15 +282,15 @@ components:
                 example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
               resource:
                 oneOf:
-                  - $ref: '#/components/schemas/FHIRDiagnosticReport'
-                  - $ref: '#/components/schemas/FHIRObservation'
-                  - $ref: '#/components/schemas/FHIRCommunication'
+                  - $ref: "#/components/schemas/FHIRDiagnosticReport"
+                  - $ref: "#/components/schemas/FHIRObservation"
+                  - $ref: "#/components/schemas/FHIRCommunication"
                 discriminator:
                   propertyName: resourceType
                   mapping:
-                    DiagnosticReport: '#/components/schemas/FHIRDiagnosticReport'
-                    Observation: '#/components/schemas/FHIRObservation'
-                    Communication: '#/components/schemas/FHIRCommunication'
+                    DiagnosticReport: "#/components/schemas/FHIRDiagnosticReport"
+                    Observation: "#/components/schemas/FHIRObservation"
+                    Communication: "#/components/schemas/FHIRCommunication"
           minItems: 3
           maxItems: 3
     FHIRDiagnosticReport:
@@ -166,7 +321,7 @@ components:
           description: Reference to the ServiceRequest this DiagnosticReport fulfills
           items:
             allOf:
-              - $ref: '#/components/schemas/FHIRReference'
+              - $ref: "#/components/schemas/FHIRReference"
               - example:
                   reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
         status:
@@ -178,7 +333,7 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/FHIRCodeableConcept'
+            $ref: "#/components/schemas/FHIRCodeableConcept"
           description: Category of the diagnostic report (should be LAB/Laboratory for test results)
           example:
             - coding:
@@ -188,7 +343,7 @@ components:
               text: "Laboratory"
         code:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: "#/components/schemas/FHIRCodeableConcept"
             - description: Always use SNOMED CT code 721981007 for "Diagnostic studies report"
               example:
                 coding:
@@ -198,7 +353,7 @@ components:
                 text: "Diagnostic studies report"
         subject:
           allOf:
-            - $ref: '#/components/schemas/FHIRReference'
+            - $ref: "#/components/schemas/FHIRReference"
             - description: Patient reference for matching with service request - PII removed for results
               example:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
@@ -216,13 +371,13 @@ components:
           type: array
           description: Organisation responsible for the diagnostic report
           items:
-            $ref: '#/components/schemas/FHIRReference'
+            $ref: "#/components/schemas/FHIRReference"
         result:
           type: array
           description: References to the observations that are part of this report
           items:
             allOf:
-              - $ref: '#/components/schemas/FHIRReference'
+              - $ref: "#/components/schemas/FHIRReference"
               - example:
                   reference: "urn:uuid:550e8400-e29b-41d4"
     FHIRObservation:
@@ -256,7 +411,7 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/FHIRCodeableConcept'
+            $ref: "#/components/schemas/FHIRCodeableConcept"
           description: Category of the observation (should be laboratory/Laboratory for observation category)
           example:
             - coding:
@@ -265,7 +420,7 @@ components:
                   display: "Laboratory"
         code:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: "#/components/schemas/FHIRCodeableConcept"
             - description: The SNOMED-CT 'Observable Entity' code for the specific test performed (e.g., HIV antigen test)
               example:
                 coding:
@@ -277,7 +432,7 @@ components:
                     display: "HIV antigen test"
         subject:
           allOf:
-            - $ref: '#/components/schemas/FHIRReference'
+            - $ref: "#/components/schemas/FHIRReference"
             - description: Patient reference for matching with service request - PII removed for results
               example:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
@@ -295,10 +450,10 @@ components:
           type: array
           description: The Organisation responsible for the Observation
           items:
-            $ref: '#/components/schemas/FHIRReference'
+            $ref: "#/components/schemas/FHIRReference"
         valueCodeableConcept:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: "#/components/schemas/FHIRCodeableConcept"
             - description: Actual result (for coded results)
               example:
                 coding:
@@ -332,7 +487,7 @@ components:
           description: Reference to the Observation this communication is about
           items:
             allOf:
-              - $ref: '#/components/schemas/FHIRReference'
+              - $ref: "#/components/schemas/FHIRReference"
               - example:
                   reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
     FHIRTask:
@@ -359,13 +514,13 @@ components:
           type: array
           description: Task Instance Identifier
           items:
-            $ref: '#/components/schemas/FHIRIdentifier'
+            $ref: "#/components/schemas/FHIRIdentifier"
         basedOn:
           type: array
           description: Reference to the ServiceRequest this task fulfills
           items:
             allOf:
-              - $ref: '#/components/schemas/FHIRReference'
+              - $ref: "#/components/schemas/FHIRReference"
               - example:
                   reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
         status:
@@ -375,7 +530,7 @@ components:
           example: "in-progress"
         businessStatus:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: "#/components/schemas/FHIRCodeableConcept"
             - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
@@ -386,13 +541,13 @@ components:
           example: "order"
         statusReason:
           allOf:
-            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - $ref: "#/components/schemas/FHIRCodeableConcept"
             - description: Reason for current status
               example:
                 text: "Test kit dispatched to patient"
         for:
           allOf:
-            - $ref: '#/components/schemas/FHIRReference'
+            - $ref: "#/components/schemas/FHIRReference"
             - description: Beneficiary of the Task
               example:
                 reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
@@ -408,13 +563,13 @@ components:
           example: "2025-11-04T10:35:00Z"
         requester:
           allOf:
-            - $ref: '#/components/schemas/FHIRReference'
+            - $ref: "#/components/schemas/FHIRReference"
             - description: Who is asking for task to be done
               example:
                 reference: "Organization/ORG001"
         owner:
           allOf:
-            - $ref: '#/components/schemas/FHIRReference'
+            - $ref: "#/components/schemas/FHIRReference"
             - description: Responsible individual for the task
               example:
                 reference: "Organization/SUP001"
@@ -451,11 +606,44 @@ components:
               code:
                 type: string
                 description: Error or warning code
-                enum: [invalid, structure, required, value, invariant, security, login, unknown, expired, forbidden, suppressed, processing, not-supported, duplicate, multiple-matches, not-found, deleted, too-long, code-invalid, extension, too-costly, business-rule, conflict, transient, lock-error, no-store, exception, timeout, incomplete, throttled, informational]
+                enum:
+                  [
+                    invalid,
+                    structure,
+                    required,
+                    value,
+                    invariant,
+                    security,
+                    login,
+                    unknown,
+                    expired,
+                    forbidden,
+                    suppressed,
+                    processing,
+                    not-supported,
+                    duplicate,
+                    multiple-matches,
+                    not-found,
+                    deleted,
+                    too-long,
+                    code-invalid,
+                    extension,
+                    too-costly,
+                    business-rule,
+                    conflict,
+                    transient,
+                    lock-error,
+                    no-store,
+                    exception,
+                    timeout,
+                    incomplete,
+                    throttled,
+                    informational,
+                  ]
                 example: "invalid"
               details:
                 allOf:
-                  - $ref: '#/components/schemas/FHIRCodeableConcept'
+                  - $ref: "#/components/schemas/FHIRCodeableConcept"
                   - description: Additional details about the error
                     example:
                       text: "Invalid parameter provided"
@@ -501,7 +689,7 @@ components:
           type: array
           description: Code defined by a terminology system
           items:
-            $ref: '#/components/schemas/FHIRCoding'
+            $ref: "#/components/schemas/FHIRCoding"
         text:
           type: string
           description: Plain text representation of the concept
@@ -655,7 +843,7 @@ components:
       content:
         application/fhir+json:
           schema:
-            $ref: '#/components/schemas/FHIROperationOutcome'
+            $ref: "#/components/schemas/FHIROperationOutcome"
           example:
             resourceType: "OperationOutcome"
             issue:
@@ -670,7 +858,7 @@ components:
       content:
         application/fhir+json:
           schema:
-            $ref: '#/components/schemas/FHIROperationOutcome'
+            $ref: "#/components/schemas/FHIROperationOutcome"
           example:
             resourceType: "OperationOutcome"
             issue:
@@ -685,7 +873,7 @@ components:
       content:
         application/fhir+json:
           schema:
-            $ref: '#/components/schemas/FHIROperationOutcome'
+            $ref: "#/components/schemas/FHIROperationOutcome"
           example:
             resourceType: "OperationOutcome"
             issue:
@@ -696,24 +884,13 @@ components:
                 diagnostics: "The requested order could not be found"
 
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    NHS_Login:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: https://auth.nhs.uk/oauth2/authorize
-          tokenUrl: https://auth.nhs.uk/oauth2/token
-          scopes:
-            read: Read access to test information
-            write: Write access to create orders
-            admin: Administrative access
 
 security:
-  - BearerAuth: []
-  - NHS_Login: []
+  - bearerAuth: []
 
 tags:
   - name: Order Management
