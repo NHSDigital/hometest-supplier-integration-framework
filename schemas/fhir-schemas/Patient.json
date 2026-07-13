@@ -16,7 +16,9 @@
     {
       "use": "official",
       "family": "Smith",
-      "given": ["John"],
+      "given": [
+        "John"
+      ],
       "text": "John Smith"
     }
   ],
@@ -36,7 +38,10 @@
     {
       "use": "home",
       "type": "both",
-      "line": ["123 Main Street", "Apartment 2B"],
+      "line": [
+        "123 Main Street",
+        "Apartment 2B"
+      ],
       "city": "London",
       "postalCode": "SW1A 1AA",
       "country": "United Kingdom"
