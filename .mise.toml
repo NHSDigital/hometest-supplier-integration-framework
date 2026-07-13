@@ -39,6 +39,9 @@ typos = "1.47.0"
 # Required by: .github/workflows/ (yq to read/update YAML values)
 yq = "4.53.2"
 
+# https://github.com/biomejs/biome
+biome = "2.5.2"
+
 # ─── Security scanning ───────────────────────────────────────────────────────
 
 # https://github.com/gitleaks/gitleaks/releases

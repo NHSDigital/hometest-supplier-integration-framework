@@ -1,4 +1,4 @@
-# WARNING: Please, DO NOT edit this section of the file! It is maintained in the repository template.
+.DS_Store
 
 .scannerwork
 *cloc*report*.json
@@ -12,6 +12,7 @@
 
 # Please, add your custom content below!
 /.idea/
+.vscode/
 schemas/home-test-consumer-api.yaml
 
 *.jar

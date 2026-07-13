@@ -60,6 +60,14 @@ repos:
 
   - repo: local
     hooks:
+      - id: biome
+        name: biome
+        entry: biome ci
+        language: system
+        pass_filenames: false
+
+  - repo: local
+    hooks:
       - id: gitleaks
         name: gitleaks
         entry: gitleaks detect --no-git --redact --verbose --config=tests/config/gitleaks.toml
