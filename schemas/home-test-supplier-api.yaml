@@ -43,7 +43,9 @@ info:
 
     ## Service level
 
-    A service level has not been published yet.
+    This API is a bronze service for private beta.
+
+    For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
 
     ## Technology
 
@@ -69,11 +71,11 @@ info:
     * `400` to `499` means the request failed because of a client error
     * `500` to `599` means the request failed because of a server error
 
-    Error responses use FHIR `OperationOutcome` resources where possible.
+    Error responses use FHIR OperationOutcome resources where possible.
 
     ## Open source
 
-    The API contract is maintained in the [HomeTest supplier integration framework repository](https://github.com/NHSDigital/hometest-supplier-integration-framework).
+    The API contract is maintained in the publicly accessible [HomeTest supplier integration framework repository](https://github.com/NHSDigital/hometest-supplier-integration-framework).
 
     ## Environments and testing
 
@@ -109,11 +111,11 @@ paths:
 
         Use this endpoint when a supplier has processed a test and needs to send the result back to HomeTest.
 
-        The request body is a FHIR `Bundle` containing:
+        The request body is a FHIR Bundle containing:
 
-        * a `DiagnosticReport`
-        * an `Observation`
-        * a `Communication`
+        * a DiagnosticReport
+        * an Observation
+        * a Communication
 
         The `X-Correlation-ID` header is required for request tracking and idempotency.
 
@@ -121,15 +123,15 @@ paths:
 
         The bundle must describe the result for an existing HomeTest order.
 
-        The `DiagnosticReport` groups the result resources. The `Observation` carries the coded test result. The `Communication` records whether clinical contact has been completed, is on hold, or is not needed.
+        The DiagnosticReport groups the result resources. The Observation carries the coded test result. The Communication records whether clinical contact has been completed, is on hold, or is not needed.
 
         ## Responses
 
-        A successful request returns `201` with the accepted FHIR `Bundle`.
+        A successful request returns `201` with the accepted FHIR Bundle.
 
-        An invalid request returns `400` with a FHIR `OperationOutcome`.
+        An invalid request returns `400` with a FHIR OperationOutcome.
 
-        An unauthorised request returns `401` with a FHIR `OperationOutcome`.
+        An unauthorised request returns `401` with a FHIR OperationOutcome.
 
         ## Sandbox test scenarios
 
@@ -180,7 +182,7 @@ paths:
 
         Use this endpoint when a supplier needs to tell HomeTest that an order has moved to a new supplier-side state.
 
-        The request body is a FHIR `Task` resource. The FHIR `Task.status` value gives the standard FHIR task state. The `businessStatus.text` value gives the HomeTest-specific order state.
+        The request body is a FHIR Task resource. The FHIR Task.status value gives the standard FHIR task state. The businessStatus.text value gives the HomeTest-specific order state.
 
         Expected HomeTest business status values are:
 
@@ -198,11 +200,11 @@ paths:
 
         ## Responses
 
-        A successful request returns `200` with the accepted FHIR `Task`.
+        A successful request returns `200` with the accepted FHIR Task.
 
-        An invalid request returns `400` with a FHIR `OperationOutcome`.
+        An invalid request returns `400` with a FHIR OperationOutcome.
 
-        A request for an unknown order returns `404` with a FHIR `OperationOutcome`.
+        A request for an unknown order returns `404` with a FHIR OperationOutcome.
 
         ## Sandbox test scenarios
 

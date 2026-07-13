@@ -384,8 +384,6 @@ Changes to schemas/fhir-schemas/:
 
 Changes to home-test-supplier-api.yaml:
 
-This spec is the single source of truth for the supplier API contract and its NHS API Platform (APIM) publication.
-
 1. Add the full APIM documentation in `info.description` in accordance with the published style guides (new sections added - overview, who can use, related APIs, status, service level, technology, network access, security, errors, open source, environments, onboarding)
 
 2. Replace the `BearerAuth` + `NHS_Login` security schemes with a single `bearerAuth` (system-to-system consumers; no NHS Login)
