@@ -391,7 +391,6 @@ Changes to home-test-supplier-api.yaml:
 
 3. Add `servers` (APIM sandbox URL) and `x-spec-publication` (Try this API disabled)
 
-
 ---
 
 ## Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas
