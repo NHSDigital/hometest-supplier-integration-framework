@@ -530,7 +530,7 @@ components:
           example: "in-progress"
         businessStatus:
           allOf:
-            - $ref: '#/components/schemas/FHIRBusinessStatusCoding'
+            - $ref: "#/components/schemas/FHIRBusinessStatusCoding"
             - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
