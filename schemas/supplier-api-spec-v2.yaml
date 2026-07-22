@@ -1,0 +1,976 @@
+openapi: 3.0.3
+info:
+  title: Supplier API
+  description: API for medical test suppliers to provide in order to allow Home Test platform integration
+  version: 2.0.0
+
+paths:
+  /oauth/token:
+    post:
+      summary: OAuth 2.0 Token Endpoint
+      description: Exchange client credentials for an access token
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+                  description: OAuth 2.0 grant type - must be 'client_credentials'
+                  example: "client_credentials"
+                client_id:
+                  type: string
+                  description: Client identifier assigned during registration
+                  example: "supplier_client_abc123"
+                client_secret:
+                  type: string
+                  description: Client secret assigned during registration
+                  example: "client_secret_xyz789"
+                scope:
+                  type: string
+                  description: Optional - requested scope (space-separated)
+                  example: "orders results"
+      responses:
+        '200':
+          description: Access token issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The access token for API requests
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  token_type:
+                    type: string
+                    description: Token type - always 'Bearer'
+                    example: "Bearer"
+                  expires_in:
+                    type: integer
+                    description: Token lifetime in seconds
+                    example: 3600
+                  scope:
+                    type: string
+                    description: Granted scopes (space-separated)
+                    example: "orders results"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: [invalid_request, invalid_client, invalid_grant, unsupported_grant_type]
+                    example: "invalid_request"
+                  error_description:
+                    type: string
+                    example: "The request is missing a required parameter"
+        '401':
+          description: Invalid client credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "invalid_client"
+                  error_description:
+                    type: string
+                    example: "Client authentication failed"
+
+  /order:
+    post:
+      summary: Receive Test Order
+      description: Receive a new test order from the home test platform
+      tags:
+        - Order Management
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          description: Unique identifier for request tracking and idempotency
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/FHIRServiceRequest'
+      responses:
+        '201':
+          description: Order received and processed successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRServiceRequest'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '409':
+          description: Business rule conflict - order cannot be processed
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+              examples:
+                test_not_available:
+                  summary: Test not available
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Test not available"
+                        diagnostics: "The requested test is not available from this supplier"
+                individual_quota_used:
+                  summary: Individual quota already used
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Individual quota already used"
+                        diagnostics: "Patient has already used their allocated quota for this test type"
+                local_quota_exceeded:
+                  summary: Local test quota exceeded
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Local test quota exceeded"
+                        diagnostics: "Local authority test quota has been exceeded for this area"
+                suspected_fraud:
+                  summary: Suspected fraudulent order
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "security"
+                        details:
+                          text: "Suspected fraudulent order"
+                        diagnostics: "Order flagged for potential fraudulent activity and requires manual review"
+                out_of_stock:
+                  summary: Out of stock
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Out of stock"
+                        diagnostics: "Test kit is currently out of stock at the requested location"
+                not_eligible:
+                  summary: Individual not eligible due to local authority rules
+                  value:
+                    resourceType: "OperationOutcome"
+                    issue:
+                      - severity: "error"
+                        code: "business-rule"
+                        details:
+                          text: "Individual not eligible due to local authority rules"
+                        diagnostics: "Patient does not meet local authority eligibility criteria for this test"
+
+  /results:
+    get:
+      summary: Get Test Results
+      description: Retrieve test results from the home test platform for completed orders
+      tags:
+        - Results Management
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          description: Unique identifier for request tracking and idempotency
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+        - name: order_uid
+          in: query
+          required: true
+          description: Unique identifier of the order to get results for
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Results retrieved successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundleSearchsetObservations'
+              examples:
+                hiv_negative:
+                  summary: HIV antigen test — negative result (valueCodeableConcept)
+                  value:
+                    resourceType: "Bundle"
+                    type: "searchset"
+                    total: 1
+                    entry:
+                      - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+                        resource:
+                          resourceType: "Observation"
+                          id: "550e8400-e29b-41d4-a716-446655440001"
+                          basedOn:
+                            - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                          status: "final"
+                          code:
+                            coding:
+                              - system: "http://snomed.info/sct"
+                                code: "31676001"
+                                display: "HIV antigen test"
+                            text: "HIV antigen test"
+                          subject:
+                            reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                          effectiveDateTime: "2025-11-04T15:45:00Z"
+                          issued: "2025-11-04T16:00:00Z"
+                          performer:
+                            - reference: "Organization/SUPP001"
+                              display: "Test Supplier Ltd"
+                          valueCodeableConcept:
+                            coding:
+                              - system: "http://snomed.info/sct"
+                                code: "260415000"
+                                display: "Not detected"
+                          interpretation:
+                            - coding:
+                                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                                  code: "N"
+                                  display: "Normal"
+                              text: "Normal"
+                psa_result:
+                  summary: PSA test — quantitative result with reference range (valueQuantity)
+                  value:
+                    resourceType: "Bundle"
+                    type: "searchset"
+                    total: 1
+                    entry:
+                      - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440002"
+                        resource:
+                          resourceType: "Observation"
+                          id: "550e8400-e29b-41d4-a716-446655440002"
+                          basedOn:
+                            - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                          status: "final"
+                          code:
+                            coding:
+                              - system: "http://snomed.info/sct"
+                                code: "63476009"
+                                display: "Measurement of prostate specific antigen"
+                            text: "Measurement of prostate specific antigen"
+                          subject:
+                            reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                          effectiveDateTime: "2026-07-21T10:30:00Z"
+                          issued: "2026-07-21T11:00:00Z"
+                          performer:
+                            - reference: "Organization/SUPP002"
+                              display: "PSA Test Lab Ltd"
+                          valueQuantity:
+                            value: 4.2
+                            unit: "ng/mL"
+                            system: "http://unitsofmeasure.org"
+                            code: "ng/mL"
+                          interpretation:
+                            - coding:
+                                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                                  code: "H"
+                                  display: "High"
+                              text: "Above reference range"
+                          referenceRange:
+                            - low:
+                                value: 0
+                                unit: "ng/mL"
+                                system: "http://unitsofmeasure.org"
+                                code: "ng/mL"
+                              high:
+                                value: 4.0
+                                unit: "ng/mL"
+                                system: "http://unitsofmeasure.org"
+                                code: "ng/mL"
+                              type:
+                                coding:
+                                  - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
+                                    code: "normal"
+                                    display: "Normal Range"
+                                text: "Normal Range"
+                              text: "Normal range for adult males (age-adjusted ranges may apply)"
+        '400':
+          description: Invalid request - FHIR OperationOutcome
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+        '404':
+          description: No results found for the specified order
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIROperationOutcome'
+
+components:
+  schemas:
+    FHIRServiceRequest:
+      type: object
+      description: FHIR ServiceRequest resource for test orders
+      required:
+        - resourceType
+        - status
+        - intent
+        - code
+        - subject
+        - contained
+      properties:
+        resourceType:
+          type: string
+          enum: [ServiceRequest]
+          example: "ServiceRequest"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        meta:
+          type: object
+          description: >-
+            Metadata about this resource. SHOULD include the UK Core profile URL to declare
+            conformance, enabling profile validation by receiving systems.
+          properties:
+            profile:
+              type: array
+              description: UK Core profile URL(s) this resource conforms to
+              minItems: 1
+              items:
+                type: string
+              example: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-ServiceRequest"]
+        status:
+          type: string
+          description: Status of the service request
+          enum: [draft, active, on-hold, revoked, completed, entered-in-error, unknown]
+          example: "active"
+        intent:
+          type: string
+          description: Intent of the service request
+          enum: [proposal, plan, directive, order, original-order, reflex-order, filler-order, instance-order, option]
+          example: "order"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: What is being requested/ordered (SNOMED CT)
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+                text: "HIV antigen test"
+        contained:
+          type: array
+          description: Contained resources including Patient demographics
+          minItems: 1
+          items:
+            type: object
+            required:
+              - resourceType
+              - id
+              - name
+              - address
+            properties:
+              resourceType:
+                type: string
+                enum: [Patient]
+                example: "Patient"
+              id:
+                type: string
+                description: Local identifier for contained resource
+                example: "patient-1"
+              meta:
+                type: object
+                properties:
+                  profile:
+                    type: array
+                    description: UK Core profile URL(s) this resource conforms to
+                    items:
+                      type: string
+                    example: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient"]
+              name:
+                type: array
+                description: Patient name(s)
+                items:
+                  $ref: '#/components/schemas/FHIRHumanName'
+              gender:
+                type: string
+                description: Administrative gender of the patient
+                enum: [male, female, other, unknown]
+                example: "male"
+              telecom:
+                type: array
+                description: >-
+                  Contact details for the patient. Required for test types where the supplier
+                  is responsible for clinical management (e.g. HIV). Must include at least one
+                  phone and one email entry. See test-type guidance in docs/test-types/.
+                minItems: 2
+                items:
+                  $ref: '#/components/schemas/FHIRContactPoint'
+              address:
+                type: array
+                description: Patient address(es) - FHIR compliant
+                items:
+                  $ref: '#/components/schemas/FHIRAddress'
+              birthDate:
+                type: string
+                format: date
+                description: Patient's date of birth (FHIR standard field name)
+                example: "1985-03-15"
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Reference to Patient - use contained resource reference
+              example:
+                reference: "#patient-1"
+        performer:
+          type: array
+          description: Requested performer (this supplier)
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+        authoredOn:
+          type: string
+          format: date-time
+          description: Date and time the order was created on the HomeTest platform. Set by the server.
+          example: "2026-07-20T09:00:00Z"
+        extension:
+          type: array
+          description: >-
+            Extensions on this resource. Used to carry additional clinical context.
+            Supported extensions:
+            - Extension-UKCore-SpecimenCollectionMethod: conveys the sample collection method
+              (e.g. capillary blood, oral swab). Required for applicable test types — see
+              docs/test-types/ for per-test guidance.
+          items:
+            type: object
+            required:
+              - url
+              - valueCodeableConcept
+            properties:
+              url:
+                type: string
+                description: Extension URL identifier
+                example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod"
+              valueCodeableConcept:
+                allOf:
+                  - $ref: '#/components/schemas/FHIRCodeableConcept'
+                  - description: Coded value for the extension
+                    example:
+                      coding:
+                        - system: "http://snomed.info/sct"
+                          code: "122554006"
+                          display: "Capillary blood specimen"
+                      text: "capillary"
+
+    FHIRObservation:
+      type: object
+      description: FHIR Observation resource for test results
+      required:
+        - resourceType
+        - status
+        - code
+        - subject
+        - basedOn
+      properties:
+        resourceType:
+          type: string
+          enum: [Observation]
+          example: "Observation"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        meta:
+          type: object
+          description: >-
+            Metadata about this resource. SHOULD include the UK Core profile URL to declare
+            conformance, enabling profile validation by receiving systems.
+          properties:
+            profile:
+              type: array
+              description: UK Core profile URL(s) this resource conforms to
+              minItems: 1
+              items:
+                type: string
+              example: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Observation"]
+        basedOn:
+          type: array
+          description: Reference to the ServiceRequest this observation fulfills
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+        status:
+          type: string
+          description: Status of the observation result
+          enum: [registered, preliminary, final, amended, corrected, cancelled, entered-in-error, unknown]
+          example: "final"
+        category:
+          type: array
+          description: >-
+            Classification of the observation. SHOULD be present for UK Core conformance
+            (UKCore-ObservationCategory preferred binding). All home test results (HIV, PSA)
+            are laboratory tests — use code 'laboratory'.
+            System: http://terminology.hl7.org/CodeSystem/observation-category
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                  code: "laboratory"
+                  display: "Laboratory"
+              text: "Laboratory"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: Type of observation (SNOMED CT or LOINC)
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "31676001"
+                    display: "HIV antigen test"
+                text: "HIV antigen test"
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Patient reference for matching with service request - PII removed for results
+              example:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        effectiveDateTime:
+          type: string
+          format: date-time
+          description: When the observation was made
+          example: "2025-11-04T15:45:00Z"
+        issued:
+          type: string
+          format: date-time
+          description: Date/Time this version was made available
+          example: "2025-11-04T16:00:00Z"
+        performer:
+          type: array
+          description: Who is responsible for the observation
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+        interpretation:
+          type: array
+          description: Clinical interpretation of the observation (e.g., Normal, Abnormal, Positive, Negative)
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+        valueCodeableConcept:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: >-
+                Actual result as a coded concept (for qualitative results, e.g. HIV detected/not detected).
+                Exactly one of valueCodeableConcept or valueQuantity must be present —
+                see docs/test-types/ for which applies to each test type.
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "260415000"
+                    display: "Not detected"
+        valueQuantity:
+          allOf:
+            - $ref: '#/components/schemas/FHIRQuantity'
+            - description: >-
+                Actual result as a measured quantity (for quantitative results, e.g. PSA level in ng/mL).
+                Exactly one of valueQuantity or valueCodeableConcept must be present —
+                see docs/test-types/ for which applies to each test type.
+              example:
+                value: 4.2
+                unit: "ng/mL"
+                system: "http://unitsofmeasure.org"
+                code: "ng/mL"
+        referenceRange:
+          type: array
+          description: >-
+            Guide for interpreting the result value. Must be present when valueQuantity is used.
+            Age-adjusted ranges should be expressed as separate entries with the text or appliesTo
+            fields indicating the applicable population.
+          items:
+            type: object
+            properties:
+              low:
+                allOf:
+                  - $ref: '#/components/schemas/FHIRQuantity'
+                  - description: Lower bound of the reference range (inclusive)
+                    example:
+                      value: 0
+                      unit: "ng/mL"
+                      system: "http://unitsofmeasure.org"
+                      code: "ng/mL"
+              high:
+                allOf:
+                  - $ref: '#/components/schemas/FHIRQuantity'
+                  - description: Upper bound of the reference range (inclusive)
+                    example:
+                      value: 4.0
+                      unit: "ng/mL"
+                      system: "http://unitsofmeasure.org"
+                      code: "ng/mL"
+              type:
+                allOf:
+                  - $ref: '#/components/schemas/FHIRCodeableConcept'
+                  - description: Reference range qualifier (normal, therapeutic, etc.)
+                    example:
+                      coding:
+                        - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
+                          code: "normal"
+                          display: "Normal Range"
+                      text: "Normal Range"
+              appliesTo:
+                type: array
+                description: Population this range applies to (e.g. age group, sex)
+                items:
+                  $ref: '#/components/schemas/FHIRCodeableConcept'
+              text:
+                type: string
+                description: Free text description of the reference range
+                example: "Normal range for adult males (age-adjusted ranges may apply)"
+
+    FHIROperationOutcome:
+      type: object
+      description: FHIR OperationOutcome resource for reporting errors and warnings
+      required:
+        - resourceType
+        - issue
+      properties:
+        resourceType:
+          type: string
+          enum: [OperationOutcome]
+          example: "OperationOutcome"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "operation-outcome-001"
+        issue:
+          type: array
+          description: Issues with the request or response
+          minItems: 1
+          items:
+            type: object
+            required:
+              - severity
+              - code
+            properties:
+              severity:
+                type: string
+                description: Severity of the issue
+                enum: [fatal, error, warning, information]
+                example: "error"
+              code:
+                type: string
+                description: Error or warning code
+                enum: [invalid, structure, required, value, invariant, security, login, unknown, expired, forbidden, suppressed, processing, not-supported, duplicate, multiple-matches, not-found, deleted, too-long, code-invalid, extension, too-costly, business-rule, conflict, transient, lock-error, no-store, exception, timeout, incomplete, throttled, informational]
+                example: "invalid"
+              details:
+                allOf:
+                  - $ref: '#/components/schemas/FHIRCodeableConcept'
+                  - description: Additional details about the error
+                    example:
+                      text: "Invalid postcode format provided"
+              diagnostics:
+                type: string
+                description: Additional diagnostic information
+                example: "Postcode must be in UK format (e.g., SW1A 1AA)"
+              location:
+                type: array
+                description: Xpath or JSONPath of element with error
+                items:
+                  type: string
+                example: ["postcode"]
+              expression:
+                type: array
+                description: FHIRPath of element with error
+                items:
+                  type: string
+                example: ["postcode"]
+    FHIRReference:
+      type: object
+      description: A reference from one resource to another (FHIR Reference datatype)
+      required:
+        - reference
+      properties:
+        reference:
+          type: string
+          description: Literal reference, Relative, internal or absolute URL
+          example: "Organization/SUP001"
+        type:
+          type: string
+          description: Type the reference refers to (e.g., "Organization")
+          example: "Organization"
+        display:
+          type: string
+          description: Text alternative for the resource
+          example: "Supplier Organization Name"
+    FHIRCodeableConcept:
+      type: object
+      description: A CodeableConcept represents a value that is usually supplied by providing a reference to one or more terminologies or ontologies (FHIR CodeableConcept datatype)
+      properties:
+        coding:
+          type: array
+          description: Code defined by a terminology system
+          items:
+            $ref: '#/components/schemas/FHIRCoding'
+        text:
+          type: string
+          description: Plain text representation of the concept
+          example: "HIV antigen test"
+    FHIRCoding:
+      type: object
+      description: A Coding is a representation of a defined concept using a symbol from a defined code system (FHIR Coding datatype)
+      properties:
+        system:
+          type: string
+          description: Identity of the terminology system
+          example: "http://snomed.info/sct"
+        code:
+          type: string
+          description: Symbol in syntax defined by the system
+          example: "31676001"
+        display:
+          type: string
+          description: Representation defined by the system
+          example: "HIV antigen test"
+    FHIRQuantity:
+      type: object
+      description: A measured or measurable amount (FHIR Quantity datatype)
+      properties:
+        value:
+          type: number
+          description: Numerical value
+          example: 4.2
+        comparator:
+          type: string
+          description: How to understand the value — used when the value is a bound (e.g. '<4.0')
+          enum: ["<", "<=", ">=", ">"]
+          example: "<"
+        unit:
+          type: string
+          description: Unit representation (human-readable)
+          example: "ng/mL"
+        system:
+          type: string
+          description: System that defines coded unit form — use UCUM (http://unitsofmeasure.org)
+          example: "http://unitsofmeasure.org"
+        code:
+          type: string
+          description: Coded form of the unit (UCUM code)
+          example: "ng/mL"
+    FHIRIdentifier:
+      type: object
+      description: An identifier intended for computation (FHIR Identifier datatype)
+      properties:
+        system:
+          type: string
+          description: The namespace for the identifier value
+          example: "https://fhir.hometest.nhs.uk/Id/order-uid"
+        value:
+          type: string
+          description: The value that is unique within the system
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        use:
+          type: string
+          description: The purpose of this identifier
+          enum: [usual, official, temp, secondary, old]
+          example: "official"
+    FHIRHumanName:
+      type: object
+      description: A name of a human with text, parts and usage information (FHIR HumanName datatype)
+      required:
+        - family
+      properties:
+        use:
+          type: string
+          description: Purpose of this name
+          enum: [usual, official, temp, nickname, anonymous, old, maiden]
+          example: "official"
+        family:
+          type: string
+          description: Family/last name
+          example: "Smith"
+        given:
+          type: array
+          description: Given/first names
+          items:
+            type: string
+          example: ["John"]
+        text:
+          type: string
+          description: Full name as a single string
+          example: "John Smith"
+    FHIRContactPoint:
+      type: object
+      description: Details for all kinds of technology-mediated contact points (FHIR ContactPoint datatype)
+      required:
+        - value
+      properties:
+        system:
+          type: string
+          description: Type of contact point
+          enum: [phone, fax, email, pager, url, sms, other]
+          example: "phone"
+        value:
+          type: string
+          description: The actual contact point details
+          example: "+447700900123"
+        use:
+          type: string
+          description: Purpose of this contact point
+          enum: [home, work, temp, old, mobile]
+          example: "mobile"
+    FHIRAddress:
+      type: object
+      description: An address expressed using postal conventions (FHIR Address datatype)
+      required:
+        - line
+        - postalCode
+      properties:
+        use:
+          type: string
+          description: Purpose of this address
+          enum: [home, work, temp, old, billing]
+          example: "home"
+        type:
+          type: string
+          description: Distinguishes between physical and postal addresses
+          enum: [postal, physical, both]
+          example: "both"
+        line:
+          type: array
+          description: Street address lines
+          items:
+            type: string
+          example: ["123 Main Street", "Apartment 2B"]
+        city:
+          type: string
+          description: City name
+          example: "London"
+        postalCode:
+          type: string
+          description: Postal code
+          example: "SW1A 1AA"
+        country:
+          type: string
+          description: Country
+          example: "United Kingdom"
+    FHIRBundleSearchsetObservations:
+      type: object
+      description: FHIR Bundle of type 'searchset' containing Observation resources
+      required:
+        - resourceType
+        - type
+        - entry
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+          example: "Bundle"
+        type:
+          type: string
+          enum: [searchset]
+          example: "searchset"
+        total:
+          type: integer
+          description: Total number of matching results
+          example: 1
+        link:
+          type: array
+          description: Links related to this result set
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                example: "self"
+              url:
+                type: string
+                format: uri
+                example: "/results?order_uid=550e8400-e29b-41d4-a716-446655440000"
+        entry:
+          type: array
+          description: Bundle entries containing Observation resources
+          items:
+            type: object
+            properties:
+              fullUrl:
+                type: string
+                format: uri
+                example: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+              resource:
+                $ref: '#/components/schemas/FHIRObservation'
+  responses:
+    BadRequest:
+      description: Bad request - invalid parameters
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIROperationOutcome'
+          example:
+            resourceType: "OperationOutcome"
+            issue:
+              - severity: "error"
+                code: "invalid"
+                details:
+                  text: "Validation Error"
+                diagnostics: "The request contains invalid data that cannot be processed"
+
+    UnprocessableEntity:
+      description: Unprocessable entity - FHIR validation errors
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIROperationOutcome'
+          example:
+            resourceType: "OperationOutcome"
+            issue:
+              - severity: "error"
+                code: "structure"
+                details:
+                  text: "FHIR Validation Error"
+                diagnostics: "The FHIR resource contains validation errors and cannot be processed"
+                expression:
+                  - "ServiceRequest.subject.identifier.value"
+
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials flow for supplier authentication
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            orders: Access to order management endpoints
+            results: Access to results endpoints
+    SupplierAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued to verified suppliers via OAuth 2.0
+
+security:
+  - OAuth2ClientCredentials: [orders, results]
+  - SupplierAuth: []
