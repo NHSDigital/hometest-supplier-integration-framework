@@ -25,6 +25,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
   - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
+  - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas for category and businessStatus](#version-118---july-22-2026---typed-codeableconcept-schemas)
 
 ---
 
@@ -389,3 +390,45 @@ Changes to home-test-supplier-api.yaml:
 2. Replace the `BearerAuth` + `NHS_Login` security schemes with a single `bearerAuth` (system-to-system consumers; no NHS Login)
 
 3. Add `servers` (APIM sandbox URL) and `x-spec-publication` (Try this API disabled)
+
+---
+
+## Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas
+
+Changes to home-test-supplier-api.yaml:
+
+1. Added typed CodeableConcept schemas to constrain category and
+businessStatus values
+
+   - Created `FHIRDiagnosticCoding` schema (replaces generic
+    FHIRCodeableConcept for DiagnosticReport.category)
+     - Requires `text` field typed to `FHIRDiagnosticCodingText`
+     - Includes example with LAB coding from
+      `http://terminology.hl7.org/CodeSystem/v2-0074`
+   - Created `FHIRDiagnosticCodingText` enum schema with allowed value:
+    `Laboratory`
+   - Created `FHIRObservationCoding` schema (replaces generic
+    FHIRCodeableConcept  Observation.category)
+     - Requires `text` field typed to `FHIRObservationCodingText`
+     - Includes example with laboratory coding from
+      `http://terminology.hl7.org/CodeSystem/observation-category`
+   - Created `FHIRObservationCodingText` enum schema with allowed value:
+    `Laboratory`
+   - Created `FHIRBusinessStatusCoding` schema for Task.businessStatus
+     - Requires `text` field typed to `FHIRBusinessStatusCodingText`
+   - Created `FHIRBusinessStatusCodingText` enum schema with allowed values.
+
+2. Updated DiagnosticReport.category to reference new typed schema
+   - Changed `items`
+    from `$ref: "#/components/schemas/FHIRCodeableConcept"`
+     to `$ref: "#/components/schemas/FHIRDiagnosticCoding"`
+
+3. Updated Observation.category to reference new typed schema
+   - Changed `items`
+    from `$ref: "#/components/schemas/FHIRCodeableConcept"`
+     to `$ref: "#/components/schemas/FHIRObservationCoding"`
+
+4. Formatting: expanded inline enum arrays to multi-line format for
+ readability
+   - Affected enums: Communication.status, FHIRTask.status,
+    OperationOutcome.issue.severity, FHIRIdentifier.use
