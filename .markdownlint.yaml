@@ -1,0 +1,40 @@
+---
+# SEE: https://github.com/DavidAnson/markdownlint/blob/main/schema/.markdownlint.yaml
+# Default state for all rules
+default: true
+
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md010.md
+MD010:  # no-hard-tabs
+  ignore_code_languages:
+    - make
+    - console
+
+# MD013 - Line length
+MD013:
+  line_length: 1000
+  heading_line_length: 80
+  code_block_line_length: 1200
+  tables: false
+
+# MD024 - Multiple headings with the same content
+MD024:
+  siblings_only: true
+
+# MD033 - Inline HTML
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
+MD033: false
+
+# MD041 - First line should be a top-level heading
+MD041: false
+
+# MD046 - Code block style
+MD046:
+  style: fenced
+
+# MD059 - Link text should be descriptive
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md059.md
+MD059: false
+
+# MD060 - Table column style
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md060.md
+MD060: false

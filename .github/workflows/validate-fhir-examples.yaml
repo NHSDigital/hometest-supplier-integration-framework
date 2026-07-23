@@ -1,0 +1,102 @@
+---
+name: Validate FHIR Examples
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - 'examples/fhir/**'
+      - 'tests/fhir-examples/**'
+      - '.github/workflows/validate-fhir-examples.yaml'
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'examples/fhir/**'
+      - 'tests/fhir-examples/**'
+      - '.github/workflows/validate-fhir-examples.yaml'
+  workflow_dispatch:
+    inputs:
+      fhir_version:
+        description: 'FHIR version to validate against'
+        required: false
+        default: '4.0.1'
+      validator_version:
+        description: 'FHIR validator version to use'
+        required: false
+        default: '6.9.11'
+jobs:
+  validate:
+    name: Validate FHIR examples
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set CI variables
+        id: vars
+        env:
+          INPUT_FHIR_VERSION: ${{ inputs.fhir_version }}
+          INPUT_VALIDATOR_VERSION: ${{ inputs.validator_version }}
+        run: |
+          DEFAULT_VALIDATOR=$(yq '.on.workflow_dispatch.inputs.validator_version.default' .github/workflows/validate-fhir-examples.yaml)
+          DEFAULT_FHIR=$(yq '.on.workflow_dispatch.inputs.fhir_version.default' .github/workflows/validate-fhir-examples.yaml)
+          echo "fhir_version=${INPUT_FHIR_VERSION:-$DEFAULT_FHIR}" >> "$GITHUB_OUTPUT"
+          echo "validator_version=${INPUT_VALIDATOR_VERSION:-$DEFAULT_VALIDATOR}" >> "$GITHUB_OUTPUT"
+      - name: Save PR number
+        if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          mkdir -p .local/results
+          echo "$PR_NUMBER" > .local/results/pr-number.txt
+      - name: Set up Java
+        uses: actions/setup-java@v5.6.0
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Cache FHIR validator JAR
+        id: cache-jar
+        uses: actions/cache@v6
+        with:
+          path: .local/validator
+          key: fhir-validator-jar-${{ steps.vars.outputs.validator_version }}
+      - name: Download FHIR validator JAR
+        if: steps.cache-jar.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VALIDATOR_VERSION: ${{ steps.vars.outputs.validator_version }}
+        run: |
+          mkdir -p .local/validator
+          gh release download "$VALIDATOR_VERSION" \
+            --pattern '*.jar' \
+            --repo 'hapifhir/org.hl7.fhir.core' \
+            --dir .local/validator
+      - name: Set JAR path
+        run: echo "JAR=$(find .local/validator -name '*.jar' | head -1)" >> "$GITHUB_ENV"
+      - name: Cache FHIR validator cache
+        uses: actions/cache@v6
+        with:
+          path: .local/cache
+          key: fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-${{ steps.vars.outputs.validator_version }}
+          restore-keys: |
+            fhir-validator-cache-${{ steps.vars.outputs.fhir_version }}-
+            fhir-validator-cache-
+      - name: Run FHIR validation (FHIR R${{ steps.vars.outputs.fhir_version }})
+        id: validate
+        continue-on-error: true
+        env:
+          FHIR_VERSION: ${{ steps.vars.outputs.fhir_version }}
+        run: |
+          tests/fhir-examples/fhir-validator.sh \
+            -j "$JAR" \
+            -i examples/fhir \
+            -o .local/results \
+            -v "$FHIR_VERSION" \
+            -c .local/cache
+      - name: Upload validation results
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: fhir-validation-results
+          path: .local/results/
+          if-no-files-found: warn

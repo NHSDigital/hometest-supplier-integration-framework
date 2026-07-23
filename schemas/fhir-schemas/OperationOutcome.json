@@ -1,6 +1,10 @@
 {
   "resourceType": "OperationOutcome",
   "id": "operation-outcome-001",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">OperationOutcome: Test not available</div>"
+  },
   "issue": [
     {
       "severity": "error",
@@ -8,7 +12,7 @@
       "details": {
         "coding": [
           {
-            "system": "http://hometest.nhs.uk/fhir/CodeSystem/error-codes",
+            "system": "https://fhir.hometest.nhs.uk/CodeSystem/error-codes",
             "code": "test-not-available",
             "display": "Test not available"
           }
@@ -16,7 +20,9 @@
         "text": "Test not available"
       },
       "diagnostics": "The requested test is not available from this supplier",
-      "expression": ["ServiceRequest.code"]
+      "expression": [
+        "ServiceRequest.code"
+      ]
     }
   ]
 }

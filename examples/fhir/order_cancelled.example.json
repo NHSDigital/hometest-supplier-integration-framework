@@ -1,0 +1,31 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "7cb0623e-9cd7-4495-aa66-715c04a81903",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: HIV antigen test order cancelled by user</div>"
+  },
+  "status": "revoked",
+  "intent": "order",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "31676001",
+        "display": "HIV antigen test"
+      }
+    ],
+    "text": "HIV antigen test"
+  },
+  "subject": {
+    "reference": "Patient/1d6efc98-78e7-4049-9d4f-e651a95d9727"
+  },
+  "requester": {
+    "reference": "Organization/ORG001"
+  },
+  "performer": [
+    {
+      "reference": "Organization/SUP001"
+    }
+  ]
+}
