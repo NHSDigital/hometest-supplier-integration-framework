@@ -237,6 +237,12 @@ paths:
                           basedOn:
                             - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
                           status: "final"
+                          category:
+                            - coding:
+                                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                                  code: "laboratory"
+                                  display: "Laboratory"
+                              text: "Laboratory"
                           code:
                             coding:
                               - system: "http://snomed.info/sct"
@@ -275,6 +281,12 @@ paths:
                           basedOn:
                             - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
                           status: "final"
+                          category:
+                            - coding:
+                                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                                  code: "laboratory"
+                                  display: "Laboratory"
+                              text: "Laboratory"
                           code:
                             coding:
                               - system: "http://snomed.info/sct"
@@ -492,10 +504,14 @@ components:
       description: FHIR Observation resource for test results
       required:
         - resourceType
+        - id
         - status
+        - category
         - code
         - subject
         - basedOn
+        - effectiveDateTime
+        - issued
       properties:
         resourceType:
           type: string
@@ -530,14 +546,10 @@ components:
           example: "final"
         category:
           type: array
-          description: >-
-            Classification of the observation. SHOULD be present for UK Core conformance
-            (UKCore-ObservationCategory preferred binding). All home test results (HIV, PSA)
-            are laboratory tests — use code 'laboratory'.
-            System: http://terminology.hl7.org/CodeSystem/observation-category
+          description: Category of the observation (should be laboratory/Laboratory for observation category)
           minItems: 1
           items:
-            $ref: '#/components/schemas/FHIRCodeableConcept'
+            $ref: '#/components/schemas/FHIRObservationCoding'
           example:
             - coding:
                 - system: "http://terminology.hl7.org/CodeSystem/observation-category"
@@ -743,6 +755,20 @@ components:
       type: object
       description: A Coding is a representation of a defined concept using a symbol from a defined code system (FHIR Coding datatype)
       properties:
+        extension:
+          type: array
+          description: Optional extensions for the coding (e.g., to indicate which value set the code is from)
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL of the extension
+                example: "http://hl7.org/fhir/StructureDefinition/valueset-reference"
+              valueUri:
+                type: string
+                description: URI of the value set this code is from
+                example: "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
         system:
           type: string
           description: Identity of the terminology system
@@ -780,23 +806,6 @@ components:
           type: string
           description: Coded form of the unit (UCUM code)
           example: "ng/mL"
-    FHIRIdentifier:
-      type: object
-      description: An identifier intended for computation (FHIR Identifier datatype)
-      properties:
-        system:
-          type: string
-          description: The namespace for the identifier value
-          example: "https://fhir.hometest.nhs.uk/Id/order-uid"
-        value:
-          type: string
-          description: The value that is unique within the system
-          example: "550e8400-e29b-41d4-a716-446655440000"
-        use:
-          type: string
-          description: The purpose of this identifier
-          enum: [usual, official, temp, secondary, old]
-          example: "official"
     FHIRHumanName:
       type: object
       description: A name of a human with text, parts and usage information (FHIR HumanName datatype)
@@ -877,6 +886,29 @@ components:
           type: string
           description: Country
           example: "United Kingdom"
+    FHIRObservationCoding:
+      type: object
+      description: A specific example of a CodeableConcept for Observation category.
+      required:
+        - text
+      properties:
+        coding:
+          type: array
+          description: Code defined by a terminology system
+          items:
+            $ref: '#/components/schemas/FHIRCoding'
+        text:
+          $ref: '#/components/schemas/FHIRObservationCodingText'
+      example:
+        coding:
+          - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+            code: "laboratory"
+            display: "Laboratory"
+        text: Laboratory
+    FHIRObservationCodingText:
+      type: string
+      description: Observation category status values.
+      enum: [Laboratory]
     FHIRBundleSearchsetObservations:
       type: object
       description: FHIR Bundle of type 'searchset' containing Observation resources

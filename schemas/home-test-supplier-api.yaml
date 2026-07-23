@@ -156,6 +156,8 @@ paths:
             examples:
               FHIRBundleResultsExample:
                 $ref: "#/components/examples/FHIRBundleResultsExample"
+              FHIRBundleResultsPSAExample:
+                $ref: "#/components/examples/FHIRBundleResultsPSAExample"
       responses:
         "201":
           description: Results posted successfully
@@ -166,6 +168,8 @@ paths:
               examples:
                 FHIRBundleResultsExample:
                   $ref: "#/components/examples/FHIRBundleResultsExample"
+                FHIRBundleResultsPSAExample:
+                  $ref: "#/components/examples/FHIRBundleResultsPSAExample"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -316,6 +320,19 @@ components:
           type: string
           description: Logical id of this artifact
           example: "36716694-601b-4ad2-99e3-befb78d846ef"
+        meta:
+          type: object
+          description: >-
+            Metadata about this resource. SHOULD include the UK Core profile URL to declare
+            conformance, enabling profile validation by receiving systems.
+          properties:
+            profile:
+              type: array
+              description: UK Core profile URL(s) this resource conforms to
+              minItems: 1
+              items:
+                type: string
+              example: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-DiagnosticReport"]
         basedOn:
           type: array
           description: Reference to the ServiceRequest this DiagnosticReport fulfills
@@ -386,13 +403,13 @@ components:
       required:
         - resourceType
         - id
+        - basedOn
         - status
         - category
         - code
         - subject
         - effectiveDateTime
         - issued
-        - valueCodeableConcept
       properties:
         resourceType:
           type: string
@@ -542,6 +559,13 @@ components:
                 type: string
                 description: Free text description of the reference range
                 example: "Normal range for adult males (age-adjusted ranges may apply)"
+        interpretation:
+          type: array
+          description: >-
+            Categorical assessment of the observation value (e.g. high, low, normal).
+            Use the v3 ObservationInterpretation code system for coded interpretations.
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
     FHIRCommunication:
       type: object
       description: FHIR Communication resource for sending messages to patients
@@ -970,6 +994,7 @@ components:
                     - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
                       code: "LAB"
                       display: "Laboratory"
+                  text: "Laboratory"
               code:
                 coding:
                   - system: "http://snomed.info/sct"
@@ -989,12 +1014,15 @@ components:
             resource:
               resourceType: "Observation"
               id: "550e8400-e29b-41d4-a716-446655440001"
+              basedOn:
+                - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
               status: "final"
               category:
                 - coding:
                     - system: "http://terminology.hl7.org/CodeSystem/observation-category"
                       code: "laboratory"
                       display: "Laboratory"
+                  text: "Laboratory"
               code:
                 coding:
                   - extension:
@@ -1022,6 +1050,103 @@ components:
               status: "not-done"
               reasonReference:
                 - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+    FHIRBundleResultsPSAExample:
+      summary: Example FHIR Bundle for PSA test results submission (valueQuantity with reference range)
+      value:
+        resourceType: "Bundle"
+        id: "72831cc0-7ca8-4571-b0e3-99c6d06a0ace"
+        type: "collection"
+        entry:
+          - fullUrl: "urn:uuid:b2c3d4e5-f6a7-4901-bcde-f12345678901"
+            resource:
+              resourceType: "DiagnosticReport"
+              id: "b2c3d4e5-f6a7-4901-bcde-f12345678901"
+              basedOn:
+                - reference: "ServiceRequest/660f9511-f3ac-42e5-b827-557766551111"
+              status: "final"
+              category:
+                - coding:
+                    - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                      code: "LAB"
+                      display: "Laboratory"
+                  text: "Laboratory"
+              code:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "721981007"
+                    display: "Diagnostic studies report"
+                text: "Diagnostic studies report"
+              subject:
+                reference: "Patient/234f5678-f9a0-43e4-b567-537725285111"
+              effectiveDateTime: "2026-07-21T10:30:00Z"
+              issued: "2026-07-21T11:00:00Z"
+              performer:
+                - reference: "Organization/SUPP002"
+                  display: "PSA Test Lab Ltd"
+              result:
+                - reference: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
+          - fullUrl: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
+            resource:
+              resourceType: "Observation"
+              id: "660f9511-f3ac-42e5-b827-557766551112"
+              basedOn:
+                - reference: "ServiceRequest/660f9511-f3ac-42e5-b827-557766551111"
+              status: "final"
+              category:
+                - coding:
+                    - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                      code: "laboratory"
+                      display: "Laboratory"
+                  text: "Laboratory"
+              code:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "63476009"
+                    display: "Measurement of prostate specific antigen"
+                text: "Measurement of prostate specific antigen"
+              subject:
+                reference: "Patient/234f5678-f9a0-43e4-b567-537725285111"
+              effectiveDateTime: "2026-07-21T10:30:00Z"
+              issued: "2026-07-21T11:00:00Z"
+              performer:
+                - reference: "Organization/SUPP002"
+                  display: "PSA Test Lab Ltd"
+              valueQuantity:
+                value: 4.2
+                unit: "ng/mL"
+                system: "http://unitsofmeasure.org"
+                code: "ng/mL"
+              interpretation:
+                - coding:
+                    - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                      code: "H"
+                      display: "High"
+                  text: "Above reference range"
+              referenceRange:
+                - low:
+                    value: 0
+                    unit: "ng/mL"
+                    system: "http://unitsofmeasure.org"
+                    code: "ng/mL"
+                  high:
+                    value: 4.0
+                    unit: "ng/mL"
+                    system: "http://unitsofmeasure.org"
+                    code: "ng/mL"
+                  type:
+                    coding:
+                      - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
+                        code: "normal"
+                        display: "Normal Range"
+                    text: "Normal Range"
+                  text: "Normal range for adult males (age-adjusted ranges may apply)"
+          - fullUrl: "urn:uuid:f58bd21c-69dd-4483-a678-668877662223"
+            resource:
+              resourceType: "Communication"
+              id: "f58bd21c-69dd-4483-a678-668877662223"
+              status: "on-hold"
+              reasonReference:
+                - reference: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
     FHIRTaskExample:
       summary: Example FHIR Task for a 'dispatched' update, see examples folder for further examples.
       value:
@@ -1040,9 +1165,6 @@ components:
           reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
         authoredOn: "2025-11-04T10:30:00Z"
         lastModified: "2025-11-04T10:35:00Z"
-        requester:
-          reference: "Organization/ORG001"
-          display: "HomeTest"
         owner:
           reference: "Organization/SUP001"
           display: "Test Supplier Ltd"

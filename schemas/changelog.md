@@ -26,10 +26,11 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
   - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
   - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas for category and businessStatus](#version-118---july-22-2026---typed-codeableconcept-schemas)
+  - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
 
 ---
 
-**Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support**
+## Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support
 
 Changes to supplier-api-spec-v2.yaml (new file, v1 remains unchanged):
 
