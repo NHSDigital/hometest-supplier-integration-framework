@@ -26,6 +26,39 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
   - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
   - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas for category and businessStatus](#version-118---july-22-2026---typed-codeableconcept-schemas)
+  - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
+
+---
+
+## Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support
+
+Changes to supplier-api-spec-v2.yaml (new file, v1 remains unchanged):
+
+1. Relaxed `telecom` from required to optional on contained Patient
+   - **Reason:** Clinician-initiated (acute) orders do not require supplier-to-patient contact — clinical management is the requesting clinician's responsibility. Telecom is still mandatory for test types where suppliers manage clinical follow-up (e.g. HIV); this is now enforced via test-type guidance in `docs/test-types/` rather than the base spec.
+   - **Impact on existing suppliers:** Non-breaking. Consumer-initiated HIV orders continue to include telecom as before. Existing suppliers implementing HIV tests are unaffected.
+
+2. Added `extension` (optional array) to `FHIRServiceRequest`
+   - Carries `Extension-UKCore-SpecimenCollectionMethod` to specify the sample collection method (e.g. capillary blood, oral swab).
+   - Supports current HIV capillary blood path and future variants (oral swab, transdermal).
+   - **Impact:** Non-breaking additive field. Suppliers not yet reading this extension should handle it gracefully and dispatch the default kit variant; see per-test-type docs for when this field becomes mandatory.
+
+3. Added `authoredOn` (optional, date-time) to `FHIRServiceRequest`
+   - Set by the HomeTest platform at order creation time. Useful for supplier audit trails and order traceability.
+   - **Impact:** Non-breaking additive field.
+
+4. Added `gender` (optional enum: male/female/other/unknown) to contained Patient
+   - Present on clinician-initiated orders (sourced from EPR). May be absent on consumer-initiated orders.
+   - **Impact:** Non-breaking additive field.
+
+5. Added `meta` (optional) to contained Patient
+   - Allows UK Core Patient profile URL to flow through where present on the source resource.
+   - **Impact:** Non-breaking additive field.
+
+6. Added `docs/test-types/` guidance directory
+   - `docs/test-types/README.md` — explains the convention: spec is the base contract; test-type files define per-test mandatory fields and supplier responsibilities.
+   - `docs/test-types/hiv.md` — specifies that `telecom` is mandatory for HIV, documents clinical management responsibilities, specimen collection method values, and result codes.
+   - `docs/test-types/psa.md` — skeleton for PSA (clinician-initiated); documents that `telecom` is not required, clinical management is by the requesting clinician. Sections marked [TBD] pending clinical/operational input.
 
 ---
 
