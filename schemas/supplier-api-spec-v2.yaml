@@ -222,114 +222,204 @@ paths:
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundleSearchsetObservations'
+                $ref: '#/components/schemas/FHIRBundleSearchsetResultsBundle'
               examples:
                 hiv_negative:
-                  summary: HIV antigen test — negative result (valueCodeableConcept)
+                  summary: HIV antigen test — negative result
                   value:
                     resourceType: "Bundle"
+                    id: "d95bc671-03c6-4f0c-9cd5-793ab0da08b3"
                     type: "searchset"
                     total: 1
+                    link:
+                      - relation: "self"
+                        url: "/results?order_uid=550e8400-e29b-41d4-a716-446655440000"
                     entry:
-                      - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+                      - fullUrl: "urn:uuid:42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
                         resource:
-                          resourceType: "Observation"
-                          id: "550e8400-e29b-41d4-a716-446655440001"
-                          basedOn:
-                            - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
-                          status: "final"
-                          category:
-                            - coding:
-                                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                                  code: "laboratory"
-                                  display: "Laboratory"
-                              text: "Laboratory"
-                          code:
-                            coding:
-                              - system: "http://snomed.info/sct"
-                                code: "31676001"
-                                display: "HIV antigen test"
-                            text: "HIV antigen test"
-                          subject:
-                            reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
-                          effectiveDateTime: "2025-11-04T15:45:00Z"
-                          issued: "2025-11-04T16:00:00Z"
-                          performer:
-                            - reference: "Organization/SUPP001"
-                              display: "Test Supplier Ltd"
-                          valueCodeableConcept:
-                            coding:
-                              - system: "http://snomed.info/sct"
-                                code: "260415000"
-                                display: "Not detected"
-                          interpretation:
-                            - coding:
-                                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-                                  code: "N"
-                                  display: "Normal"
-                              text: "Normal"
+                          resourceType: "Bundle"
+                          id: "42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
+                          type: "collection"
+                          entry:
+                            - fullUrl: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
+                              resource:
+                                resourceType: "DiagnosticReport"
+                                id: "36716694-601b-4ad2-99e3-befb78d846ef"
+                                basedOn:
+                                  - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                                status: "final"
+                                category:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                                        code: "LAB"
+                                        display: "Laboratory"
+                                    text: "Laboratory"
+                                code:
+                                  coding:
+                                    - system: "http://snomed.info/sct"
+                                      code: "721981007"
+                                      display: "Diagnostic studies report"
+                                  text: "Diagnostic studies report"
+                                subject:
+                                  reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                                effectiveDateTime: "2025-11-04T15:45:00Z"
+                                issued: "2025-11-04T16:00:00Z"
+                                performer:
+                                  - reference: "Organization/SUPP001"
+                                    display: "Test Supplier Ltd"
+                                result:
+                                  - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+                            - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+                              resource:
+                                resourceType: "Observation"
+                                id: "550e8400-e29b-41d4-a716-446655440001"
+                                basedOn:
+                                  - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                                status: "final"
+                                category:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                                        code: "laboratory"
+                                        display: "Laboratory"
+                                    text: "Laboratory"
+                                code:
+                                  coding:
+                                    - system: "http://snomed.info/sct"
+                                      code: "31676001"
+                                      display: "HIV antigen test"
+                                  text: "HIV antigen test"
+                                subject:
+                                  reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                                effectiveDateTime: "2025-11-04T15:45:00Z"
+                                issued: "2025-11-04T16:00:00Z"
+                                performer:
+                                  - reference: "Organization/SUPP001"
+                                    display: "Test Supplier Ltd"
+                                valueCodeableConcept:
+                                  coding:
+                                    - system: "http://snomed.info/sct"
+                                      code: "260415000"
+                                      display: "Not detected"
+                                interpretation:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                                        code: "N"
+                                        display: "Normal"
+                                    text: "Normal"
+                            - fullUrl: "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                              resource:
+                                resourceType: "Communication"
+                                id: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                                status: "not-done"
+                                reasonReference:
+                                  - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
                 psa_result:
-                  summary: PSA test — quantitative result with reference range (valueQuantity)
+                  summary: PSA test — quantitative result with reference range
                   value:
                     resourceType: "Bundle"
+                    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
                     type: "searchset"
                     total: 1
+                    link:
+                      - relation: "self"
+                        url: "/results?order_uid=550e8400-e29b-41d4-a716-446655440000"
                     entry:
-                      - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440002"
+                      - fullUrl: "urn:uuid:b2c3d4e5-f6a7-8901-bcde-f12345678901"
                         resource:
-                          resourceType: "Observation"
-                          id: "550e8400-e29b-41d4-a716-446655440002"
-                          basedOn:
-                            - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
-                          status: "final"
-                          category:
-                            - coding:
-                                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                                  code: "laboratory"
-                                  display: "Laboratory"
-                              text: "Laboratory"
-                          code:
-                            coding:
-                              - system: "http://snomed.info/sct"
-                                code: "63476009"
-                                display: "Measurement of prostate specific antigen"
-                            text: "Measurement of prostate specific antigen"
-                          subject:
-                            reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
-                          effectiveDateTime: "2026-07-21T10:30:00Z"
-                          issued: "2026-07-21T11:00:00Z"
-                          performer:
-                            - reference: "Organization/SUPP002"
-                              display: "PSA Test Lab Ltd"
-                          valueQuantity:
-                            value: 4.2
-                            unit: "ng/mL"
-                            system: "http://unitsofmeasure.org"
-                            code: "ng/mL"
-                          interpretation:
-                            - coding:
-                                - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-                                  code: "H"
-                                  display: "High"
-                              text: "Above reference range"
-                          referenceRange:
-                            - low:
-                                value: 0
-                                unit: "ng/mL"
-                                system: "http://unitsofmeasure.org"
-                                code: "ng/mL"
-                              high:
-                                value: 4.0
-                                unit: "ng/mL"
-                                system: "http://unitsofmeasure.org"
-                                code: "ng/mL"
-                              type:
-                                coding:
-                                  - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
-                                    code: "normal"
-                                    display: "Normal Range"
-                                text: "Normal Range"
-                              text: "Normal range for adult males (age-adjusted ranges may apply)"
+                          resourceType: "Bundle"
+                          id: "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                          type: "collection"
+                          entry:
+                            - fullUrl: "urn:uuid:c3d4e5f6-a7b8-9012-cdef-123456789012"
+                              resource:
+                                resourceType: "DiagnosticReport"
+                                id: "c3d4e5f6-a7b8-9012-cdef-123456789012"
+                                basedOn:
+                                  - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                                status: "final"
+                                category:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                                        code: "LAB"
+                                        display: "Laboratory"
+                                    text: "Laboratory"
+                                code:
+                                  coding:
+                                    - system: "http://snomed.info/sct"
+                                      code: "721981007"
+                                      display: "Diagnostic studies report"
+                                  text: "Diagnostic studies report"
+                                subject:
+                                  reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                                effectiveDateTime: "2026-07-21T10:30:00Z"
+                                issued: "2026-07-21T11:00:00Z"
+                                performer:
+                                  - reference: "Organization/SUPP002"
+                                    display: "PSA Test Lab Ltd"
+                                result:
+                                  - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440002"
+                            - fullUrl: "urn:uuid:550e8400-e29b-41d4-a716-446655440002"
+                              resource:
+                                resourceType: "Observation"
+                                id: "550e8400-e29b-41d4-a716-446655440002"
+                                basedOn:
+                                  - reference: "ServiceRequest/550e8400-e29b-41d4-a716-446655440000"
+                                status: "final"
+                                category:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                                        code: "laboratory"
+                                        display: "Laboratory"
+                                    text: "Laboratory"
+                                code:
+                                  coding:
+                                    - system: "http://snomed.info/sct"
+                                      code: "63476009"
+                                      display: "Measurement of prostate specific antigen"
+                                  text: "Measurement of prostate specific antigen"
+                                subject:
+                                  reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+                                effectiveDateTime: "2026-07-21T10:30:00Z"
+                                issued: "2026-07-21T11:00:00Z"
+                                performer:
+                                  - reference: "Organization/SUPP002"
+                                    display: "PSA Test Lab Ltd"
+                                valueQuantity:
+                                  value: 4.2
+                                  unit: "ng/mL"
+                                  system: "http://unitsofmeasure.org"
+                                  code: "ng/mL"
+                                interpretation:
+                                  - coding:
+                                      - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+                                        code: "H"
+                                        display: "High"
+                                    text: "Above reference range"
+                                referenceRange:
+                                  - low:
+                                      value: 0
+                                      unit: "ng/mL"
+                                      system: "http://unitsofmeasure.org"
+                                      code: "ng/mL"
+                                    high:
+                                      value: 4.0
+                                      unit: "ng/mL"
+                                      system: "http://unitsofmeasure.org"
+                                      code: "ng/mL"
+                                    type:
+                                      coding:
+                                        - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
+                                          code: "normal"
+                                          display: "Normal Range"
+                                      text: "Normal Range"
+                                    text: "Normal range for adult males (age-adjusted ranges may apply)"
+                            - fullUrl: "urn:uuid:d4e5f6a7-b8c9-0123-defa-234567890123"
+                              resource:
+                                resourceType: "Communication"
+                                id: "d4e5f6a7-b8c9-0123-defa-234567890123"
+                                status: "completed"
+                                reasonReference:
+                                  - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440002"
         '400':
           description: Invalid request - FHIR OperationOutcome
           content:
@@ -441,8 +531,8 @@ components:
                 description: >-
                   Contact details for the patient. Required for test types where the supplier
                   is responsible for clinical management (e.g. HIV). Must include at least one
-                  phone and one email entry. See test-type guidance in docs/test-types/.
-                minItems: 2
+                  phone entry. Email is optional. See test-type guidance in docs/test-types/.
+                minItems: 1
                 items:
                   $ref: '#/components/schemas/FHIRContactPoint'
               address:
@@ -910,18 +1000,24 @@ components:
       type: string
       description: Observation category status values.
       enum: [Laboratory]
-    FHIRBundleSearchsetObservations:
+    FHIRBundleSearchsetResultsBundle:
       type: object
-      description: FHIR Bundle of type 'searchset' containing Observation resources
+      description: FHIR Bundle of type 'searchset' containing a single results Bundle per order
       required:
         - resourceType
         - type
+        - total
+        - link
         - entry
       properties:
         resourceType:
           type: string
           enum: [Bundle]
           example: "Bundle"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "d95bc671-03c6-4f0c-9cd5-793ab0da08b3"
         type:
           type: string
           enum: [searchset]
@@ -932,7 +1028,7 @@ components:
           example: 1
         link:
           type: array
-          description: Links related to this result set
+          description: Must contain at least a 'self' link to the search that produced this searchset
           items:
             type: object
             properties:
@@ -941,20 +1037,179 @@ components:
                 example: "self"
               url:
                 type: string
-                format: uri
+                format: uri-reference
                 example: "/results?order_uid=550e8400-e29b-41d4-a716-446655440000"
         entry:
           type: array
-          description: Bundle entries containing Observation resources
+          description: Bundle entries, each containing a results Bundle (DiagnosticReport, Observation, and Communication)
           items:
             type: object
             properties:
               fullUrl:
                 type: string
                 format: uri
-                example: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
+                example: "urn:uuid:42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
               resource:
-                $ref: '#/components/schemas/FHIRObservation'
+                $ref: '#/components/schemas/FHIRBundleResults'
+    FHIRBundleResults:
+      type: object
+      description: FHIR Bundle of type 'collection' containing DiagnosticReport, Observation, and Communication resources for a single test result
+      required:
+        - resourceType
+        - id
+        - type
+        - entry
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+          example: "Bundle"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "42631cc0-6ca7-4460-a9d2-88b5c95f9f89"
+        type:
+          type: string
+          enum: [collection]
+          example: "collection"
+        entry:
+          type: array
+          description: Must contain exactly three entries — a DiagnosticReport, an Observation, and a Communication
+          minItems: 3
+          maxItems: 3
+          items:
+            type: object
+            required:
+              - fullUrl
+              - resource
+            properties:
+              fullUrl:
+                type: string
+                description: Absolute URL for the resource entry (urn:uuid followed by the resource id)
+                example: "urn:uuid:36716694-601b-4ad2-99e3-befb78d846ef"
+              resource:
+                oneOf:
+                  - $ref: '#/components/schemas/FHIRDiagnosticReport'
+                  - $ref: '#/components/schemas/FHIRObservation'
+                  - $ref: '#/components/schemas/FHIRCommunication'
+                discriminator:
+                  propertyName: resourceType
+                  mapping:
+                    DiagnosticReport: '#/components/schemas/FHIRDiagnosticReport'
+                    Observation: '#/components/schemas/FHIRObservation'
+                    Communication: '#/components/schemas/FHIRCommunication'
+    FHIRDiagnosticReport:
+      type: object
+      description: FHIR DiagnosticReport resource grouping observations for a test result
+      required:
+        - resourceType
+        - id
+        - basedOn
+        - status
+        - category
+        - code
+        - subject
+        - issued
+        - performer
+        - result
+      properties:
+        resourceType:
+          type: string
+          enum: [DiagnosticReport]
+          example: "DiagnosticReport"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "36716694-601b-4ad2-99e3-befb78d846ef"
+        basedOn:
+          type: array
+          description: Reference to the ServiceRequest this DiagnosticReport fulfills
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+        status:
+          type: string
+          description: Status of the diagnostic report
+          enum: [final]
+          example: "final"
+        category:
+          type: array
+          description: Category of the report — use LAB/Laboratory for test results
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FHIRCodeableConcept'
+          example:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
+                  code: "LAB"
+                  display: "Laboratory"
+              text: "Laboratory"
+        code:
+          allOf:
+            - $ref: '#/components/schemas/FHIRCodeableConcept'
+            - description: Always use SNOMED CT 721981007 — Diagnostic studies report
+              example:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "721981007"
+                    display: "Diagnostic studies report"
+                text: "Diagnostic studies report"
+        subject:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Patient reference — PII removed for results
+              example:
+                reference: "Patient/123e4567-e89b-12d3-a456-426614174000"
+        effectiveDateTime:
+          type: string
+          format: date-time
+          description: When the test was performed
+          example: "2025-11-04T15:45:00Z"
+        issued:
+          type: string
+          format: date-time
+          description: When this report was made available
+          example: "2025-11-04T16:00:00Z"
+        performer:
+          type: array
+          description: Organisation responsible for the report
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+        result:
+          type: array
+          description: References to the Observation resources that are part of this report
+          items:
+            $ref: '#/components/schemas/FHIRReference'
+    FHIRCommunication:
+      type: object
+      description: FHIR Communication resource recording whether clinical contact was made with the patient
+      required:
+        - resourceType
+        - id
+        - status
+        - reasonReference
+      properties:
+        resourceType:
+          type: string
+          enum: [Communication]
+          example: "Communication"
+        id:
+          type: string
+          description: Logical id of this artifact
+          example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        status:
+          type: string
+          description: >-
+            Status of the communication event.
+            Use 'completed' when clinical contact has been made.
+            Use 'on-hold' when clinical contact is required but not yet made.
+            Use 'not-done' when clinical contact is not required (e.g. non-reactive results).
+          enum: [completed, on-hold, not-done]
+          example: "not-done"
+        reasonReference:
+          type: array
+          description: Reference to the Observation this communication relates to
+          items:
+            $ref: '#/components/schemas/FHIRReference'
   responses:
     BadRequest:
       description: Bad request - invalid parameters

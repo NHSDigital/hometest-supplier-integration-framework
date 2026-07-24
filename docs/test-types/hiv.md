@@ -21,9 +21,9 @@ Suppliers are responsible for all clinical management of HIV test orders. This i
 
 **Requirements:**
 
-- `telecom` **must** be present with a minimum of two entries
+- `telecom` **must** be present with a minimum of one entry
 - One entry **must** have `system: "phone"` with a valid UK phone number
-- One entry **must** have `system: "email"` with a valid email address
+- One entry **may** have `system: "email"` with a valid email address (optional)
 
 ```json
 "telecom": [
@@ -31,11 +31,6 @@ Suppliers are responsible for all clinical management of HIV test orders. This i
     "system": "phone",
     "value": "+447700900123",
     "use": "mobile"
-  },
-  {
-    "system": "email",
-    "value": "patient@example.com",
-    "use": "home"
   }
 ]
 ```
@@ -62,29 +57,29 @@ If the extension is absent, assume capillary blood (current default).
 
 | Responsibility | Supplier | HomeTest platform | Requesting clinician |
 |---|---|---|---|
+| Eligibility / quota checking | ✅ (via 409 response) | | |
 | Kit dispatch | ✅ | | |
 | Sample receipt and processing | ✅ | | |
-| Result submission (`/results`) | ✅ | | |
 | Patient notification of result | ✅ | | |
 | Clinical advice and onward referral | ✅ | | |
-| Eligibility / quota checking | ✅ (via 409 response) | | |
+| Result submission (`/results`) | ✅ | | |
 
 ---
 
 ## Order flow
 
-1. HomeTest platform sends `POST /order` with a `FHIRServiceRequest` containing patient demographics (including `telecom`)
-2. Supplier validates eligibility and quota rules; return `409` with appropriate `OperationOutcome` if the order cannot proceed
+1. HomeTest platform sends a pre-submission eligibility check with a `draft` `FHIRServiceRequest`; supplier validates eligibility and quota rules and returns `409` with an appropriate `OperationOutcome` if the order cannot proceed
+2. HomeTest platform sends `POST /order` with an `active` `FHIRServiceRequest` containing patient demographics (including `telecom`); if a pre-submission check was performed and the order matches, the supplier must accept it — `400`/`409` responses are not expected at this stage unless no pre-submission check was performed or a technical error occurs
 3. On acceptance, supplier dispatches the kit to the address in `contained[Patient].address`
 4. Supplier posts status updates via the task endpoint as the order progresses
-5. On result availability, supplier submits an `Observation` via `POST /results`
-6. Supplier contacts the patient directly to deliver results and provide clinical support
+5. Supplier contacts the patient directly to deliver results and provide clinical support
+6. After notifying the patient, supplier submits an `Observation` via `POST /results` to make results available to HomeTest
 
 ---
 
 ## Result requirements
 
-Results must be submitted as a `FHIRObservation` and must include:
+Results must be submitted as a FHIR `Bundle` containing a `DiagnosticReport` and an `Observation`. The `Observation` must include:
 
 - `basedOn` referencing the originating `ServiceRequest`
 - `status: "final"` for confirmed results
