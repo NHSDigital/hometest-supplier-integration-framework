@@ -20,6 +20,7 @@ The following fields are **optional** in the base supplier spec but are **mandat
 Suppliers are responsible for all clinical management of HIV test orders. This includes contacting the patient to deliver results, providing appropriate clinical advice, and referring where required. Patient contact details are therefore essential.
 
 **Requirements:**
+
 - `telecom` **must** be present with a minimum of two entries
 - One entry **must** have `system: "phone"` with a valid UK phone number
 - One entry **must** have `system: "email"` with a valid email address
