@@ -1,0 +1,200 @@
+{
+  "resourceType": "Bundle",
+  "id": "8f4e0c3b-2a5d-4f9e-b6c8-3d7a9f1e2b4c",
+  "type": "searchset",
+  "total": 1,
+  "link": [
+    {
+      "relation": "self",
+      "url": "/results?order_uid=a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d94"
+    }
+  ],
+  "entry": [
+    {
+      "search": {
+        "mode": "match"
+      },
+      "fullUrl": "urn:uuid:a2b3c4d5-e6f7-4a8b-9c0d-e1f2a3b4c5d6",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "a2b3c4d5-e6f7-4a8b-9c0d-e1f2a3b4c5d6",
+        "type": "collection",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:b3c4d5e6-f7a8-4b9c-0d1e-f2a3b4c5d6e7",
+            "resource": {
+              "resourceType": "DiagnosticReport",
+              "id": "b3c4d5e6-f7a8-4b9c-0d1e-f2a3b4c5d6e7",
+              "text": {
+                "status": "generated",
+                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">DiagnosticReport: PSA measurement — result above reference range</div>"
+              },
+              "basedOn": [
+                {
+                  "reference": "ServiceRequest/a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d94"
+                }
+              ],
+              "status": "final",
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                      "code": "LAB",
+                      "display": "Laboratory"
+                    }
+                  ],
+                  "text": "Laboratory"
+                }
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "721981007",
+                    "display": "Diagnostic studies report"
+                  }
+                ],
+                "text": "Diagnostic studies report"
+              },
+              "subject": {
+                "reference": "Patient/123e4567-e89b-12d3-a456-426614174001"
+              },
+              "effectiveDateTime": "2026-07-29T10:30:00Z",
+              "issued": "2026-07-29T11:00:00Z",
+              "performer": [
+                {
+                  "reference": "Organization/SUPP002",
+                  "display": "PSA Test Lab Ltd"
+                }
+              ],
+              "result": [
+                {
+                  "reference": "urn:uuid:c4d5e6f7-a8b9-4c0d-1e2f-a3b4c5d6e7f8"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:c4d5e6f7-a8b9-4c0d-1e2f-a3b4c5d6e7f8",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "c4d5e6f7-a8b9-4c0d-1e2f-a3b4c5d6e7f8",
+              "text": {
+                "status": "generated",
+                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Observation: PSA measurement — 6.8 ng/mL (above reference range)</div>"
+              },
+              "basedOn": [
+                {
+                  "reference": "ServiceRequest/a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d94"
+                }
+              ],
+              "status": "final",
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                      "code": "laboratory",
+                      "display": "Laboratory"
+                    }
+                  ],
+                  "text": "Laboratory"
+                }
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/valueset-reference",
+                        "valueUri": "https://fhir.hl7.org.uk/ValueSet/UKCore-PathologyBoundedCodeListObservables"
+                      }
+                    ],
+                    "system": "http://snomed.info/sct",
+                    "code": "63476009",
+                    "display": "Measurement of prostate specific antigen"
+                  }
+                ],
+                "text": "Measurement of prostate specific antigen"
+              },
+              "subject": {
+                "reference": "Patient/123e4567-e89b-12d3-a456-426614174001"
+              },
+              "effectiveDateTime": "2026-07-29T10:30:00Z",
+              "issued": "2026-07-29T11:00:00Z",
+              "performer": [
+                {
+                  "reference": "Organization/SUPP002",
+                  "display": "PSA Test Lab Ltd"
+                }
+              ],
+              "valueQuantity": {
+                "value": 6.8,
+                "unit": "ng/mL",
+                "system": "http://unitsofmeasure.org",
+                "code": "ng/mL"
+              },
+              "interpretation": [
+                {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                      "code": "H",
+                      "display": "High"
+                    }
+                  ],
+                  "text": "Above reference range"
+                }
+              ],
+              "referenceRange": [
+                {
+                  "low": {
+                    "value": 0,
+                    "unit": "ng/mL",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "ng/mL"
+                  },
+                  "high": {
+                    "value": 4.0,
+                    "unit": "ng/mL",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "ng/mL"
+                  },
+                  "type": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                        "code": "normal",
+                        "display": "Normal Range"
+                      }
+                    ],
+                    "text": "Normal Range"
+                  },
+                  "text": "Normal range for adult males (age-adjusted ranges may apply)"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:d5e6f7a8-b9c0-4d1e-2f3a-b4c5d6e7f8a9",
+            "resource": {
+              "resourceType": "Communication",
+              "id": "d5e6f7a8-b9c0-4d1e-2f3a-b4c5d6e7f8a9",
+              "text": {
+                "status": "generated",
+                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Communication: no supplier-initiated clinical contact — result routed to requesting clinician for review and patient notification</div>"
+              },
+              "status": "not-done",
+              "reasonReference": [
+                {
+                  "reference": "urn:uuid:c4d5e6f7-a8b9-4c0d-1e2f-a3b4c5d6e7f8"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

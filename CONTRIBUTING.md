@@ -234,7 +234,7 @@ To avoid repeating git config steps across repositories or having it declared gl
 
 ### FHIR example validation
 
-If you are adding or modifying FHIR example resources in [`examples/fhir/`](./examples/fhir), run the FHIR validator locally before opening a PR to catch issues early. See [`tests/fhir-examples/README.md`](./tests/fhir-examples/README.md) for prerequisites, usage, and how to interpret the output.
+If you are adding or modifying FHIR example resources in [`examples/fhir/`](./examples/fhir) (organised into [`hiv/`](./examples/fhir/hiv) and [`psa/`](./examples/fhir/psa) subdirectories), run the FHIR validator locally before opening a PR to catch issues early. See [`tests/fhir-examples/README.md`](./tests/fhir-examples/README.md) for prerequisites, usage, and how to interpret the output.
 
 Validation also runs automatically in CI and results are posted as a PR comment.
 

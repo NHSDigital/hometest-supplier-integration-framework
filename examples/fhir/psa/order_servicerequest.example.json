@@ -1,0 +1,79 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d94",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: PSA measurement order (clinician-initiated)</div>"
+  },
+  "extension": [
+    {
+      "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "122554006",
+            "display": "Capillary blood specimen"
+          }
+        ],
+        "text": "Capillary blood specimen"
+      }
+    }
+  ],
+  "status": "active",
+  "intent": "order",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "63476009",
+        "display": "Measurement of prostate specific antigen"
+      }
+    ],
+    "text": "Measurement of prostate specific antigen"
+  },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "b5e9d3c2-8a1f-4b6e-ad3c-2f9e4g7b1e05",
+      "name": [
+        {
+          "use": "official",
+          "family": "Doe",
+          "given": [
+            "Hohn"
+          ],
+          "text": "John Doe"
+        }
+      ],
+      "gender": "male",
+      "address": [
+        {
+          "use": "home",
+          "type": "both",
+          "line": [
+            "123 Evergreen Terrace"
+          ],
+          "city": "Birmingham",
+          "postalCode": "B15 XXX",
+          "country": "United Kingdom"
+        }
+      ],
+      "birthDate": "1970-01-01"
+    }
+  ],
+  "subject": {
+    "reference": "#b5e9d3c2-8a1f-4b6e-ad3c-2f9e4g7b1e05"
+  },
+  "requester": {
+    "reference": "Organization/GP-PRAC-001",
+    "display": "Birchwood Road GP Practice"
+  },
+  "performer": [
+    {
+      "reference": "Organization/SUPP002",
+      "display": "PSA Test Lab Ltd"
+    }
+  ],
+  "authoredOn": "2026-07-28T09:15:00Z"
+}
