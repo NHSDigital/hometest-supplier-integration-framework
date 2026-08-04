@@ -31,6 +31,22 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
 
 ---
 
+## Version 1.1.9 - August 4, 2026 - Document APIM application-restricted access
+
+Changes to `home-test-supplier-api.yaml`:
+
+1. Replaced the generic bearer authentication scheme with APIM's `app-level3`
+   application-restricted signed-JWT security scheme.
+2. Documented that suppliers authenticate their application, not an end user,
+   and linked to the NHS signed-JWT integration guide.
+3. Added the sandbox, integration and production environment table. Only the
+   sandbox URL is currently available; integration and production remain
+   unavailable.
+4. Corrected the sandbox documentation to state that it returns canned
+   responses and enabled "Try this API".
+
+---
+
 ## Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support
 
 Changes to supplier-api-spec-v2.yaml (new file, v1 remains unchanged):
