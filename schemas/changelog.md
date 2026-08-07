@@ -8,6 +8,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
 
 - [Changelog](#changelog)
   - [Table of Contents](#table-of-contents)
+  - [Version 2.0.2 - August 13, 2026 - Document APIM application-restricted access](#version-202---august-13-2026---document-apim-application-restricted-access)
   - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
   - [Version 1.0.1](#version-101)
   - [Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates](#version-102---january-26-2026---additional-fhir-compliance-updates)
@@ -31,7 +32,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
 
 ---
 
-## Version 1.1.9 - August 4, 2026 - Document APIM application-restricted access
+## Version 2.0.2 - August 13, 2026 - Document APIM application-restricted access
 
 Changes to `home-test-supplier-api.yaml`:
 
