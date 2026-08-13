@@ -59,9 +59,14 @@ info:
 
     ## Security and authorisation
 
-    This draft uses bearer token authorisation because suppliers are system-to-system API consumers.
+    This API is application-restricted: we authenticate the calling supplier
+    application, but not an end user.
 
-    The final access level must be confirmed with the NHS API Platform team before production use.
+    Suppliers use this API unattended, with no end user present, to submit test
+    results and test-order status updates to HomeTest.
+
+    To use this access mode, follow
+    [Application-restricted RESTful API - signed JWT authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication).
 
     ## Errors
 
@@ -79,21 +84,39 @@ info:
 
     ## Environments and testing
 
-    A sandbox has been deployed to the NHS API Platform and is available under the `https://sandbox.api.service.nhs.uk/hometest-api` base URL.
+    | Environment | Base URL |
+    | --- | --- |
+    | Sandbox | `https://sandbox.api.service.nhs.uk/hometest-api` |
+    | Integration | Not yet available |
+    | Production | Not yet available |
 
-    The "Try this API" feature is disabled for this documentation-only publication until a sandbox endpoint is available.
+    ### Sandbox environment
+
+    Our [sandbox environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#sandbox-testing):
+
+    * is for early developer testing
+    * is open access, so does not allow suppliers to test authorisation
+    * returns canned example responses rather than processing live data.
+
+    "Try this API" is enabled for this sandbox specification.
+
+    ### Integration and production environments
+
+    Integration and production environments are not yet available. Integration
+    will support formal supplier testing with authorisation; production will
+    process live service requests.
 
     ## Onboarding
 
     Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.
-  version: 1.1.8
+  version: 2.0.2
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
 
 x-spec-publication:
   try-this-api:
-    disabled: true
+    disabled: false
 
 servers:
   - url: https://sandbox.api.service.nhs.uk/hometest-api
@@ -1215,13 +1238,11 @@ components:
                 diagnostics: "The requested order could not be found"
 
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    app-level3:
+      $ref: https://proxygen.prod.api.platform.nhs.uk/components/securitySchemes/app-level3
 
 security:
-  - bearerAuth: []
+  - app-level3: []
 
 tags:
   - name: Order Management
