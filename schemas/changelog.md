@@ -8,6 +8,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
 
 - [Changelog](#changelog)
   - [Table of Contents](#table-of-contents)
+  - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
   - [Version 1.0.1](#version-101)
   - [Version 1.0.2 - January 26, 2026 - Additional FHIR Compliance Updates](#version-102---january-26-2026---additional-fhir-compliance-updates)
   - [Version 1.0.3 - January 27, 2026 - FHIR R4 Validation and UUID Corrections](#version-103---january-27-2026---fhir-r4-validation-and-uuid-corrections)
@@ -25,8 +26,8 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.5 - June 15, 2026 - FHIR Example File Compliance Fixes\*\*](#version-115---june-15-2026---fhir-example-file-compliance-fixes)
   - [Version 1.1.6 - June 22, 2026 - Add order cancellation\*\*](#version-116---june-22-2026---add-order-cancellation)
   - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
-  - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas for category and businessStatus](#version-118---july-22-2026---typed-codeableconcept-schemas)
-  - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
+  - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas](#version-118---july-22-2026---typed-codeableconcept-schemas)
+  - [Version 2.0.1  - August 10, 2026 - Make patient email optional](#version-201----august-10-2026---make-patient-email-optional)
 
 ---
 
@@ -465,3 +466,11 @@ businessStatus values
  readability
    - Affected enums: Communication.status, FHIRTask.status,
     OperationOutcome.issue.severity, FHIRIdentifier.use
+
+---
+
+## Version 2.0.1  - August 10, 2026 - Make patient email optional
+
+Changes to supplier-api-spec.yaml:
+
+1. Make email optional in the contained Patient resource. This was a mistake confirmed during testing, as the HomeTest user journey has the patient email as an optional field. The patient's phone number is still mandatory.
