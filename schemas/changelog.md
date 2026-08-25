@@ -28,7 +28,7 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas](#version-118---july-22-2026---typed-codeableconcept-schemas)
   - [Version 2.0.1  - August 10, 2026 - Make patient email optional](#version-201----august-10-2026---make-patient-email-optional)
   - [Version 3.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-300---july-20-2026---acute-consumer-order-support)
-  - [Version 3.0.1 - August 21, 2026 - Add ServiceRequest.note for clinical context](#version-301---august-21-2026---add-servicerequestrequestnote-for-clinical-context)
+  - [Version 3.0.1 - August 21, 2026 - Add ServiceRequest.note for clinical context](#version-301---august-21-2026---add-servicerequestnote-for-clinical-context)
 
 ---
 
