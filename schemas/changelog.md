@@ -27,6 +27,25 @@ All notable changes to the NHS Home Test Supplier Integration Framework API sche
   - [Version 1.1.7 - July 7, 2026 - Aligned API spec for APIM publication](#version-117---july-7-2026---aligned-api-spec-for-apim-publication)
   - [Version 1.1.8 - July 22, 2026 - Typed CodeableConcept schemas for category and businessStatus](#version-118---july-22-2026---typed-codeableconcept-schemas)
   - [Version 2.0.0 - July 20, 2026 - Acute Consumer Order Support](#version-200---july-20-2026---acute-consumer-order-support)
+  - [Version 2.0.1 - August 21, 2026 - Add ServiceRequest.note for clinical context](#version-201---august-21-2026---add-servicerequestrequestnote-for-clinical-context)
+
+---
+
+## Version 2.0.1 - August 21, 2026 - Add ServiceRequest.note for clinical context
+
+Changes to `supplier-api-spec-v2.yaml` and `examples/fhir/psa/`:
+
+1. Added `note` (optional array of `FHIRAnnotation`) to `FHIRServiceRequest`
+   - Allows clinicians to include free-text notes explaining why the test is being ordered (e.g. "PSA test required for Active Surveillance").
+   - Uses the FHIR `Annotation` datatype: `text` is required; `authorString` and `time` are optional.
+   - **Impact:** Non-breaking additive field.
+
+2. Added `FHIRAnnotation` schema to `components/schemas`
+   - New reusable datatype schema supporting the `note` field above.
+
+3. Added PSA order example with clinical note
+   - New inline example `psa_order` added to `/order` request and `201` response.
+   - New example file: `examples/fhir/psa/order_servicerequest_with_note.example.json`
 
 ---
 

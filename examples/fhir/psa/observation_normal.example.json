@@ -118,26 +118,8 @@
           "system": "http://unitsofmeasure.org",
           "code": "ng/mL"
         },
-        "interpretation": [
-          {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-                "code": "N",
-                "display": "Normal"
-              }
-            ],
-            "text": "Within reference range"
-          }
-        ],
         "referenceRange": [
           {
-            "low": {
-              "value": 0,
-              "unit": "ng/mL",
-              "system": "http://unitsofmeasure.org",
-              "code": "ng/mL"
-            },
             "high": {
               "value": 4.0,
               "unit": "ng/mL",
@@ -155,23 +137,6 @@
               "text": "Normal Range"
             },
             "text": "Normal range for adult males (age-adjusted ranges may apply)"
-          }
-        ]
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:f0e7b1c4-5a6d-7b8e-1c4f-6e8d0a2b5c7f",
-      "resource": {
-        "resourceType": "Communication",
-        "id": "f0e7b1c4-5a6d-7b8e-1c4f-6e8d0a2b5c7f",
-        "text": {
-          "status": "generated",
-          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Communication: no supplier-initiated clinical contact — result routed to requesting clinician</div>"
-        },
-        "status": "not-done",
-        "reasonReference": [
-          {
-            "reference": "urn:uuid:e9d6a0b3-4f5c-6a7d-0b3e-5d7c9f1a4b6e"
           }
         ]
       }

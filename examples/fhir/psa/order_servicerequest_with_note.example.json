@@ -1,9 +1,9 @@
 {
   "resourceType": "ServiceRequest",
-  "id": "a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d94",
+  "id": "a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d95",
   "text": {
     "status": "generated",
-    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: PSA measurement order (clinician-initiated)</div>"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: PSA measurement order (clinician-initiated) with clinical note</div>"
   },
   "extension": [
     {
@@ -71,5 +71,10 @@
       "display": "PSA Test Lab Ltd"
     }
   ],
-  "authoredOn": "2026-07-28T09:15:00Z"
+  "authoredOn": "2026-08-21T09:00:00Z",
+  "note": [
+    {
+      "text": "PSA test required for Active Surveillance"
+    }
+  ]
 }

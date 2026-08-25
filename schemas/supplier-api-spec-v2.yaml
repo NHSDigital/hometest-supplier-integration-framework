@@ -114,6 +114,38 @@ paths:
           application/fhir+json:
             schema:
               $ref: '#/components/schemas/FHIRServiceRequest'
+            examples:
+              psa_order:
+                summary: PSA test order with clinical note
+                value:
+                  resourceType: "ServiceRequest"
+                  id: "660f9511-f3ac-42e5-b827-557766551111"
+                  status: "active"
+                  intent: "order"
+                  code:
+                    coding:
+                      - system: "http://snomed.info/sct"
+                        code: "63476009"
+                        display: "Measurement of prostate specific antigen"
+                    text: "Measurement of prostate specific antigen"
+                  contained:
+                    - resourceType: "Patient"
+                      id: "patient-1"
+                      name:
+                        - use: "official"
+                          family: "Smith"
+                          given: ["John"]
+                      gender: "male"
+                      birthDate: "1965-03-15"
+                      address:
+                        - use: "home"
+                          line: ["123 Main Street"]
+                          postalCode: "SW1A 1AA"
+                  subject:
+                    reference: "#patient-1"
+                  authoredOn: "2026-08-21T09:00:00Z"
+                  note:
+                    - text: "PSA test required for Active Surveillance"
       responses:
         '201':
           description: Order received and processed successfully
@@ -121,6 +153,38 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/FHIRServiceRequest'
+              examples:
+                psa_order:
+                  summary: PSA test order with clinical note
+                  value:
+                    resourceType: "ServiceRequest"
+                    id: "660f9511-f3ac-42e5-b827-557766551111"
+                    status: "active"
+                    intent: "order"
+                    code:
+                      coding:
+                        - system: "http://snomed.info/sct"
+                          code: "63476009"
+                          display: "Measurement of prostate specific antigen"
+                      text: "Measurement of prostate specific antigen"
+                    contained:
+                      - resourceType: "Patient"
+                        id: "patient-1"
+                        name:
+                          - use: "official"
+                            family: "Smith"
+                            given: ["John"]
+                        gender: "male"
+                        birthDate: "1965-03-15"
+                        address:
+                          - use: "home"
+                            line: ["123 Main Street"]
+                            postalCode: "SW1A 1AA"
+                    subject:
+                      reference: "#patient-1"
+                    authoredOn: "2026-08-21T09:00:00Z"
+                    note:
+                      - text: "PSA test required for Active Surveillance"
         '400':
           $ref: '#/components/responses/BadRequest'
         '422':
@@ -589,6 +653,11 @@ components:
                           code: "122554006"
                           display: "Capillary blood specimen"
                       text: "capillary"
+        note:
+          type: array
+          description: Free-text clinical notes from the requesting clinician
+          items:
+            $ref: '#/components/schemas/FHIRAnnotation'
 
     FHIRObservation:
       type: object
@@ -1000,6 +1069,26 @@ components:
       type: string
       description: Observation category status values.
       enum: [Laboratory]
+    FHIRAnnotation:
+      type: object
+      description: A text note with optional author and timestamp (FHIR Annotation datatype)
+      required:
+        - text
+      properties:
+        authorString:
+          type: string
+          # use authorReference instead when the author is a known FHIR resource
+          description: Name of the annotation author as a plain string
+          example: "Dr. Jane Smith"
+        time:
+          type: string
+          format: date-time
+          description: When the annotation was made
+          example: "2026-08-21T09:00:00Z"
+        text:
+          type: string
+          description: Free-text clinical note
+          example: "PSA test required for Active Surveillance"
     FHIRBundleSearchsetResultsBundle:
       type: object
       description: FHIR Bundle of type 'searchset' containing a single results Bundle per order
