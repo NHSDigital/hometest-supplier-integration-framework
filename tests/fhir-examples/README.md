@@ -1,7 +1,7 @@
 # FHIR Example Validation
 
 This directory contains tooling to validate the FHIR example resources in
-[`examples/fhir/`](../../examples/fhir) against the FHIR specification using
+[`examples/fhir/`](../../examples/fhir) (organised into [`hiv/`](../../examples/fhir/hiv) and [`psa/`](../../examples/fhir/psa) subdirectories) against the FHIR specification using
 the [HL7 FHIR Validator CLI](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator).
 
 Validation is also run automatically in CI on every push and pull request — see

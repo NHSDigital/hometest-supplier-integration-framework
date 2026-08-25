@@ -377,12 +377,12 @@ components:
         effectiveDateTime:
           type: string
           format: date-time
-          description: Date/Time the observation was made (when the test was performed)
+          description: Date/time the specimen was collected from the patient
           example: "2025-11-04T15:45:00Z"
         issued:
           type: string
           format: date-time
-          description: Date/Time this diagnostic report was made available
+          description: Date/time the result was finalised and made available
           example: "2025-11-04T16:00:00Z"
         performer:
           type: array
@@ -477,12 +477,12 @@ components:
         effectiveDateTime:
           type: string
           format: date-time
-          description: Date/Time the observation was made (when the test was performed)
+          description: Date/time the specimen was collected from the patient
           example: "2025-11-04T15:45:00Z"
         issued:
           type: string
           format: date-time
-          description: Date/Time this Observation was made available
+          description: Date/time the result was finalised and made available
           example: "2025-11-04T16:00:00Z"
         performer:
           type: array

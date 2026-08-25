@@ -1,0 +1,80 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "a3f8c2d1-7b4e-4a5f-9c2d-1e8b3f6a0d95",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: PSA measurement order (clinician-initiated) with clinical note</div>"
+  },
+  "extension": [
+    {
+      "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "122554006",
+            "display": "Capillary blood specimen"
+          }
+        ],
+        "text": "Capillary blood specimen"
+      }
+    }
+  ],
+  "status": "active",
+  "intent": "order",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "63476009",
+        "display": "Measurement of prostate specific antigen"
+      }
+    ],
+    "text": "Measurement of prostate specific antigen"
+  },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "b5e9d3c2-8a1f-4b6e-ad3c-2f9e4g7b1e05",
+      "name": [
+        {
+          "use": "official",
+          "family": "Doe",
+          "given": [
+            "John"
+          ],
+          "text": "John Doe"
+        }
+      ],
+      "gender": "male",
+      "address": [
+        {
+          "use": "home",
+          "type": "both",
+          "line": [
+            "123 Evergreen Terrace"
+          ],
+          "city": "Birmingham",
+          "postalCode": "B15 XXX",
+          "country": "United Kingdom"
+        }
+      ],
+      "birthDate": "1970-01-01"
+    }
+  ],
+  "subject": {
+    "reference": "#b5e9d3c2-8a1f-4b6e-ad3c-2f9e4g7b1e05"
+  },
+  "performer": [
+    {
+      "reference": "Organization/SUPP002",
+      "display": "PSA Test Lab Ltd"
+    }
+  ],
+  "authoredOn": "2026-08-21T09:00:00Z",
+  "note": [
+    {
+      "text": "PSA test required for Active Surveillance"
+    }
+  ]
+}
