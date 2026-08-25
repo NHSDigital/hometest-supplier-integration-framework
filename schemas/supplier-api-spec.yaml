@@ -445,8 +445,9 @@ components:
                   $ref: "#/components/schemas/FHIRHumanName"
               telecom:
                 type: array
-                description: Contact details - must include both phone and email contact points
-                minItems: 2
+                description: Contact details - must include at least phone. email is optional.
+                minItems: 1
+                maxItems: 2
                 items:
                   $ref: "#/components/schemas/FHIRContactPoint"
               address:
