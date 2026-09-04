@@ -190,6 +190,7 @@ paths:
 
         Expected HomeTest business status values are:
 
+        * `order-accepted`
         * `dispatched`
         * `received-at-lab`
         * `test-processed`
@@ -659,7 +660,7 @@ components:
         businessStatus:
           allOf:
             - $ref: "#/components/schemas/FHIRBusinessStatusCoding"
-            - description: Domain-specific business status, expected to be one of "dispatched","received-at-lab", or "test-processed" for HomeTest.
+            - description: Domain-specific business status, expected to be one of "order-accepted", "dispatched","received-at-lab", or "test-processed" for HomeTest.
               example:
                 text: "dispatched"
         intent:
