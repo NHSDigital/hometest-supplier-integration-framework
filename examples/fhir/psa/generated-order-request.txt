@@ -1,0 +1,4 @@
+MSH|^~\&#|HomeTest|X26|Epic|RH8|20260923161613+0000||ORM^O01|8880C7BF-8CD7-446F-ACF7-2A87C3F1BB8B|P|2.5.1|||AL|NE
+PID|1||9443211234^^^HC^PI~944 321 1234^^^NHS^NH||MOUSE^MINNIE^^^^^B||19871005|F|||113 BEAUMONT ROAD^^PLYMOUTH^^PL4 9EE^ENG^H^^DEVON||||||||944 321 1234|||||||||||N||||RH8^^ISO
+ORC|NW|2812455^|^|||||||||||||||||||XAD^^^^^^L||XAD^^^^^^B
+OBR|1|2812455^|^|63476009^Measurement of prostate specific antigen^SCT^^^^|||||||||||122554006&Capillary blood specimen&SCT^^^20982000&Capillary&SCT||||||||||||||||^^^^^^

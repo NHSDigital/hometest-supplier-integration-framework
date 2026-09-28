@@ -96,7 +96,10 @@ paths:
   /order:
     post:
       summary: Receive Test Order
-      description: Receive a new test order from the home test platform
+      description: >-
+        Receive a new test order from the home test platform. Accepts the legacy standalone
+        ServiceRequest format and the UK Core transaction Bundle format. Existing suppliers
+        may continue sending standalone ServiceRequests; Bundle support is additive.
       tags:
         - Order Management
       parameters:
@@ -113,7 +116,9 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/FHIRServiceRequest'
+              oneOf:
+                - $ref: '#/components/schemas/FHIRServiceRequest'
+                - $ref: '#/components/schemas/FHIRTransactionBundle'
             examples:
               psa_order:
                 summary: PSA test order with clinical note
@@ -146,6 +151,139 @@ paths:
                   authoredOn: "2026-08-21T09:00:00Z"
                   note:
                     - text: "PSA test required for Active Surveillance"
+              psa_ukcore_transaction_bundle:
+                summary: UK Core PSA transaction Bundle with patient, organizations and specimen
+                value:
+                  resourceType: Bundle
+                  meta:
+                    profile:
+                      - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Bundle
+                  type: transaction
+                  entry:
+                    - fullUrl: urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012
+                      request:
+                        method: POST
+                        url: Organization
+                      resource:
+                        resourceType: Organization
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
+                        identifier:
+                          - value: RH8
+                    - fullUrl: urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5
+                      request:
+                        method: POST
+                        url: Organization
+                      resource:
+                        resourceType: Organization
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
+                        identifier:
+                          - value: https://fhir.hl7.org.uk/Id/nhs-number
+                    - fullUrl: urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193
+                      request:
+                        method: POST
+                        url: Organization
+                      resource:
+                        resourceType: Organization
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
+                        identifier:
+                          - value: RH8
+                    - fullUrl: urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53
+                      request:
+                        method: POST
+                        url: Patient
+                      resource:
+                        resourceType: Patient
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient
+                        address:
+                          - city: PLYMOUTH
+                            country: ENG
+                            district: DEVON
+                            line: [113 BEAUMONT ROAD]
+                            postalCode: PL4 9EE
+                        birthDate: "1987-10-05"
+                        gender: female
+                        identifier:
+                          - assigner:
+                              reference: urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5
+                            system: https://fhir.hl7.org.uk/Id/nhs-number
+                            value: "9443211234"
+                        managingOrganization:
+                          reference: urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012
+                        name:
+                          - family: MOUSE
+                            given: [MINNIE]
+                            text: MINNIE MOUSE
+                            use: official
+                    - fullUrl: urn:uuid:9df086ae-598d-436d-b0c0-d87954d5d135
+                      request:
+                        method: POST
+                        url: Specimen
+                      resource:
+                        resourceType: Specimen
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Specimen
+                        status: available
+                        type:
+                          coding:
+                            - code: "122554006"
+                              display: Capillary blood specimen
+                              system: http://snomed.info/sct
+                    - fullUrl: urn:uuid:685c4a3a-5ac3-498d-9703-c81da7a5d9f4
+                      request:
+                        method: POST
+                        url: ServiceRequest
+                      resource:
+                        resourceType: ServiceRequest
+                        meta:
+                          profile:
+                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-ServiceRequest
+                        category:
+                          - coding:
+                              - code: "103693007"
+                                display: Diagnostic procedure
+                                system: http://snomed.info/sct
+                            text: Diagnostic procedure
+                        code:
+                          coding:
+                            - code: "63476009"
+                              display: Measurement of prostate specific antigen
+                              system: http://snomed.info/sct
+                        extension:
+                          - url: https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod
+                            valueCodeableConcept:
+                              coding:
+                                - code: "122554006"
+                                  display: Capillary blood specimen
+                                  system: http://snomed.info/sct
+                              text: Capillary blood specimen
+                        identifier:
+                          - type:
+                              coding:
+                                - code: PLAC
+                                  display: Placer Identifier
+                                  system: http://terminology.hl7.org/CodeSystem/v2-0203
+                              text: PlacerId
+                            use: official
+                            value: "2812455"
+                        intent: order
+                        performer:
+                          - reference: urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193
+                        requester:
+                          reference: urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012
+                        specimen:
+                          - reference: urn:uuid:9df086ae-598d-436d-b0c0-d87954d5d135
+                        status: active
+                        subject:
+                          reference: urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53
       responses:
         '201':
           description: Order received and processed successfully
@@ -620,6 +758,10 @@ components:
           description: Requested performer (this supplier)
           items:
             $ref: '#/components/schemas/FHIRReference'
+        requester:
+          allOf:
+            - $ref: '#/components/schemas/FHIRReference'
+            - description: Organization or practitioner that initiated the request
         authoredOn:
           type: string
           format: date-time
@@ -658,6 +800,281 @@ components:
           description: Free-text clinical notes from the requesting clinician
           items:
             $ref: '#/components/schemas/FHIRAnnotation'
+
+    FHIRTransactionBundle:
+      type: object
+      description: >-
+        UK Core transaction Bundle order containing separately-addressed resources. This is
+        additive to the legacy standalone ServiceRequest format. References between Bundle
+        entries MUST resolve to an entry fullUrl; suppliers should accept urn:uuid references.
+      required:
+        - resourceType
+        - meta
+        - type
+        - entry
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+        meta:
+          $ref: '#/components/schemas/UKCoreBundleMeta'
+        type:
+          type: string
+          enum: [transaction]
+        entry:
+          type: array
+          minItems: 1
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/FHIRTransactionOrganizationEntry'
+              - $ref: '#/components/schemas/FHIRTransactionPatientEntry'
+              - $ref: '#/components/schemas/FHIRTransactionSpecimenEntry'
+              - $ref: '#/components/schemas/FHIRTransactionServiceRequestEntry'
+
+    UKCoreBundleMeta:
+      type: object
+      required: [profile]
+      properties:
+        profile:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Bundle"]
+
+    FHIRTransactionEntryRequest:
+      type: object
+      required: [method, url]
+      properties:
+        method:
+          type: string
+          enum: [POST]
+        url:
+          type: string
+          enum: [Organization, Patient, Specimen, ServiceRequest]
+
+    FHIRTransactionOrganizationEntry:
+      type: object
+      required: [fullUrl, request, resource]
+      properties:
+        fullUrl:
+          type: string
+          format: uri
+        request:
+          allOf:
+            - $ref: '#/components/schemas/FHIRTransactionEntryRequest'
+            - properties:
+                url:
+                  type: string
+                  enum: [Organization]
+        resource:
+          type: object
+          required: [resourceType, meta, identifier]
+          properties:
+            resourceType:
+              type: string
+              enum: [Organization]
+            meta:
+              type: object
+              required: [profile]
+              properties:
+                profile:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization"]
+            identifier:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/FHIRBundleIdentifier'
+
+    FHIRTransactionPatientEntry:
+      type: object
+      required: [fullUrl, request, resource]
+      properties:
+        fullUrl:
+          type: string
+          format: uri
+        request:
+          allOf:
+            - $ref: '#/components/schemas/FHIRTransactionEntryRequest'
+            - properties:
+                url:
+                  type: string
+                  enum: [Patient]
+        resource:
+          type: object
+          required: [resourceType, meta, address, birthDate, gender, identifier, managingOrganization, name]
+          properties:
+            resourceType:
+              type: string
+              enum: [Patient]
+            meta:
+              type: object
+              required: [profile]
+              properties:
+                profile:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient"]
+            address:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/FHIRAddress'
+            birthDate:
+              type: string
+              format: date
+            gender:
+              type: string
+              enum: [male, female, other, unknown]
+            identifier:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/FHIRBundleIdentifier'
+            managingOrganization:
+              $ref: '#/components/schemas/FHIRReference'
+            name:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/FHIRHumanName'
+
+    FHIRTransactionSpecimenEntry:
+      type: object
+      required: [fullUrl, request, resource]
+      properties:
+        fullUrl:
+          type: string
+          format: uri
+        request:
+          allOf:
+            - $ref: '#/components/schemas/FHIRTransactionEntryRequest'
+            - properties:
+                url:
+                  type: string
+                  enum: [Specimen]
+        resource:
+          type: object
+          required: [resourceType, meta, status, type]
+          properties:
+            resourceType:
+              type: string
+              enum: [Specimen]
+            meta:
+              type: object
+              required: [profile]
+              properties:
+                profile:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-Specimen"]
+            status:
+              type: string
+              enum: [available, unavailable, unsatisfactory, entered-in-error]
+            type:
+              $ref: '#/components/schemas/FHIRCodeableConcept'
+
+    FHIRTransactionServiceRequestEntry:
+      type: object
+      required: [fullUrl, request, resource]
+      properties:
+        fullUrl:
+          type: string
+          format: uri
+        request:
+          allOf:
+            - $ref: '#/components/schemas/FHIRTransactionEntryRequest'
+            - properties:
+                url:
+                  type: string
+                  enum: [ServiceRequest]
+        resource:
+          type: object
+          required: [resourceType, meta, status, intent, category, code, subject, specimen]
+          properties:
+            resourceType:
+              type: string
+              enum: [ServiceRequest]
+            meta:
+              type: object
+              required: [profile]
+              properties:
+                profile:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: ["https://fhir.hl7.org.uk/StructureDefinition/UKCore-ServiceRequest"]
+            status:
+              type: string
+              enum: [draft, active, on-hold, revoked, completed, entered-in-error, unknown]
+            intent:
+              type: string
+              enum: [proposal, plan, directive, order, original-order, reflex-order, filler-order, instance-order, option]
+            category:
+              type: array
+              items:
+                $ref: '#/components/schemas/FHIRCodeableConcept'
+            code:
+              $ref: '#/components/schemas/FHIRCodeableConcept'
+            extension:
+              type: array
+              description: >-
+                Include Extension-UKCore-SpecimenCollectionMethod when required by the ordered
+                test type. For PSA orders, use the SNOMED CT specimen collection method.
+              items:
+                $ref: '#/components/schemas/UKCoreSpecimenCollectionMethodExtension'
+            identifier:
+              type: array
+              items:
+                $ref: '#/components/schemas/FHIRBundleIdentifier'
+            performer:
+              type: array
+              items:
+                $ref: '#/components/schemas/FHIRReference'
+            requester:
+              $ref: '#/components/schemas/FHIRReference'
+            specimen:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/FHIRReference'
+            subject:
+              $ref: '#/components/schemas/FHIRReference'
+
+    FHIRBundleIdentifier:
+      type: object
+      required: [value]
+      properties:
+        assigner:
+          $ref: '#/components/schemas/FHIRReference'
+        system:
+          type: string
+        type:
+          $ref: '#/components/schemas/FHIRCodeableConcept'
+        use:
+          type: string
+          enum: [usual, official, temp, secondary, old]
+        value:
+          type: string
+
+    UKCoreSpecimenCollectionMethodExtension:
+      type: object
+      required: [url, valueCodeableConcept]
+      properties:
+        url:
+          type: string
+          enum: ["https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod"]
+        valueCodeableConcept:
+          $ref: '#/components/schemas/FHIRCodeableConcept'
 
     FHIRObservation:
       type: object
