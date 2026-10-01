@@ -18,8 +18,8 @@ const validationOutcome = process.env.VALIDATION_OUTCOME;
 const validationType = process.env.VALIDATION_TYPE;
 const runUrl = process.env.RUN_URL;
 const outputPath = process.env.OUTPUT_PATH ?? "comment-body.md";
-const heading = `## 🔬 FHIR Validation Results${validationType ? ` - ${validationType.toUpperCase()}` : ""}`;
-const commentMarker = validationType ? `<!-- fhir-validation-${validationType} -->` : "<!-- fhir-validation -->";
+const heading = `## 🔬 FHIR Validation Results - ${validationType.toUpperCase()}`;
+const commentMarker = `<!-- fhir-validation-${validationType} -->`;
 
 const serverUrl = process.env.GITHUB_SERVER_URL;
 const repository = process.env.GITHUB_REPOSITORY;
@@ -99,8 +99,14 @@ if (!fs.existsSync(resultsPath)) {
     }
   }
 
-  const overall =
-    errors > 0 ? "❌ Validation failed" : warnings > 0 ? "⚠️ Validation passed with warnings" : "✅ Validation passed";
+  let overall;
+  if (errors > 0) {
+    overall = "❌ Validation failed";
+  } else if (warnings > 0) {
+    overall = "⚠️ Validation passed with warnings";
+  } else {
+    overall = "✅ Validation passed";
+  }
 
   const summary = `**${errors}** error(s) · **${warnings}** warning(s) · **${info}** info`;
 
