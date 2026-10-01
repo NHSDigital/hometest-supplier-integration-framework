@@ -22,47 +22,7 @@
         },
         "identifier": [
           {
-            "value": "RH8"
-          }
-        ]
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "Organization"
-      },
-      "fullUrl": "urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5",
-      "resource": {
-        "resourceType": "Organization",
-        "meta": {
-          "profile": [
-            "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization"
-          ]
-        },
-        "identifier": [
-          {
-            "value": "https://fhir.hl7.org.uk/Id/nhs-number"
-          }
-        ]
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "Organization"
-      },
-      "fullUrl": "urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193",
-      "resource": {
-        "resourceType": "Organization",
-        "meta": {
-          "profile": [
-            "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization"
-          ]
-        },
-        "identifier": [
-          {
-            "value": "RH8"
+            "value": "REQUESTER_ODS_CODE"
           }
         ]
       }
@@ -93,15 +53,6 @@
         ],
         "birthDate": "1987-10-05",
         "gender": "female",
-        "identifier": [
-          {
-            "assigner": {
-              "reference": "urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5"
-            },
-            "system": "https://fhir.hl7.org.uk/Id/nhs-number",
-            "value": "9443211234"
-          }
-        ],
         "managingOrganization": {
           "reference": "urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012"
         },
@@ -131,6 +82,9 @@
           ]
         },
         "status": "available",
+        "subject": {
+          "reference": "urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53"
+        },
         "type": {
           "coding": [
             {
@@ -210,7 +164,8 @@
         "intent": "order",
         "performer": [
           {
-            "reference": "urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193"
+            "reference": "Organization/ODS_CODE",
+            "type": "Organization"
           }
         ],
         "requester": {

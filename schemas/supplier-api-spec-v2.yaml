@@ -120,39 +120,8 @@ paths:
                 - $ref: '#/components/schemas/FHIRServiceRequest'
                 - $ref: '#/components/schemas/FHIRTransactionBundle'
             examples:
-              psa_order:
-                summary: PSA test order with clinical note
-                value:
-                  resourceType: "ServiceRequest"
-                  id: "660f9511-f3ac-42e5-b827-557766551111"
-                  status: "active"
-                  intent: "order"
-                  code:
-                    coding:
-                      - system: "http://snomed.info/sct"
-                        code: "63476009"
-                        display: "Measurement of prostate specific antigen"
-                    text: "Measurement of prostate specific antigen"
-                  contained:
-                    - resourceType: "Patient"
-                      id: "patient-1"
-                      name:
-                        - use: "official"
-                          family: "Smith"
-                          given: ["John"]
-                      gender: "male"
-                      birthDate: "1965-03-15"
-                      address:
-                        - use: "home"
-                          line: ["123 Main Street"]
-                          postalCode: "SW1A 1AA"
-                  subject:
-                    reference: "#patient-1"
-                  authoredOn: "2026-08-21T09:00:00Z"
-                  note:
-                    - text: "PSA test required for Active Surveillance"
               psa_ukcore_transaction_bundle:
-                summary: UK Core PSA transaction Bundle with patient, organizations and specimen
+                summary: UK Core PSA transaction Bundle without an NHS number
                 value:
                   resourceType: Bundle
                   meta:
@@ -170,29 +139,7 @@ paths:
                           profile:
                             - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
                         identifier:
-                          - value: RH8
-                    - fullUrl: urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5
-                      request:
-                        method: POST
-                        url: Organization
-                      resource:
-                        resourceType: Organization
-                        meta:
-                          profile:
-                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
-                        identifier:
-                          - value: https://fhir.hl7.org.uk/Id/nhs-number
-                    - fullUrl: urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193
-                      request:
-                        method: POST
-                        url: Organization
-                      resource:
-                        resourceType: Organization
-                        meta:
-                          profile:
-                            - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization
-                        identifier:
-                          - value: RH8
+                          - value: REQUESTER_ODS_CODE
                     - fullUrl: urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53
                       request:
                         method: POST
@@ -210,11 +157,6 @@ paths:
                             postalCode: PL4 9EE
                         birthDate: "1987-10-05"
                         gender: female
-                        identifier:
-                          - assigner:
-                              reference: urn:uuid:b9b174d9-aa4a-477a-acbd-f833eb6b70c5
-                            system: https://fhir.hl7.org.uk/Id/nhs-number
-                            value: "9443211234"
                         managingOrganization:
                           reference: urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012
                         name:
@@ -232,6 +174,8 @@ paths:
                           profile:
                             - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Specimen
                         status: available
+                        subject:
+                          reference: urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53
                         type:
                           coding:
                             - code: "122554006"
@@ -276,7 +220,8 @@ paths:
                             value: "2812455"
                         intent: order
                         performer:
-                          - reference: urn:uuid:8d3e15c4-2b71-4c59-9a84-0f6e27b8d193
+                          - reference: Organization/ODS_CODE
+                            type: Organization
                         requester:
                           reference: urn:uuid:528c4978-6d0d-45a5-9dda-40642b155012
                         specimen:
@@ -291,38 +236,6 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/FHIRServiceRequest'
-              examples:
-                psa_order:
-                  summary: PSA test order with clinical note
-                  value:
-                    resourceType: "ServiceRequest"
-                    id: "660f9511-f3ac-42e5-b827-557766551111"
-                    status: "active"
-                    intent: "order"
-                    code:
-                      coding:
-                        - system: "http://snomed.info/sct"
-                          code: "63476009"
-                          display: "Measurement of prostate specific antigen"
-                      text: "Measurement of prostate specific antigen"
-                    contained:
-                      - resourceType: "Patient"
-                        id: "patient-1"
-                        name:
-                          - use: "official"
-                            family: "Smith"
-                            given: ["John"]
-                        gender: "male"
-                        birthDate: "1965-03-15"
-                        address:
-                          - use: "home"
-                            line: ["123 Main Street"]
-                            postalCode: "SW1A 1AA"
-                    subject:
-                      reference: "#patient-1"
-                    authoredOn: "2026-08-21T09:00:00Z"
-                    note:
-                      - text: "PSA test required for Active Surveillance"
         '400':
           $ref: '#/components/responses/BadRequest'
         '422':
@@ -804,9 +717,11 @@ components:
     FHIRTransactionBundle:
       type: object
       description: >-
-        UK Core transaction Bundle order containing separately-addressed resources. This is
-        additive to the legacy standalone ServiceRequest format. References between Bundle
-        entries MUST resolve to an entry fullUrl; suppliers should accept urn:uuid references.
+        UK Core transaction Bundle order containing Organization, Patient, Specimen, and
+        ServiceRequest entries in that order. This is additive to the legacy standalone
+        ServiceRequest format. An NHS number is not required or expected in this Bundle.
+        References between Bundle entries MUST resolve to an entry fullUrl; suppliers should
+        accept urn:uuid references.
       required:
         - resourceType
         - meta
@@ -823,7 +738,9 @@ components:
           enum: [transaction]
         entry:
           type: array
-          minItems: 1
+          minItems: 4
+          maxItems: 4
+          description: Organization, Patient, Specimen, and ServiceRequest transaction entries, in that order
           items:
             oneOf:
               - $ref: '#/components/schemas/FHIRTransactionOrganizationEntry'
@@ -906,7 +823,7 @@ components:
                   enum: [Patient]
         resource:
           type: object
-          required: [resourceType, meta, address, birthDate, gender, identifier, managingOrganization, name]
+          required: [resourceType, meta, address, birthDate, gender, managingOrganization, name]
           properties:
             resourceType:
               type: string
@@ -934,7 +851,7 @@ components:
               enum: [male, female, other, unknown]
             identifier:
               type: array
-              minItems: 1
+              description: Optional non-NHS identifier; do not include an NHS number in this order Bundle.
               items:
                 $ref: '#/components/schemas/FHIRBundleIdentifier'
             managingOrganization:
@@ -961,7 +878,7 @@ components:
                   enum: [Specimen]
         resource:
           type: object
-          required: [resourceType, meta, status, type]
+          required: [resourceType, meta, status, subject, type]
           properties:
             resourceType:
               type: string
@@ -979,6 +896,8 @@ components:
             status:
               type: string
               enum: [available, unavailable, unsatisfactory, entered-in-error]
+            subject:
+              $ref: '#/components/schemas/FHIRReference'
             type:
               $ref: '#/components/schemas/FHIRCodeableConcept'
 
@@ -1038,8 +957,19 @@ components:
                 $ref: '#/components/schemas/FHIRBundleIdentifier'
             performer:
               type: array
+              description: >-
+                Requested performing Organization, identified by its ODS code using the
+                relative reference form Organization/{ODS code}.
               items:
-                $ref: '#/components/schemas/FHIRReference'
+                allOf:
+                  - $ref: '#/components/schemas/FHIRReference'
+                  - properties:
+                      reference:
+                        type: string
+                        example: Organization/ODS_CODE
+                      type:
+                        type: string
+                        enum: [Organization]
             requester:
               $ref: '#/components/schemas/FHIRReference'
             specimen:
@@ -1505,7 +1435,7 @@ components:
         text:
           type: string
           description: Free-text clinical note
-          example: "PSA test required for Active Surveillance"
+          example: "Clinical note text"
     FHIRBundleSearchsetResultsBundle:
       type: object
       description: FHIR Bundle of type 'searchset' containing a single results Bundle per order
