@@ -2,6 +2,7 @@
 // Environment variables:
 //   - RESULTS_PATH       : path to the results.json file (optional, defaults to '.local/results/results.json')
 //   - VALIDATION_OUTCOME : result of the validation job ('success' | 'failure' | 'cancelled'), optional
+//   - VALIDATION_TYPE    : type of FHIR examples being reported (optional)
 //   - RUN_URL            : URL to the workflow run, for linking to artifacts
 //   - OUTPUT_PATH        : path for the generated comment body (optional, defaults to 'comment-body.md')
 //   - GITHUB_SERVER_URL  : GitHub server URL (set automatically by Actions)
@@ -14,8 +15,11 @@ const path = require("node:path");
 
 const resultsPath = process.env.RESULTS_PATH ?? ".local/results/results.json";
 const validationOutcome = process.env.VALIDATION_OUTCOME;
+const validationType = process.env.VALIDATION_TYPE;
 const runUrl = process.env.RUN_URL;
 const outputPath = process.env.OUTPUT_PATH ?? "comment-body.md";
+const heading = `## 🔬 FHIR Validation Results${validationType ? ` - ${validationType.toUpperCase()}` : ""}`;
+const commentMarker = validationType ? `<!-- fhir-validation-${validationType} -->` : "<!-- fhir-validation -->";
 
 const serverUrl = process.env.GITHUB_SERVER_URL;
 const repository = process.env.GITHUB_REPOSITORY;
@@ -47,7 +51,7 @@ let body;
 
 if (!fs.existsSync(resultsPath)) {
   body =
-    `## 🔬 FHIR Validation Results\n\n` +
+    `${heading}\n\n` +
     `❌ Validation did not produce a results file. ` +
     `Check the [workflow run](${runUrl}) for details.`;
 } else {
@@ -115,7 +119,7 @@ if (!fs.existsSync(resultsPath)) {
   }
 
   body =
-    `## 🔬 FHIR Validation Results\n\n` +
+    `${heading}\n\n` +
     `${overall} — ${summary}\n` +
     details +
     `\n> Full HTML report available in the [workflow run artifacts](${runUrl}).`;
@@ -126,5 +130,5 @@ const warning =
     ? `> [!WARNING]\n> The FHIR validator exited with errors. This should be reviewed before merging.\n\n`
     : "";
 
-fs.writeFileSync(outputPath, `<!-- fhir-validation -->\n${warning}${body}`);
+fs.writeFileSync(outputPath, `${commentMarker}\n${warning}${body}`);
 console.log(`Comment body written to ${outputPath}`);
