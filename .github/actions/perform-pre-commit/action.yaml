@@ -1,0 +1,58 @@
+---
+name: "Perform pre-commit checks"
+description: "Perform pre-commit checks"
+inputs:
+  base_sha:
+    description: "Base commit SHA used to determine pre-commit diff range"
+    required: false
+    default: ""
+  all_files:
+    description: "Run pre-commit against all files instead of a diff range"
+    required: false
+    default: "true"
+runs:
+  using: "composite"
+  steps:
+    - name: Restore cache pre-commit hooks
+      id: cache-pre-commit
+      uses: actions/cache/restore@v6
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+        restore-keys: |
+          pre-commit-${{ runner.os }}-
+
+    - name: Install pre-commit
+      shell: bash
+      run: |
+        echo "::group::Install pre-commit hooks"
+        mise exec -- pre-commit install --install-hooks
+        echo "::endgroup::"
+
+    - name: Run pre-commit
+      shell: bash
+      run: |
+        echo "::group::Run pre-commit checks"
+        if [[ "${ALL_FILES}" == "true" ]]; then
+          SKIP=no-commit-to-branch mise exec -- pre-commit run --all-files --show-diff-on-failure --color=always
+        else
+          if [[ -n "${BASE_SHA}" ]]; then
+            FROM_REF="${BASE_SHA}"
+          else
+            FROM_REF="origin/main"
+          fi
+          SKIP=no-commit-to-branch mise exec -- pre-commit run --from-ref "${FROM_REF}" --to-ref HEAD --show-diff-on-failure --color=always
+        fi
+        echo "::endgroup::"
+      env:
+        ALL_FILES: ${{ inputs.all_files }}
+        BASE_SHA: ${{ inputs.base_sha }}
+        PRE_COMMIT_COLOR: always
+
+    - name: "Save cache pre-commit hooks"
+      if: always()
+      continue-on-error: true
+      uses: actions/cache/save@v6
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
