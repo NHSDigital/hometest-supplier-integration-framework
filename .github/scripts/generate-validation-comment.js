@@ -2,7 +2,7 @@
 // Environment variables:
 //   - RESULTS_PATH       : path to the results.json file (optional, defaults to '.local/results/results.json')
 //   - VALIDATION_OUTCOME : result of the validation job ('success' | 'failure' | 'cancelled'), optional
-//   - VALIDATION_TYPE    : type of FHIR examples being reported (optional)
+//   - VALIDATION_TYPE    : type of FHIR examples being reported
 //   - RUN_URL            : URL to the workflow run, for linking to artifacts
 //   - OUTPUT_PATH        : path for the generated comment body (optional, defaults to 'comment-body.md')
 //   - GITHUB_SERVER_URL  : GitHub server URL (set automatically by Actions)
