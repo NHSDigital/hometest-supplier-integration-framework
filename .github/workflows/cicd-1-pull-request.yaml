@@ -15,6 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Initialize mise
-        uses: NHSDigital/hometest-mgmt-terraform/.github/actions/install-mise@main
+        uses: ./.github/actions/install-mise
       - name: Run pre-commit checks
-        uses: NHSDigital/hometest-mgmt-terraform/.github/actions/perform-pre-commit@main
+        uses: ./.github/actions/perform-pre-commit
