@@ -1,0 +1,5 @@
+MSH|^~\&|Epic|RH8|HomeTest|X26|20260904153627||ORM^O01|4128|P|2.5.1|||AL|NE
+PID|1||9443211234^^^https://fhir.hl7.org.uk/Id/nhs-number^||MOUSE^MINNIE^^^^^D||19871005|F|||113 BEAUMONT ROAD^^PLYMOUTH^^PL4 9EE^ENG^P^^DEVON|||||||||||||||||||N
+ORC|NW|2812455^EPC|||||^||||||||||||||||||||||LAB
+OBR|1|2812455^EPC||63476009^Measurement of prostate specific antigen^SCT|||||||||||122554006&Capillary blood specimen&SCT^^^20982000&Capillary&SCT||||||||||||||||
+SPM|1|^||122554006^Capillary blood specimen^SCT^^^^|||^^^^^^|20982000^Capillary^SCT^^^^||||||||||

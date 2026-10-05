@@ -1,0 +1,145 @@
+{
+  "resourceType": "Bundle",
+  "id": "psa-order-bundle-with-note",
+  "meta": {
+    "profile": [
+      "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Bundle"
+    ]
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:7d2a4f1e-0a7a-4b67-9c2f-8f3c6a1d5e90",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "psa-order-with-note",
+        "meta": {
+          "profile": [
+            "https://fhir.hl7.org.uk/StructureDefinition/UKCore-ServiceRequest"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "122554006",
+                  "display": "Capillary blood specimen"
+                }
+              ],
+              "text": "Capillary blood specimen"
+            }
+          }
+        ],
+        "status": "active",
+        "intent": "order",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "63476009",
+              "display": "Measurement of prostate specific antigen"
+            }
+          ],
+          "text": "Measurement of prostate specific antigen"
+        },
+        "subject": {
+          "reference": "urn:uuid:7d2a4f1e-0a7a-4b67-9c2f-8f3c6a1d5e91",
+          "display": "John Doe"
+        },
+        "authoredOn": "2026-09-15T09:00:00Z",
+        "requester": {
+          "reference": "urn:uuid:7d2a4f1e-0a7a-4b67-9c2f-8f3c6a1d5e92",
+          "display": "Dr Sarah Jenkins"
+        },
+        "performer": [
+          {
+            "reference": "Organization/SUPP002",
+            "display": "PSA Test Lab Ltd"
+          }
+        ],
+        "note": [
+          {
+            "text": "PSA test required for Active Surveillance"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7d2a4f1e-0a7a-4b67-9c2f-8f3c6a1d5e91",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "psa-patient-example",
+        "meta": {
+          "profile": [
+            "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient"
+          ]
+        },
+        "active": true,
+        "identifier": [
+          {
+            "system": "https://fhir.hl7.org.uk/Id/nhs-number",
+            "value": "9443211234"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Doe",
+            "given": [
+              "John"
+            ],
+            "text": "John Doe"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1970-01-01",
+        "address": [
+          {
+            "use": "home",
+            "type": "both",
+            "line": [
+              "123 Evergreen Terrace"
+            ],
+            "city": "Birmingham",
+            "postalCode": "B15 XXX",
+            "country": "United Kingdom"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7d2a4f1e-0a7a-4b67-9c2f-8f3c6a1d5e92",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "psa-practitioner-example",
+        "meta": {
+          "profile": [
+            "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Practitioner"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://fhir.hl7.org.uk/Id/gmc-number",
+            "value": "7011234"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Jenkins",
+            "given": [
+              "Sarah"
+            ],
+            "prefix": [
+              "Dr"
+            ],
+            "text": "Dr Sarah Jenkins"
+          }
+        ]
+      }
+    }
+  ]
+}

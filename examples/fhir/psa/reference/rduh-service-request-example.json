@@ -1,0 +1,143 @@
+{
+  "resourceType": "Bundle",
+  "id": "ukcore-pathology-order-bundle",
+  "meta": {
+    "profile": [
+      "https://hl7.org.uk"
+    ]
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:6f6634d0-997d-4171-be17-1f4153096001",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "ukcore-pathology-order-fbc",
+        "meta": {
+          "profile": [
+            "https://hl7.org.uk"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info",
+                "code": "108252007",
+                "display": "Laboratory procedure"
+              }
+            ]
+          }
+        ],
+        "priority": "routine",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info",
+              "code": "444158007",
+              "display": "Full blood count"
+            }
+          ],
+          "text": "Full Blood Count (FBC)"
+        },
+        "subject": {
+          "reference": "urn:uuid:6f6634d0-997d-4171-be17-1f4153096002",
+          "display": "Richard Jones"
+        },
+        "authoredOn": "2026-09-15T14:30:00Z",
+        "requester": {
+          "reference": "urn:uuid:6f6634d0-997d-4171-be17-1f4153096003",
+          "display": "Dr. Sarah Jenkins"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info",
+                "code": "84229001",
+                "display": "Fatigue"
+              }
+            ],
+            "text": "Lethargy and tiredness"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6f6634d0-997d-4171-be17-1f4153096002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ukcore-patient-example",
+        "meta": {
+          "profile": [
+            "https://hl7.org.uk"
+          ]
+        },
+        "active": true,
+        "identifier": [
+          {
+            "extension": [
+              {
+                "url": "https://hl7.org.uk",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "https://hl7.org.uk",
+                      "code": "01",
+                      "display": "Number present and verified"
+                    }
+                  ]
+                }
+              }
+            ],
+            "system": "https://fhir.nhs.uk",
+            "value": "9443211234"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Jones",
+            "given": [
+              "Richard"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1974-04-12"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6f6634d0-997d-4171-be17-1f4153096003",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "ukcore-practitioner-example",
+        "meta": {
+          "profile": [
+            "https://hl7.org.uk"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://fhir.nhs.uk",
+            "value": "7011234"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Jenkins",
+            "given": [
+              "Sarah"
+            ],
+            "prefix": [
+              "Dr"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
