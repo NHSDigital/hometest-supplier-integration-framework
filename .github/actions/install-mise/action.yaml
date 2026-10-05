@@ -1,0 +1,165 @@
+---
+name: "Install mise"
+description: "Install mise and repo dependencies"
+inputs:
+  working_directory:
+    description: "Directory which will be used for mise installation"
+    required: false
+    default: "."
+  github_token:
+    description: "GitHub token for API rate limits (use a PAT for higher limits)"
+    required: false
+    default: ""
+  remove_android_sdk:
+    description: "Remove the Android SDK during cleanup (frees ~9GB but is slow takes around 1m15s)"
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure git
+      shell: bash
+      run: |
+        echo "::group::Configure git"
+        git config --global --add safe.directory '*'
+        echo "::endgroup::"
+
+        echo "::group::GitHub API rate limit info"
+        if [[ -n "${GITHUB_TOKEN}" ]]; then
+          echo "Using provided GitHub token for API requests"
+          curl -s -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/rate_limit | jq '.rate'
+        else
+          echo "No GitHub token provided, using unauthenticated requests with lower rate limits"
+          curl -s https://api.github.com/rate_limit | jq '.rate'
+        fi
+        echo "::endgroup::"
+
+        echo "::group:: PWD and directory contents"
+        pwd
+        ls -la
+        echo "::endgroup::"
+
+    # - name: "Analyze disk usage"
+    #   shell: bash
+    #   run: |
+    #     echo "::group::Filesystem usage"
+    #     df -h
+    #     echo "::endgroup::"
+
+    #     # 11G	/usr/local/lib/android
+    #     # 5.6G	/usr/share/dotnet
+    #     # 4.3G	/usr/share/dotnet/sdk
+    #     # 3.7G	/usr/local/.ghcup
+    #     # 3.3G	/usr/share/swift
+    #     # 1.8G	/opt/hostedtoolcache/CodeQL
+    #     # 1.6G	/opt/hostedtoolcache/Python
+    #     # 1.5G	/usr/lib/jvm
+    #     # 1.3G	/usr/local/share/powershell
+    #     # 1.1G	/usr/local/julia1.12.7
+
+    #     echo "::group::Top 30 largest directories"
+    #     # Depth-limited scan of common large roots; sorted biggest-first for cleanup decisions.
+    #     sudo du -h -d 3 /opt /usr/share /usr/local /usr/lib /home 2>/dev/null \
+    #       | sort -rh | head -n 30
+    #     echo "::endgroup::"
+
+
+    - name: "Free up disk space"
+      shell: bash
+      env:
+        REMOVE_ANDROID_SDK: ${{ inputs.remove_android_sdk }}
+      run: |
+        echo "::group::Disk usage before cleanup"
+        df -h
+        echo "::endgroup::"
+
+        echo "::group::Free up disk space"
+        if [[ "${REMOVE_ANDROID_SDK}" == "true" ]]; then
+          echo "Removing android sdk..."
+          sudo rm -rf /usr/local/lib/android
+        else
+          echo "Skipping android sdk removal (remove_android_sdk != true)"
+        fi
+        echo "Removing dotnet..."
+        sudo rm -rf /usr/share/dotnet
+        echo "Removing swift..."
+        sudo rm -rf /usr/share/swift
+        echo "Removing CodeQL..."
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        echo "Removing go..."
+        sudo rm -rf /opt/hostedtoolcache/go
+        echo "::endgroup::"
+
+        echo "::group::Disk usage after cleanup"
+        df -h
+        echo "::endgroup::"
+
+    - name: "Determine repo root"
+      id: repo-root
+      shell: bash
+      env:
+        WORKING_DIR: ${{ inputs.working_directory }}
+      run: |
+        echo "::group::Configure repo root for mise installation"
+        REPO_ROOT=$(git -C "$WORKING_DIR" rev-parse --show-toplevel)
+        echo "path=${REPO_ROOT}" >> "$GITHUB_OUTPUT"
+
+        ACTION_REPO_ROOT="${GITHUB_ACTION_PATH%%/.github/*}"
+        echo "action_repo_root=${ACTION_REPO_ROOT}" >> "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+
+        echo "::group::Print repo root, PWD, and GITHUB_ACTION_PATH"
+        echo "Repo root: ${REPO_ROOT}"
+        echo "Current directory: $(pwd)"
+        echo "GITHUB_ACTION_PATH: ${GITHUB_ACTION_PATH}"
+        echo " Action repo root: ${ACTION_REPO_ROOT}"
+        echo "::endgroup::"
+
+    - name: Restore cache mise
+      id: cache-mise
+      uses: actions/cache/restore@v6
+      with:
+        path: |
+          ~/.local/share/mise
+          ${{ steps.repo-root.outputs.path }}/.mise-cache
+        key: mise-${{ runner.os }}-${{ runner.arch }}-mgmt-${{ hashFiles(format('{0}/mise.lock', steps.repo-root.outputs.path)) }}
+        restore-keys: |
+          mise-${{ runner.os }}-${{ runner.arch }}-mgmt-
+          mise-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Install mise
+      shell: bash
+      working-directory: ${{ steps.repo-root.outputs.path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
+        MISE_GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
+      run: |
+        curl https://mise.run | sh
+        echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+        echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
+
+    - name: Mise install
+      shell: bash
+      working-directory: ${{ steps.repo-root.outputs.path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
+        MISE_GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
+      run: |
+        mise install
+        echo "::group::mise doctor"
+        mise doctor || true
+        echo "::endgroup::"
+        echo "::group::Disk usage after mise install"
+        df -h
+        echo "::endgroup::"
+
+    - name: "Save cache mise"
+      if: always()
+      continue-on-error: true
+      uses: actions/cache/save@v6
+      with:
+        path: |
+          ~/.local/share/mise
+          ${{ steps.repo-root.outputs.path }}/.mise-cache
+        key: mise-${{ runner.os }}-${{ runner.arch }}-mgmt-${{ hashFiles(format('{0}/mise.lock', steps.repo-root.outputs.path)) }}
