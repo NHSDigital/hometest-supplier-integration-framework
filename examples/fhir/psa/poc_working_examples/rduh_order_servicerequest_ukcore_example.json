@@ -82,6 +82,17 @@
           ]
         },
         "status": "available",
+        "collection": {
+          "bodySite": {
+            "coding": [
+              {
+                "code": "20982000",
+                "display": "Capillary",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        },
         "subject": {
           "reference": "urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53"
         },
