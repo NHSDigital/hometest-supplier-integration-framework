@@ -1,0 +1,4 @@
+[files]
+extend-exclude = [
+  "examples/fhir/psa/poc_working_examples/*.json"
+]
