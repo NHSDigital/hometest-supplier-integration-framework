@@ -174,6 +174,12 @@ paths:
                           profile:
                             - https://fhir.hl7.org.uk/StructureDefinition/UKCore-Specimen
                         status: available
+                        collection:
+                          bodySite:
+                            coding:
+                              - code: "20982000"
+                                display: Capillary
+                                system: http://snomed.info/sct
                         subject:
                           reference: urn:uuid:a9d98321-bfd1-4abd-8180-017228ad8b53
                         type:
@@ -878,7 +884,7 @@ components:
                   enum: [Specimen]
         resource:
           type: object
-          required: [resourceType, meta, status, subject, type]
+          required: [resourceType, meta, subject, type]
           properties:
             resourceType:
               type: string
@@ -896,6 +902,11 @@ components:
             status:
               type: string
               enum: [available, unavailable, unsatisfactory, entered-in-error]
+            collection:
+              type: object
+              properties:
+                bodySite:
+                  $ref: '#/components/schemas/FHIRCodeableConcept'
             subject:
               $ref: '#/components/schemas/FHIRReference'
             type:
