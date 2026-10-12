@@ -829,7 +829,10 @@ components:
                   enum: [Patient]
         resource:
           type: object
-          required: [resourceType, meta, address, birthDate, gender, managingOrganization, name]
+          description: |
+            Whilst the patients date of birth and gender are optional in the schema, they are required for PSA orders.
+            However they might not be in the future for other tests.
+          required: [resourceType, meta, address, managingOrganization, name]
           properties:
             resourceType:
               type: string
