@@ -54,7 +54,7 @@ jobs:
         run: node .github/scripts/generate-validation-comment.js
 
       - name: Upload comment body
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: fhir-validation-comment-${{ matrix.example_type }}
           path: .local/comment-body.md
