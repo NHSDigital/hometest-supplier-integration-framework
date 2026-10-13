@@ -27,7 +27,7 @@ jobs:
           persist-credentials: false
 
       - name: Download validation results
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         continue-on-error: true
         with:
           name: fhir-validation-results-${{ matrix.example_type }}
@@ -72,7 +72,7 @@ jobs:
 
     steps:
       - name: Download comment body
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: fhir-validation-comment-${{ matrix.example_type }}
           path: .local/
