@@ -3,89 +3,10 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: |
-    ## Overview
-
-    Use this API to send completed home test results and order status updates to the HomeTest service.
-
-    HomeTest is the API producer and test kit suppliers are the API consumers. Suppliers use this API after they have received an order through the companion supplier-hosted API and need to tell HomeTest what happened next.
-
-    You can:
-
-    * submit a completed test result
-    * update the status of a test order
-
-    You cannot use this API to:
-
-    * create a new test order
-    * check whether a person is eligible for a test
-    * retrieve patient demographic details
-    * retrieve historical test results
-
-    Payloads use [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#fhir) resources encoded as `application/fhir+json`.
-
-    ## Who can use this API
-
-    This API is intended for approved home test suppliers integrating with the HomeTest service.
-
-    Suppliers must agree their use case and onboarding route with the HomeTest team before using this API.
-
-    ## Related APIs
-
-    The companion supplier-hosted API is used by HomeTest to send orders to suppliers and check order eligibility. This API is the reverse direction: suppliers use it to send results and order status updates back to HomeTest.
-
-    ## API status and roadmap
-
-    This API is being prepared for private beta on the NHS API Platform.
-
-    A sandbox instance is available for testing purposes with canned responses.
-
-    For questions about the roadmap, use the [NHS Digital Developer Community](https://developer.community.nhs.uk/) or contact the HomeTest team.
-
-    ## Service level
-
-    This API is a bronze service for private beta.
-
-    For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
-
-    ## Technology
-
-    This API is a RESTful API using OpenAPI 3.0.3.
-
-    Request and response bodies use FHIR JSON resources. The FHIR resources are constrained by this API specification and the HomeTest integration guidance.
-
-    ## Network access
-
-    The API is expected to be available over the internet through the NHS API Platform when deployed.
-
-    ## Security and authorisation
-
-    This draft uses bearer token authorisation because suppliers are system-to-system API consumers.
-
-    The final access level must be confirmed with the NHS API Platform team before production use.
-
-    ## Errors
-
-    This API uses standard HTTP status codes:
-
-    * `200` to `299` means the request succeeded
-    * `400` to `499` means the request failed because of a client error
-    * `500` to `599` means the request failed because of a server error
-
-    Error responses use FHIR OperationOutcome resources where possible.
-
-    ## Open source
-
-    The API contract is maintained in the publicly accessible [HomeTest supplier integration framework repository](https://github.com/NHSDigital/hometest-supplier-integration-framework).
-
-    ## Environments and testing
-
-    A sandbox has been deployed to the NHS API Platform and is available under the `https://sandbox.api.service.nhs.uk/hometest-api` base URL.
-
-    The "Try this API" feature is disabled for this documentation-only publication until a sandbox endpoint is available.
-
-    ## Onboarding
-
-    Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.
+    Supplier-facing API for submitting completed test results and order status updates to HomeTest.
+    Payloads use FHIR JSON (`application/fhir+json`) and bearer-token authorisation. Access is for
+    approved suppliers; agree onboarding with the HomeTest team. The API is in preparation for
+    private beta on the NHS API Platform.
   version: 1.1.8
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
@@ -105,37 +26,9 @@ paths:
       summary: Submit test results
       operationId: postTestResultsToHomeTest
       description: |
-        ## Overview
-
-        Submit a completed home test result to HomeTest.
-
-        Use this endpoint when a supplier has processed a test and needs to send the result back to HomeTest.
-
-        The request body is a FHIR Bundle containing:
-
-        * a DiagnosticReport
-        * an Observation
-        * a Communication
-
-        The `X-Correlation-ID` header is required for request tracking and idempotency.
-
-        ## Business rules
-
-        The bundle must describe the result for an existing HomeTest order.
-
-        The DiagnosticReport groups the result resources. The Observation carries the coded test result. The Communication records whether clinical contact has been completed, is on hold, or is not needed.
-
-        ## Responses
-
-        A successful request returns `201` with the accepted FHIR Bundle.
-
-        An invalid request returns `400` with a FHIR OperationOutcome.
-
-        An unauthorised request returns `401` with a FHIR OperationOutcome.
-
-        ## Sandbox test scenarios
-
-        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
+        Submit a completed result for an existing HomeTest order as a FHIR Bundle. Requests may use
+        the legacy collection format or the transaction format. Include `X-Correlation-ID` for
+        request tracking and idempotency.
       tags:
         - Result Service
       parameters:
@@ -152,12 +45,14 @@ paths:
         content:
           application/fhir+json:
             schema:
-              $ref: "#/components/schemas/FHIRBundleResults"
+              oneOf:
+                - $ref: "#/components/schemas/FHIRBundleResults"
+                - $ref: "#/components/schemas/FHIRBundleTransactionResults"
             examples:
               FHIRBundleResultsExample:
                 $ref: "#/components/examples/FHIRBundleResultsExample"
-              FHIRBundleResultsPSAExample:
-                $ref: "#/components/examples/FHIRBundleResultsPSAExample"
+              FHIRBundleTransactionResultsExample:
+                $ref: "#/components/examples/FHIRBundleTransactionResultsExample"
       responses:
         "201":
           description: Results posted successfully
@@ -168,8 +63,6 @@ paths:
               examples:
                 FHIRBundleResultsExample:
                   $ref: "#/components/examples/FHIRBundleResultsExample"
-                FHIRBundleResultsPSAExample:
-                  $ref: "#/components/examples/FHIRBundleResultsPSAExample"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -180,40 +73,9 @@ paths:
       summary: Update order status
       operationId: updateOrderStatus
       description: |
-        ## Overview
-
-        Update the status of an existing HomeTest order.
-
-        Use this endpoint when a supplier needs to tell HomeTest that an order has moved to a new supplier-side state.
-
-        The request body is a FHIR Task resource. The FHIR Task.status value gives the standard FHIR task state. The businessStatus.text value gives the HomeTest-specific order state.
-
-        Expected HomeTest business status values are:
-
-        * `order-accepted`
-        * `dispatched`
-        * `received-at-lab`
-        * `test-processed`
-
-        The `X-Correlation-ID` header is required for request tracking and idempotency.
-
-        ## Business rules
-
-        The status update must refer to an existing HomeTest order.
-
-        Use `businessStatus.text` for the HomeTest-specific supplier state. Use `Task.status` for the standard FHIR task state.
-
-        ## Responses
-
-        A successful request returns `200` with the accepted FHIR Task.
-
-        An invalid request returns `400` with a FHIR OperationOutcome.
-
-        A request for an unknown order returns `404` with a FHIR OperationOutcome.
-
-        ## Sandbox test scenarios
-
-        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
+        Update an existing order using a FHIR Task. Use `businessStatus.text` for the HomeTest state
+        (`order-accepted`, `dispatched`, `received-at-lab`, or `test-processed`) and `Task.status` for
+        the FHIR task state. Include `X-Correlation-ID` for request tracking and idempotency.
       tags:
         - Order Management
       parameters:
@@ -298,6 +160,189 @@ components:
                     Communication: "#/components/schemas/FHIRCommunication"
           minItems: 3
           maxItems: 3
+    FHIRBundleTransactionResults:
+      type: object
+      description: >-
+        Pathology transaction Bundle. The schema validates consumed resource fields and
+        permits other transaction entries and fields that HomeTest ignores. Application-level
+        validation must confirm that Patient, ServiceRequest, Observation, DiagnosticReport,
+        and the Organization carrying the requesting organisation's ODS code are present and
+        correctly cross-referenced.
+      required: [resourceType, type, entry]
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+        type:
+          type: string
+          enum: [transaction]
+        entry:
+          type: array
+          description: >-
+            Include Patient, the Organization carrying the requesting organisation's ODS code,
+            ServiceRequest, Observation, and DiagnosticReport.
+            Additional resources such as Specimen are accepted and ignored. Presence and
+            cross-resource reference checks are performed by the application.
+          items:
+            type: object
+            required: [fullUrl, request, resource]
+            properties:
+              fullUrl:
+                type: string
+                format: uri
+                description: Entry identity used by references; required for Patient and ServiceRequest.
+              request:
+                type: object
+                required: [method, url]
+                properties:
+                  method:
+                    type: string
+                    enum: [POST]
+                  url:
+                    type: string
+              resource:
+                oneOf:
+                  - $ref: "#/components/schemas/FHIRTransactionOrganization"
+                  - $ref: "#/components/schemas/FHIRTransactionPatient"
+                  - $ref: "#/components/schemas/FHIRTransactionSpecimen"
+                  - $ref: "#/components/schemas/FHIRTransactionServiceRequest"
+                  - $ref: "#/components/schemas/FHIRTransactionObservation"
+                  - $ref: "#/components/schemas/FHIRTransactionDiagnosticReport"
+                  - $ref: "#/components/schemas/FHIRTransactionIgnoredResource"
+                discriminator:
+                  propertyName: resourceType
+                  mapping:
+                    Organization: "#/components/schemas/FHIRTransactionOrganization"
+                    Patient: "#/components/schemas/FHIRTransactionPatient"
+                    Specimen: "#/components/schemas/FHIRTransactionSpecimen"
+                    ServiceRequest: "#/components/schemas/FHIRTransactionServiceRequest"
+                    Observation: "#/components/schemas/FHIRTransactionObservation"
+                    DiagnosticReport: "#/components/schemas/FHIRTransactionDiagnosticReport"
+    FHIRTransactionIgnoredResource:
+      type: object
+      description: Any other transaction resource accepted but ignored by HomeTest.
+      required: [resourceType]
+      properties:
+        resourceType:
+          type: string
+      not:
+        properties:
+          resourceType:
+            enum: [Organization, Patient, Specimen, ServiceRequest, Observation, DiagnosticReport]
+    FHIRTransactionOrganization:
+      type: object
+      description: >-
+        Organization entry. HomeTest consumes the Organization carrying the requesting
+        organisation's ODS code; other Organization entries are permitted but ignored.
+      required: [resourceType]
+      properties:
+        resourceType:
+          type: string
+          enum: [Organization]
+        identifier:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: >-
+                  ODS code for the requesting organisation. The value varies by organisation;
+                  X26 is only an example.
+        name:
+          type: string
+    FHIRTransactionPatient:
+      type: object
+      description: >-
+        Patient entry used as a reference target. NHS identifier is not required or consumed;
+        the entry fullUrl supplies the patient identity for resource references.
+      required: [resourceType]
+      properties:
+        resourceType:
+          type: string
+          enum: [Patient]
+    FHIRTransactionSpecimen:
+      type: object
+      description: Specimen entry accepted for payload compatibility and ignored by HomeTest.
+      required: [resourceType]
+      properties:
+        resourceType:
+          type: string
+          enum: [Specimen]
+    FHIRTransactionServiceRequest:
+      type: object
+      description: >-
+        ServiceRequest entry used as a reference target. PLAC and FILL identifiers are not
+        required or consumed by this result contract.
+      required: [resourceType]
+      properties:
+        resourceType:
+          type: string
+          enum: [ServiceRequest]
+    FHIRTransactionObservation:
+      type: object
+      description: Pathology result Observation; HomeTest consumes the coded test and result details.
+      required: [resourceType, status, code, subject, effectiveDateTime, valueQuantity, interpretation, referenceRange]
+      properties:
+        resourceType:
+          type: string
+          enum: [Observation]
+        status:
+          type: string
+          enum: [registered, preliminary, final, amended, corrected, cancelled, entered-in-error, unknown]
+        code:
+          $ref: "#/components/schemas/FHIRCodeableConcept"
+        subject:
+          allOf:
+            - $ref: "#/components/schemas/FHIRReference"
+          description: Reference to the Patient entry fullUrl; NHS identifiers are not used for matching.
+        effectiveDateTime:
+          type: string
+          format: date-time
+        valueQuantity:
+          $ref: "#/components/schemas/FHIRQuantity"
+        interpretation:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/FHIRCodeableConcept"
+        referenceRange:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            properties:
+              high:
+                $ref: "#/components/schemas/FHIRQuantity"
+              text:
+                type: string
+    FHIRTransactionDiagnosticReport:
+      type: object
+      description: DiagnosticReport linking its ServiceRequest and Observation result.
+      required: [resourceType, basedOn, status, subject, result]
+      properties:
+        resourceType:
+          type: string
+          enum: [DiagnosticReport]
+        basedOn:
+          description: Reference to the ServiceRequest entry fullUrl.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/FHIRReference"
+        status:
+          type: string
+          enum: [registered, partial, preliminary, final, amended, corrected, appended, cancelled, entered-in-error, unknown]
+        subject:
+          allOf:
+            - $ref: "#/components/schemas/FHIRReference"
+          description: Reference to the Patient entry fullUrl; NHS identifiers are not used for matching.
+        result:
+          description: References to Observation entry fullUrls.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/FHIRReference"
     FHIRDiagnosticReport:
       type: object
       description: FHIR DiagnosticReport resource for grouping observations
@@ -914,7 +959,8 @@ components:
           items:
             $ref: '#/components/schemas/FHIRCoding'
         text:
-          $ref: '#/components/schemas/FHIRBusinessStatusCodingText'
+          allOf:
+            - $ref: '#/components/schemas/FHIRBusinessStatusCodingText'
           description: Business status category text.
           example: dispatched
     FHIRBusinessStatusCodingText:
@@ -939,7 +985,8 @@ components:
           items:
             $ref: '#/components/schemas/FHIRCoding'
         text:
-          $ref: '#/components/schemas/FHIRDiagnosticCodingText'
+          allOf:
+            - $ref: '#/components/schemas/FHIRDiagnosticCodingText'
           description: Diagnostic report status text.
       example:
         coding:
@@ -963,7 +1010,8 @@ components:
           items:
             $ref: '#/components/schemas/FHIRCoding'
         text:
-          $ref: '#/components/schemas/FHIRObservationCodingText'
+          allOf:
+            - $ref: '#/components/schemas/FHIRObservationCodingText'
           description: Observation category status values
       example:
         coding:
@@ -976,6 +1024,71 @@ components:
       description: Observation category status values.
       enum: [Laboratory]
   examples:
+    FHIRBundleTransactionResultsExample:
+      summary: Pathology transaction result payload
+      value:
+        resourceType: Bundle
+        type: transaction
+        entry:
+          - fullUrl: "urn:uuid:25dec8d2-1abb-4ab2-ab04-4b27553abffc"
+            request:
+              method: POST
+              url: Patient
+            resource:
+              resourceType: Patient
+          - fullUrl: "urn:uuid:b85b7985-f0de-4b51-8c90-f4a8395f0388"
+            request:
+              method: POST
+              url: Organization
+            resource:
+              resourceType: Organization
+              identifier:
+                - value: "X26"
+          - fullUrl: "urn:uuid:70fb4a85-31f7-4204-820b-7c13a66f9c9c"
+            request:
+              method: POST
+              url: ServiceRequest
+            resource:
+              resourceType: ServiceRequest
+          - fullUrl: "urn:uuid:8c4b5333-19b2-4232-b4d3-e45360fe1a7a"
+            request:
+              method: POST
+              url: Observation
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - system: "http://snomed.info/sct"
+                    code: "1030791000000100"
+                    display: Prostate Specific Antigen (PSA)
+              subject:
+                reference: "urn:uuid:25dec8d2-1abb-4ab2-ab04-4b27553abffc"
+              effectiveDateTime: "2026-10-08T13:12:00+01:00"
+              valueQuantity:
+                value: 5.63
+                unit: "ug/L"
+                system: "http://unitsofmeasure.org"
+                code: "ug/L"
+              interpretation:
+                - text: H
+              referenceRange:
+                - high:
+                    value: 2.5
+                  text: "<=2.50"
+          - fullUrl: "urn:uuid:694a9a99-61b9-4b64-b0da-56912f3aa2eb"
+            request:
+              method: POST
+              url: DiagnosticReport
+            resource:
+              resourceType: DiagnosticReport
+              basedOn:
+                - reference: "urn:uuid:70fb4a85-31f7-4204-820b-7c13a66f9c9c"
+              status: corrected
+              subject:
+                reference: "urn:uuid:25dec8d2-1abb-4ab2-ab04-4b27553abffc"
+              result:
+                - reference: "urn:uuid:8c4b5333-19b2-4232-b4d3-e45360fe1a7a"
     FHIRBundleResultsExample:
       summary: Example FHIR Bundle for test results submission
       value:
@@ -1051,103 +1164,6 @@ components:
               status: "not-done"
               reasonReference:
                 - reference: "urn:uuid:550e8400-e29b-41d4-a716-446655440001"
-    FHIRBundleResultsPSAExample:
-      summary: Example FHIR Bundle for PSA test results submission (valueQuantity with reference range)
-      value:
-        resourceType: "Bundle"
-        id: "72831cc0-7ca8-4571-b0e3-99c6d06a0ace"
-        type: "collection"
-        entry:
-          - fullUrl: "urn:uuid:b2c3d4e5-f6a7-4901-bcde-f12345678901"
-            resource:
-              resourceType: "DiagnosticReport"
-              id: "b2c3d4e5-f6a7-4901-bcde-f12345678901"
-              basedOn:
-                - reference: "ServiceRequest/660f9511-f3ac-42e5-b827-557766551111"
-              status: "final"
-              category:
-                - coding:
-                    - system: "http://terminology.hl7.org/CodeSystem/v2-0074"
-                      code: "LAB"
-                      display: "Laboratory"
-                  text: "Laboratory"
-              code:
-                coding:
-                  - system: "http://snomed.info/sct"
-                    code: "721981007"
-                    display: "Diagnostic studies report"
-                text: "Diagnostic studies report"
-              subject:
-                reference: "Patient/234f5678-f9a0-43e4-b567-537725285111"
-              effectiveDateTime: "2026-07-21T10:30:00Z"
-              issued: "2026-07-21T11:00:00Z"
-              performer:
-                - reference: "Organization/SUPP002"
-                  display: "PSA Test Lab Ltd"
-              result:
-                - reference: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
-          - fullUrl: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
-            resource:
-              resourceType: "Observation"
-              id: "660f9511-f3ac-42e5-b827-557766551112"
-              basedOn:
-                - reference: "ServiceRequest/660f9511-f3ac-42e5-b827-557766551111"
-              status: "final"
-              category:
-                - coding:
-                    - system: "http://terminology.hl7.org/CodeSystem/observation-category"
-                      code: "laboratory"
-                      display: "Laboratory"
-                  text: "Laboratory"
-              code:
-                coding:
-                  - system: "http://snomed.info/sct"
-                    code: "63476009"
-                    display: "Measurement of prostate specific antigen"
-                text: "Measurement of prostate specific antigen"
-              subject:
-                reference: "Patient/234f5678-f9a0-43e4-b567-537725285111"
-              effectiveDateTime: "2026-07-21T10:30:00Z"
-              issued: "2026-07-21T11:00:00Z"
-              performer:
-                - reference: "Organization/SUPP002"
-                  display: "PSA Test Lab Ltd"
-              valueQuantity:
-                value: 4.2
-                unit: "ng/mL"
-                system: "http://unitsofmeasure.org"
-                code: "ng/mL"
-              interpretation:
-                - coding:
-                    - system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-                      code: "H"
-                      display: "High"
-                  text: "Above reference range"
-              referenceRange:
-                - low:
-                    value: 0
-                    unit: "ng/mL"
-                    system: "http://unitsofmeasure.org"
-                    code: "ng/mL"
-                  high:
-                    value: 4.0
-                    unit: "ng/mL"
-                    system: "http://unitsofmeasure.org"
-                    code: "ng/mL"
-                  type:
-                    coding:
-                      - system: "http://terminology.hl7.org/CodeSystem/referencerange-meaning"
-                        code: "normal"
-                        display: "Normal Range"
-                    text: "Normal Range"
-                  text: "Normal range for adult males (age-adjusted ranges may apply)"
-          - fullUrl: "urn:uuid:f58bd21c-69dd-4483-a678-668877662223"
-            resource:
-              resourceType: "Communication"
-              id: "f58bd21c-69dd-4483-a678-668877662223"
-              status: "on-hold"
-              reasonReference:
-                - reference: "urn:uuid:660f9511-f3ac-42e5-b827-557766551112"
     FHIRTaskExample:
       summary: Example FHIR Task for a 'dispatched' update, see examples folder for further examples.
       value:
