@@ -44,44 +44,44 @@ url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/3849248
 provenance = "github-attestations"
 
 [[tools.biome]]
-version = "2.6.3"
+version = "2.5.14"
 backend = "aqua:biomejs/biome"
-specifiers = ["2.6.3"]
+specifiers = ["2.5.14"]
 
 [tools.biome."platforms.linux-arm64"]
-checksum = "sha256:72eb52bfcbac58338fa507e394684c3ef74bbb49bcd5f78910e5f900e4610e25"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-linux-arm64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312136"
+checksum = "sha256:50ac7f598985e21b15da57e5d87da0f7ab0c163e6f78eb6d4690309827d77ef8"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-linux-arm64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471272"
 provenance = "github-attestations"
 
 [tools.biome."platforms.linux-arm64-musl"]
-checksum = "sha256:72eb52bfcbac58338fa507e394684c3ef74bbb49bcd5f78910e5f900e4610e25"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-linux-arm64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312136"
+checksum = "sha256:50ac7f598985e21b15da57e5d87da0f7ab0c163e6f78eb6d4690309827d77ef8"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-linux-arm64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471272"
 provenance = "github-attestations"
 
 [tools.biome."platforms.linux-x64"]
-checksum = "sha256:1e5134625f00231035bfb14c12141cdc8fcab69b8275f354287808bb5d86d3ae"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-linux-x64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312137"
+checksum = "sha256:290c1c85deeaf01310d9187306060b53961574856a7e34f59d9662562e6f19fe"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-linux-x64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471264"
 provenance = "github-attestations"
 
 [tools.biome."platforms.linux-x64-musl"]
-checksum = "sha256:1e5134625f00231035bfb14c12141cdc8fcab69b8275f354287808bb5d86d3ae"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-linux-x64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312137"
+checksum = "sha256:290c1c85deeaf01310d9187306060b53961574856a7e34f59d9662562e6f19fe"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-linux-x64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471264"
 provenance = "github-attestations"
 
 [tools.biome."platforms.macos-arm64"]
-checksum = "sha256:c158900ec63bd10332d34cc1fe6a6a571da5c65a4396087f87a2368111bd7ff7"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-darwin-arm64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312131"
+checksum = "sha256:3d1194d0a7b720315fb6f8cbafeb5b18ca7100c3e635e8ce82ef46b315de9c0e"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-darwin-arm64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471268"
 provenance = "github-attestations"
 
 [tools.biome."platforms.macos-x64"]
-checksum = "sha256:c06a7b72d313e803f2e77b6eda16e5e57f3cb4f864fc2e2f079da3fc218a34ef"
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.6.3/biome-darwin-x64"
-url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/672312133"
+checksum = "sha256:b331448d7afb592cc4674e9bd6905eae5e79f5dd9b34b61b44803a6b7a91b801"
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.14/biome-darwin-x64"
+url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/567471271"
 provenance = "github-attestations"
 
 [[tools.gitleaks]]
@@ -126,15 +126,6 @@ url = "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8
 url_api = "https://api.github.com/repos/gitleaks/gitleaks/releases/assets/378332053"
 
 [[tools.java]]
-version = "temurin-25.0.4+101.0.LTS"
-backend = "core:java"
-specifiers = ["temurin-25.0.4+101.0.LTS"]
-
-[tools.java."platforms.macos-x64"]
-checksum = "sha256:e6229d9504f7922053ab31821b9e6bee8761daf7b026a3476d1a027563009880"
-url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jdk_x64_mac_hotspot_25.0.4.1_1.tar.gz"
-
-[[tools.java]]
 version = "temurin-25.0.5+8.0.LTS"
 backend = "core:java"
 specifiers = ["temurin-25.0.5+8.0.LTS"]
@@ -158,6 +149,10 @@ url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0
 [tools.java."platforms.macos-arm64"]
 checksum = "sha256:36dc14d797aaff6d89aab302cd053fdba6207dfdcf772052fa7b023a94b0e857"
 url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.5_8.tar.gz"
+
+[tools.java."platforms.macos-x64"]
+checksum = "sha256:32cd4d2151c91aa00d0fc911edfd05245ed40fa6b1aa894d5f35c928cd67a59d"
+url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_mac_hotspot_25.0.5_8.tar.gz"
 
 [[tools.node]]
 version = "24.22.2"

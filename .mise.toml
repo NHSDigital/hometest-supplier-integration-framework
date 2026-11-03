@@ -48,7 +48,7 @@ typos = "1.51.1"
 yq = "4.54.1"
 
 # https://github.com/biomejs/biome
-biome = "2.6.3"
+biome = "2.5.14"
 
 # ─── Security scanning ───────────────────────────────────────────────────────
 
