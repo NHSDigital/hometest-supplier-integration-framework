@@ -85,7 +85,8 @@ info:
 
     ## Onboarding
 
-    Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.  version: 1.1.8
+    Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.
+  version: 1.1.8
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
