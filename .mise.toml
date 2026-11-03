@@ -1,7 +1,7 @@
 [settings]
 minimum_release_age = "7d"
 lockfile = true
-# locked = true
+locked = true
 
 [settings.python]
 compile = false
