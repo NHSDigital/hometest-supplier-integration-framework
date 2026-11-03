@@ -3,11 +3,89 @@ openapi: 3.0.3
 info:
   title: Home Test Supplier API
   description: |
-    Supplier-facing API for submitting completed test results and order status updates to HomeTest.
-    Payloads use FHIR JSON (`application/fhir+json`) and bearer-token authorisation. Access is for
-    approved suppliers; agree onboarding with the HomeTest team. The API is in preparation for
-    private beta on the NHS API Platform.
-  version: 1.1.8
+    ## Overview
+
+    Use this API to send completed home test results and order status updates to the HomeTest service.
+
+    HomeTest is the API producer and test kit suppliers are the API consumers. Suppliers use this API after they have received an order through the companion supplier-hosted API and need to tell HomeTest what happened next.
+
+    You can:
+
+    * submit a completed test result
+    * update the status of a test order
+
+    You cannot use this API to:
+
+    * create a new test order
+    * check whether a person is eligible for a test
+    * retrieve patient demographic details
+    * retrieve historical test results
+
+    Payloads use [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#fhir) resources encoded as `application/fhir+json`.
+
+    ## Who can use this API
+
+    This API is intended for approved home test suppliers integrating with the HomeTest service.
+
+    Suppliers must agree their use case and onboarding route with the HomeTest team before using this API.
+
+    ## Related APIs
+
+    The companion supplier-hosted API is used by HomeTest to send orders to suppliers and check order eligibility. This API is the reverse direction: suppliers use it to send results and order status updates back to HomeTest.
+
+    ## API status and roadmap
+
+    This API is being prepared for private beta on the NHS API Platform.
+
+    A sandbox instance is available for testing purposes with canned responses.
+
+    For questions about the roadmap, use the [NHS Digital Developer Community](https://developer.community.nhs.uk/) or contact the HomeTest team.
+
+    ## Service level
+
+    This API is a bronze service for private beta.
+
+    For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
+
+    ## Technology
+
+    This API is a RESTful API using OpenAPI 3.0.3.
+
+    Request and response bodies use FHIR JSON resources. The FHIR resources are constrained by this API specification and the HomeTest integration guidance.
+
+    ## Network access
+
+    The API is expected to be available over the internet through the NHS API Platform when deployed.
+
+    ## Security and authorisation
+
+    This draft uses bearer token authorisation because suppliers are system-to-system API consumers.
+
+    The final access level must be confirmed with the NHS API Platform team before production use.
+
+    ## Errors
+
+    This API uses standard HTTP status codes:
+
+    * `200` to `299` means the request succeeded
+    * `400` to `499` means the request failed because of a client error
+    * `500` to `599` means the request failed because of a server error
+
+    Error responses use FHIR OperationOutcome resources where possible.
+
+    ## Open source
+
+    The API contract is maintained in the publicly accessible [HomeTest supplier integration framework repository](https://github.com/NHSDigital/hometest-supplier-integration-framework).
+
+    ## Environments and testing
+
+    A sandbox has been deployed to the NHS API Platform and is available under the `https://sandbox.api.service.nhs.uk/hometest-api` base URL.
+
+    The "Try this API" feature is disabled for this documentation-only publication until a sandbox endpoint is available.
+
+    ## Onboarding
+
+    Contact the HomeTest team to agree onboarding, supplier responsibilities and access to test environments.  version: 1.1.8
   contact:
     name: NHS England - Digital Prevention Services Portfolio - Home Test Team
     email: england.hometest@nhs.net
@@ -26,9 +104,37 @@ paths:
       summary: Submit test results
       operationId: postTestResultsToHomeTest
       description: |
-        Submit a completed result for an existing HomeTest order as a FHIR Bundle. Requests may use
-        the legacy collection format or the transaction format. Include `X-Correlation-ID` for
-        request tracking and idempotency.
+        ## Overview
+
+        Submit a completed home test result to HomeTest.
+
+        Use this endpoint when a supplier has processed a test and needs to send the result back to HomeTest.
+
+        The request body is a FHIR Bundle containing:
+
+        * a DiagnosticReport
+        * an Observation
+        * a Communication
+
+        The `X-Correlation-ID` header is required for request tracking and idempotency.
+
+        ## Business rules
+
+        The bundle must describe the result for an existing HomeTest order.
+
+        The DiagnosticReport groups the result resources. The Observation carries the coded test result. The Communication records whether clinical contact has been completed, is on hold, or is not needed.
+
+        ## Responses
+
+        A successful request returns `201` with the accepted FHIR Bundle.
+
+        An invalid request returns `400` with a FHIR OperationOutcome.
+
+        An unauthorised request returns `401` with a FHIR OperationOutcome.
+
+        ## Sandbox test scenarios
+
+        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
       tags:
         - Result Service
       parameters:
@@ -73,9 +179,40 @@ paths:
       summary: Update order status
       operationId: updateOrderStatus
       description: |
-        Update an existing order using a FHIR Task. Use `businessStatus.text` for the HomeTest state
-        (`order-accepted`, `dispatched`, `received-at-lab`, or `test-processed`) and `Task.status` for
-        the FHIR task state. Include `X-Correlation-ID` for request tracking and idempotency.
+        ## Overview
+
+        Update the status of an existing HomeTest order.
+
+        Use this endpoint when a supplier needs to tell HomeTest that an order has moved to a new supplier-side state.
+
+        The request body is a FHIR Task resource. The FHIR Task.status value gives the standard FHIR task state. The businessStatus.text value gives the HomeTest-specific order state.
+
+        Expected HomeTest business status values are:
+
+        * `order-accepted`
+        * `dispatched`
+        * `received-at-lab`
+        * `test-processed`
+
+        The `X-Correlation-ID` header is required for request tracking and idempotency.
+
+        ## Business rules
+
+        The status update must refer to an existing HomeTest order.
+
+        Use `businessStatus.text` for the HomeTest-specific supplier state. Use `Task.status` for the standard FHIR task state.
+
+        ## Responses
+
+        A successful request returns `200` with the accepted FHIR Task.
+
+        An invalid request returns `400` with a FHIR OperationOutcome.
+
+        A request for an unknown order returns `404` with a FHIR OperationOutcome.
+
+        ## Sandbox test scenarios
+
+        A sandbox environment is available for testing purposes. The "Try this API" feature is disabled for this documentation-only publication.
       tags:
         - Order Management
       parameters:
