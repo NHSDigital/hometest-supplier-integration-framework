@@ -93,9 +93,9 @@
         },
         "authoredOn": "2026-10-19T12:00:00+01:00",
         "requisition": {
-                    "system": "http://hometest.service.nhs.uk/order",
-                    "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
-         },
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
         "status": "active",
         "intent": "order",
         "category": [
@@ -157,9 +157,9 @@
         },
         "authoredOn": "2026-10-19T12:00:00+01:00",
         "requisition": {
-                    "system": "http://hometest.service.nhs.uk/order",
-                    "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
-         },
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
         "status": "active",
         "intent": "order",
         "category": [
@@ -221,9 +221,9 @@
         },
         "authoredOn": "2026-10-19T12:00:00+01:00",
         "requisition": {
-                    "system": "http://hometest.service.nhs.uk/order",
-                    "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
-         },
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
         "status": "active",
         "intent": "order",
         "category": [
@@ -279,9 +279,9 @@
         },
         "authoredOn": "2026-10-19T12:00:00+01:00",
         "requisition": {
-                    "system": "http://hometest.service.nhs.uk/order",
-                    "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
-         },
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
         "status": "active",
         "intent": "order",
         "category": [
