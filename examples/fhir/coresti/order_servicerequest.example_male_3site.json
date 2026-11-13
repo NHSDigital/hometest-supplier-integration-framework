@@ -5,6 +5,36 @@
     {
       "request": {
         "method": "POST",
+        "url": "Organization"
+      },
+      "fullUrl": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86",
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "value": "PreventX"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Organization"
+      },
+      "fullUrl": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22",
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "value": "NHS England"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
         "url": "Patient"
       },
       "fullUrl": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf",
@@ -91,9 +121,11 @@
           "text": "Screening for Chlamydia trachomatis"
         },
         "requester": {
-          "reference": "urn:uuid:fde1e02c-ca08-4a2c-8b2c-d3903f484332"
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
         },
-
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
+        },
         "specimen": [
           {
             "reference": "urn:uuid:c2a2a627-852f-4bda-ab7d-cbfa834928f0"
@@ -153,7 +185,10 @@
           "text": "Gonorrhoea screening"
         },
         "requester": {
-          "reference": "urn:uuid:fde1e02c-ca08-4a2c-8b2c-d3903f484332"
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
         },
         "specimen": [
           {
@@ -214,7 +249,10 @@
           "text": "Syphilis antibody screen EIA"
         },
         "requester": {
-          "reference": "urn:uuid:fde1e02c-ca08-4a2c-8b2c-d3903f484332"
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
         },
         "specimen": [
           {
@@ -269,7 +307,10 @@
           "text": "HIV antigen test"
         },
         "requester": {
-          "reference": "urn:uuid:fde1e02c-ca08-4a2c-8b2c-d3903f484332"
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
         },
         "specimen": [
           {
