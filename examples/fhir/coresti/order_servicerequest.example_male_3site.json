@@ -1,0 +1,506 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "Organization"
+      },
+      "fullUrl": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86",
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "value": "PreventX"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Organization"
+      },
+      "fullUrl": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22",
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "value": "NHS England"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      },
+      "fullUrl": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf",
+      "resource": {
+        "id": "1d6efc98-78e7-4049-9d4f-e651a95d9727",
+        "name": [
+          {
+            "use": "official",
+            "family": "Doe",
+            "given": [
+              "Alex"
+            ],
+            "text": "Alex Doe"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+447700900000",
+            "use": "mobile"
+          },
+          {
+            "system": "email",
+            "value": "alex.doe@example.com",
+            "use": "home"
+          }
+        ],
+        "address": [
+          {
+            "use": "home",
+            "type": "both",
+            "line": [
+              "123 Main Street",
+              "Flat 4B"
+            ],
+            "city": "London",
+            "postalCode": "SW1A 1AA",
+            "country": "United Kingdom"
+          }
+        ],
+        "birthDate": "1990-01-01"
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "ServiceRequest"
+      },
+      "fullUrl": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "e8395ba4-a624-40dc-9adf-d84f61e851a5",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: Screening for Chlamydia trachomatis</div>"
+        },
+        "authoredOn": "2026-10-19T12:00:00+01:00",
+        "requisition": {
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "103693007",
+                "display": "Diagnostic procedure",
+                "system": "http://snomed.info/sct"
+              }
+            ],
+            "text": "Diagnostic procedure"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "442487003",
+              "display": "Screening for Chlamydia trachomatis",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Screening for Chlamydia trachomatis"
+        },
+        "requester": {
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
+        },
+        "specimen": [
+          {
+            "reference": "urn:uuid:c2a2a627-852f-4bda-ab7d-cbfa834928f0"
+          },
+          {
+            "reference": "urn:uuid:64f44eb6-0d4a-46de-aa74-6d03397d1f6d"
+          },
+          {
+            "reference": "urn:uuid:3b7fe8e2-9ad5-407c-974a-d1e544d374fe"
+          }
+        ],
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "ServiceRequest"
+      },
+      "fullUrl": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "e8395ba4-a624-40dc-9adf-d84f61e851a5",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: Gonorrhoea screening</div>"
+        },
+        "authoredOn": "2026-10-19T12:00:00+01:00",
+        "requisition": {
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "103693007",
+                "display": "Diagnostic procedure",
+                "system": "http://snomed.info/sct"
+              }
+            ],
+            "text": "Diagnostic procedure"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "1086351000000100",
+              "display": "Gonorrhoea screening",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Gonorrhoea screening"
+        },
+        "requester": {
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
+        },
+        "specimen": [
+          {
+            "reference": "urn:uuid:c2a2a627-852f-4bda-ab7d-cbfa834928f0"
+          },
+          {
+            "reference": "urn:uuid:64f44eb6-0d4a-46de-aa74-6d03397d1f6d"
+          },
+          {
+            "reference": "urn:uuid:3b7fe8e2-9ad5-407c-974a-d1e544d374fe"
+          }
+        ],
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "ServiceRequest"
+      },
+      "fullUrl": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "e8395ba4-a624-40dc-9adf-d84f61e851a5",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: Syphillis screening</div>"
+        },
+        "authoredOn": "2026-10-19T12:00:00+01:00",
+        "requisition": {
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "103693007",
+                "display": "Diagnostic procedure",
+                "system": "http://snomed.info/sct"
+              }
+            ],
+            "text": "Diagnostic procedure"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "374971000119102",
+              "display": "Syphilis antibody screen EIA",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Syphilis antibody screen EIA"
+        },
+        "requester": {
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
+        },
+        "specimen": [
+          {
+            "reference": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5"
+          }
+        ],
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "ServiceRequest"
+      },
+      "fullUrl": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "e8395ba4-a624-40dc-9adf-d84f61e851a5",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ServiceRequest: HIV screening</div>"
+        },
+        "authoredOn": "2026-10-19T12:00:00+01:00",
+        "requisition": {
+          "system": "http://hometest.service.nhs.uk/order",
+          "value": "36a9dcb1-22c7-4864-b276-bd3f3a3a0c0b"
+        },
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "103693007",
+                "display": "Diagnostic procedure",
+                "system": "http://snomed.info/sct"
+              }
+            ],
+            "text": "Diagnostic procedure"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "31676001",
+              "display": "HIV antigen test"
+            }
+          ],
+          "text": "HIV antigen test"
+        },
+        "requester": {
+          "reference": "urn:uuid:73889367-0349-4c7b-9f29-73bb1cf5cb22"
+        },
+        "performer": {
+          "reference": "urn:uuid:3be95115-cdb3-4093-964a-6ddd32528d86"
+        },
+        "specimen": [
+          {
+            "reference": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5"
+          }
+        ],
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Specimen"
+      },
+      "fullUrl": "urn:uuid:e8395ba4-a624-40dc-9adf-d84f61e851a5",
+      "resource": {
+        "resourceType": "Specimen",
+        "metadata": {
+          "profile": [
+            "https://fhir.nhs.uk/STU3/StructureDefinition/UKCore-Specimen"
+          ]
+        },
+        "id": "e8395ba4-a624-40dc-9adf-d84f61e851a5",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Specimen: Capillary blood</div>"
+        },
+        "status": "available",
+        "collection": {
+          "bodySite": {
+            "coding": [
+              {
+                "code": "368209003",
+                "display": "Capillary",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "122554006",
+              "display": "Capillary blood specimen",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Capillary blood specimen"
+        },
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Specimen"
+      },
+      "fullUrl": "urn:uuid:c2a2a627-852f-4bda-ab7d-cbfa834928f0",
+      "resource": {
+        "resourceType": "Specimen",
+        "metadata": {
+          "profile": [
+            "https://fhir.nhs.uk/STU3/StructureDefinition/UKCore-Specimen"
+          ]
+        },
+        "id": "c2a2a627-852f-4bda-ab7d-cbfa834928f0",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Specimen: Urine, Body Site: Penis</div>"
+        },
+        "status": "available",
+        "collection": {
+          "bodySite": {
+            "coding": [
+              {
+                "code": "18911002",
+                "display": "Penis",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "122575003",
+              "display": "Urine specimen",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Urine specimen"
+        },
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Specimen"
+      },
+      "fullUrl": "urn:uuid:64f44eb6-0d4a-46de-aa74-6d03397d1f6d",
+      "resource": {
+        "resourceType": "Specimen",
+        "metadata": {
+          "profile": [
+            "https://fhir.nhs.uk/STU3/StructureDefinition/UKCore-Specimen"
+          ]
+        },
+        "id": "64f44eb6-0d4a-46de-aa74-6d03397d1f6d",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Specimen: Throat swab</div>"
+        },
+        "status": "available",
+        "collection": {
+          "bodySite": {
+            "coding": [
+              {
+                "code": "312535008",
+                "display": "Throat",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "258529004",
+              "display": "Throat swab",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Throat swab"
+        },
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "Specimen"
+      },
+      "fullUrl": "urn:uuid:3b7fe8e2-9ad5-407c-974a-d1e544d374fe",
+      "resource": {
+        "resourceType": "Specimen",
+        "metadata": {
+          "profile": [
+            "https://fhir.nhs.uk/STU3/StructureDefinition/UKCore-Specimen"
+          ]
+        },
+        "id": "3b7fe8e2-9ad5-407c-974a-d1e544d374fe",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Specimen: Rectal swab</div>"
+        },
+        "status": "available",
+        "collection": {
+          "bodySite": {
+            "coding": [
+              {
+                "code": "34402009",
+                "display": "Rectum",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "258528007",
+              "display": "Rectal swab",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Rectal swab"
+        },
+        "subject": {
+          "reference": "urn:uuid:49d5b864-9a25-41f0-8011-926d12e9d9cf"
+        }
+      }
+    }
+  ]
+}

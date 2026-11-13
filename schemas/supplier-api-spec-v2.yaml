@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Supplier API
   description: API for medical test suppliers to provide in order to allow Home Test platform integration
-  version: 2.0.0
+  version: 2.0.1
 
 paths:
   /oauth/token:
@@ -745,7 +745,6 @@ components:
         entry:
           type: array
           minItems: 4
-          maxItems: 4
           description: Organization, Patient, Specimen, and ServiceRequest transaction entries, in that order
           items:
             oneOf:
