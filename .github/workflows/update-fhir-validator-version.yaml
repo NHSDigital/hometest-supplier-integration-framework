@@ -41,7 +41,7 @@ jobs:
 
       - name: Open pull request
         if: steps.latest.outputs.version != steps.current.outputs.version
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1
         with:
           token: ${{ secrets.VALIDATOR_UPDATER_PAT }}
           branch: chore/update-fhir-validator-${{ steps.latest.outputs.version }}
