@@ -23,7 +23,7 @@ python = "3.15.2"
 node = "24.22.2"
 
 # Required by: local runs of validator
-java = "temurin-25.0.5+8.0.LTS"
+java = "temurin-25.0.5.1+2.0.LTS"
 
 # ─── Pre-commit ───────────────────────────────────────────────────────────────
 
