@@ -31,16 +31,30 @@ PSA orders originate from a clinician in an acute or primary care setting via th
 
 `gender` will be present on PSA orders (sourced from the EPR). Suppliers should use this where relevant to test processing or result interpretation. **[TBD: confirm whether gender is required for PSA processing or informational only]**
 
-### `ServiceRequest.extension` — SpecimenCollectionMethod
+### `ServiceRequest.orderDetail` — specimen collection method
 
-The `Extension-UKCore-SpecimenCollectionMethod` extension will be present on PSA orders and must be used to determine the kit variant to dispatch.
+Acute transaction bundle PSA orders will include the collection method in `ServiceRequest.orderDetail`. Suppliers must use it to determine the kit variant to dispatch.
 
-**[TBD: confirm supported collection method SNOMED codes for PSA]**
+The coding system is `https://hometest.service.nhs.uk/fhir/CodeSystem/specimen-collection-method`.
 
-| SNOMED code | Display | Kit variant |
-|---|---|---|
-| `122554006` | Capillary blood specimen | Finger-prick blood spot card |
-| **[TBD]** | **[TBD]** | **[TBD]** |
+| Code | Display |
+|---|---|
+| `fingerprick` | Fingerprick capillary blood collection |
+| `transdermal` | Transdermal capillary blood collection |
+
+```json
+"orderDetail": [
+  {
+    "coding": [
+      {
+        "system": "https://hometest.service.nhs.uk/fhir/CodeSystem/specimen-collection-method",
+        "code": "fingerprick",
+        "display": "Fingerprick capillary blood collection"
+      }
+    ]
+  }
+]
+```
 
 ---
 
