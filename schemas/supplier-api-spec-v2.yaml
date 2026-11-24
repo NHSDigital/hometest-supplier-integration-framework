@@ -207,14 +207,11 @@ paths:
                             - code: "63476009"
                               display: Measurement of prostate specific antigen
                               system: http://snomed.info/sct
-                        extension:
-                          - url: https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-SpecimenCollectionMethod
-                            valueCodeableConcept:
-                              coding:
-                                - code: "122554006"
-                                  display: Capillary blood specimen
-                                  system: http://snomed.info/sct
-                              text: Capillary blood specimen
+                        orderDetail:
+                          - coding:
+                              - system: https://hometest.service.nhs.uk/fhir/CodeSystem/specimen-collection-method
+                                code: fingerprick
+                                display: Fingerprick capillary blood collection
                         identifier:
                           - type:
                               coding:
@@ -958,11 +955,24 @@ components:
                 $ref: '#/components/schemas/FHIRCodeableConcept'
             code:
               $ref: '#/components/schemas/FHIRCodeableConcept'
+            orderDetail:
+              type: array
+              description: >-
+                Additional order details. For PSA orders, include the specimen collection
+                method using the HomeTest specimen-collection-method code system. Supported
+                codes are fingerprick and transdermal; see docs/test-types/psa.md.
+              items:
+                $ref: '#/components/schemas/FHIRCodeableConcept'
+              example:
+                - coding:
+                    - system: "https://hometest.service.nhs.uk/fhir/CodeSystem/specimen-collection-method"
+                      code: "fingerprick"
+                      display: "Fingerprick capillary blood collection"
             extension:
               type: array
               description: >-
                 Include Extension-UKCore-SpecimenCollectionMethod when required by the ordered
-                test type. For PSA orders, use the SNOMED CT specimen collection method.
+                test type; see docs/test-types/ for per-test guidance.
               items:
                 $ref: '#/components/schemas/UKCoreSpecimenCollectionMethodExtension'
             identifier:
